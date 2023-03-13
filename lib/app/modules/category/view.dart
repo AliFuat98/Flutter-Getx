@@ -1,15 +1,15 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/category.dart';
-import 'package:first_app/app/modules/home/controller.dart';
-import 'package:first_app/app/modules/home/widgets/add_card.dart';
-import 'package:first_app/app/modules/home/widgets/add_word.dart';
-import 'package:first_app/app/modules/home/widgets/category_card.dart';
+import 'package:first_app/app/modules/category/controller.dart';
+import 'package:first_app/app/modules/category/widgets/add_card.dart';
+import 'package:first_app/app/modules/category/widgets/add_word.dart';
+import 'package:first_app/app/modules/category/widgets/category_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-class HomePage extends GetView<HomeController> {
-  const HomePage({super.key});
+class CategoryPage extends GetView<CategoryController> {
+  const CategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {

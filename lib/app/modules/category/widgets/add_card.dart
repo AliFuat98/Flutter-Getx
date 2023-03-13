@@ -2,7 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/category.dart';
-import 'package:first_app/app/modules/home/controller.dart';
+import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/widgets/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 class AddCategoryCard extends StatelessWidget {
   AddCategoryCard({super.key});
 
-  final homeController = Get.find<HomeController>();
+  final categoryController = Get.find<CategoryController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class AddCategoryCard extends StatelessWidget {
               radius: 5,
               title: "Fill Category",
               content: Form(
-                key: homeController.fromKey,
+                key: categoryController.fromKey,
                 child: Column(
                   children: [
                     categoryNameInputField(),
@@ -37,8 +37,8 @@ class AddCategoryCard extends StatelessWidget {
                   ],
                 ),
               ));
-          homeController.editController.clear();
-          homeController.changeChipIndex(0);
+          categoryController.editController.clear();
+          categoryController.changeChipIndex(0);
         },
         child: DottedBorder(
           color: Colors.grey[400]!,
@@ -55,7 +55,7 @@ class AddCategoryCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 3.0.wp),
       child: TextFormField(
-        controller: homeController.editController,
+        controller: categoryController.editController,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: "CategoryName",
@@ -83,9 +83,9 @@ class AddCategoryCard extends StatelessWidget {
                     pressElevation: 0,
                     backgroundColor: Colors.white,
                     label: e,
-                    selected: homeController.chipIndex.value == index,
+                    selected: categoryController.chipIndex.value == index,
                     onSelected: (bool selected) {
-                      homeController.chipIndex.value = selected ? index : 0;
+                      categoryController.chipIndex.value = selected ? index : 0;
                     },
                   );
                 }))
@@ -106,16 +106,17 @@ class AddCategoryCard extends StatelessWidget {
       ),
       child: const Text("confirm"),
       onPressed: () {
-        if (homeController.fromKey.currentState!.validate()) {
-          int icon = icons[homeController.chipIndex.value].icon!.codePoint;
-          String color = icons[homeController.chipIndex.value].color!.toHex();
+        if (categoryController.fromKey.currentState!.validate()) {
+          int icon = icons[categoryController.chipIndex.value].icon!.codePoint;
+          String color =
+              icons[categoryController.chipIndex.value].color!.toHex();
           var category = Category(
-            title: homeController.editController.text,
+            title: categoryController.editController.text,
             icon: icon,
             color: color,
           );
           Get.back();
-          homeController.addCategory(category)
+          categoryController.addCategory(category)
               ? EasyLoading.showSuccess("Create Success")
               : EasyLoading.showError("dublicate task");
         }

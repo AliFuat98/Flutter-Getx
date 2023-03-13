@@ -1,6 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/category.dart';
-import 'package:first_app/app/modules/home/controller.dart';
+import 'package:first_app/app/modules/category/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -13,7 +13,7 @@ class CategoryCard extends StatelessWidget {
     required this.category,
   });
 
-  final homeController = Get.find<HomeController>();
+  final categoryController = Get.find<CategoryController>();
   final Category category;
 
   @override
@@ -23,8 +23,8 @@ class CategoryCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        homeController.changeSelectedCategory(category);
-        homeController.changeWords(category.words ?? []);
+        categoryController.changeSelectedCategory(category);
+        categoryController.changeWords(category.words ?? []);
         Get.to(() => WordPage());
       },
       child: Container(

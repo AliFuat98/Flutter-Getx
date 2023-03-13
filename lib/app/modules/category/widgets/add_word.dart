@@ -1,18 +1,18 @@
 import 'package:first_app/app/core/utils/extensions.dart';
-import 'package:first_app/app/modules/home/controller.dart';
+import 'package:first_app/app/modules/category/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class AddWord extends StatelessWidget {
-  final homeController = Get.find<HomeController>();
+  final categoryController = Get.find<CategoryController>();
   AddWord({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: homeController.fromKey,
+        key: categoryController.fromKey,
         child: ListView(
           children: [
             // Close And Done Buttons
@@ -40,8 +40,8 @@ class AddWord extends StatelessWidget {
           IconButton(
             onPressed: () {
               Get.back();
-              homeController.editController.clear();
-              homeController.changeSelectedCategory(null);
+              categoryController.editController.clear();
+              categoryController.changeSelectedCategory(null);
             },
             icon: const Icon(Icons.close),
           ),
@@ -52,27 +52,27 @@ class AddWord extends StatelessWidget {
               overlayColor: MaterialStateProperty.all(Colors.transparent),
             ),
             onPressed: () {
-              if (!homeController.fromKey.currentState!.validate()) {
+              if (!categoryController.fromKey.currentState!.validate()) {
                 return;
               }
-              if (homeController.selectedCategory.value == null) {
+              if (categoryController.selectedCategory.value == null) {
                 EasyLoading.showError("Please select a category");
                 return;
               }
-              var success = homeController.updateCategory(
-                homeController.selectedCategory.value!,
-                homeController.editController.text,
+              var success = categoryController.updateCategory(
+                categoryController.selectedCategory.value!,
+                categoryController.editController.text,
               );
               if (success) {
                 EasyLoading.showSuccess(
                   "Word is added to the category",
                 );
                 Get.back();
-                homeController.changeSelectedCategory(null);
+                categoryController.changeSelectedCategory(null);
               } else {
                 EasyLoading.showError("word is already exist");
               }
-              homeController.editController.clear();
+              categoryController.editController.clear();
             },
             child: Text(
               "Done",
@@ -103,7 +103,7 @@ class AddWord extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
       child: TextFormField(
-        controller: homeController.editController,
+        controller: categoryController.editController,
         decoration: InputDecoration(
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey[400]!),
@@ -135,10 +135,10 @@ class AddWord extends StatelessWidget {
   }
 
   List<Widget> getListOfCategories() {
-    return homeController.categories
+    return categoryController.categories
         .map((element) => Obx(
               () => InkWell(
-                onTap: () => homeController.changeSelectedCategory(element),
+                onTap: () => categoryController.changeSelectedCategory(element),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                       vertical: 3.0.wp, horizontal: 5.0.wp),
@@ -167,7 +167,7 @@ class AddWord extends StatelessWidget {
                       ),
 
                       // CHECK TICK
-                      if (homeController.selectedCategory.value == element)
+                      if (categoryController.selectedCategory.value == element)
                         const Icon(
                           Icons.check,
                           color: Colors.blue,

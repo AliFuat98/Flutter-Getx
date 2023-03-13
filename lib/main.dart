@@ -1,6 +1,6 @@
 import 'package:first_app/app/data/services/storage/services.dart';
-import 'package:first_app/app/modules/home/binding.dart';
-import 'package:first_app/app/modules/home/view.dart';
+import 'package:first_app/app/modules/category/binding.dart';
+import 'package:first_app/app/modules/category/view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
-      initialBinding: HomeBinding(),
+      home: const CategoryPage(),
+      initialBinding: CategoryBinding(),
       builder: EasyLoading.init(),
     );
   }

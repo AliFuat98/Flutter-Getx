@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
 
-class HomeController extends GetxController {
+class CategoryController extends GetxController {
   CategoryRepository categoryRepository;
 
-  HomeController({
+  CategoryController({
     required this.categoryRepository,
   });
 
