@@ -44,56 +44,68 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StepProgressIndicator(
-              totalSteps: 100,
-              currentStep: 50,
-              size: 5,
-              padding: 0,
-              selectedGradientColor: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    color.withOpacity(0.5),
-                    color,
-                  ]),
-              unselectedGradientColor: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.white, Colors.white]),
-            ),
-            Padding(
-              padding: EdgeInsets.all(6.0.wp),
-              child: Icon(
-                IconData(category.icon, fontFamily: "MaterialIcons"),
-                color: color,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(6.0.wp),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    category.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0.sp,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 2.0.wp),
-                  Text(
-                    "${category.words?.length ?? 0} words",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            )
+            getStepProcessor(color),
+            getCategoryIcon(color),
+            getCategoryCardInfo(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getStepProcessor(Color color) {
+    return StepProgressIndicator(
+      totalSteps: 100,
+      currentStep: 50,
+      size: 5,
+      padding: 0,
+      selectedGradientColor: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            color.withOpacity(0.5),
+            color,
+          ]),
+      unselectedGradientColor: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.white, Colors.white]),
+    );
+  }
+
+  Widget getCategoryCardInfo() {
+    return Padding(
+      padding: EdgeInsets.all(6.0.wp),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            category.title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 12.0.sp,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 2.0.wp),
+          Text(
+            "${category.words?.length ?? 0} words",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getCategoryIcon(Color color) {
+    return Padding(
+      padding: EdgeInsets.all(6.0.wp),
+      child: Icon(
+        IconData(category.icon, fontFamily: "MaterialIcons"),
+        color: color,
       ),
     );
   }

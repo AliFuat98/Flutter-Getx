@@ -17,68 +17,77 @@ class HomePage extends GetView<HomeController> {
       body: SafeArea(
         child: ListView(
           children: [
-            Padding(
-              padding: EdgeInsets.all(4.0.wp),
-              child: Text(
-                "My Categories",
-                style: TextStyle(
-                  fontSize: 24.0.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Obx(
-              () => GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                children: [
-                  ...controller.categories
-                      .map((element) => LongPressDraggable(
-                            data: element,
-                            onDragStarted: () =>
-                                controller.changeDeleting(true),
-                            onDraggableCanceled: (velocity, offset) =>
-                                controller.changeDeleting(false),
-                            onDragEnd: (details) =>
-                                controller.changeDeleting(false),
-                            feedback: Opacity(
-                              opacity: 0.8,
-                              child: CategoryCard(category: element),
-                            ),
-                            child: CategoryCard(category: element),
-                          ))
-                      .toList(),
-                  AddCard(),
-                ],
-              ),
-            )
+            title(),
+            categoriesAndAddCategoryCard(),
           ],
         ),
       ),
-      floatingActionButton: DragTarget<Category>(
-        builder: (context, candidateData, rejectedData) => Obx(
-          () => FloatingActionButton(
-            onPressed: () {
-              if (controller.categories.isEmpty) {
-                EasyLoading.showInfo("Create a Category to add a word");
-                return;
-              }
-              Get.to(
-                () => AddWord(),
-                transition: Transition.downToUp,
-              );
-            },
-            backgroundColor:
-                controller.deleting.value ? Colors.red : Colors.blue,
-            child: Icon(controller.deleting.value ? Icons.delete : Icons.add),
-          ),
+      floatingActionButton: deleteCategoryAndAddWordButton(),
+    );
+  }
+
+  Widget title() {
+    return Padding(
+      padding: EdgeInsets.all(4.0.wp),
+      child: Text(
+        "My Categories",
+        style: TextStyle(
+          fontSize: 24.0.sp,
+          fontWeight: FontWeight.bold,
         ),
-        onAccept: (category) {
-          controller.deleteCategory(category);
-          EasyLoading.showSuccess("Delete Success");
-        },
       ),
+    );
+  }
+
+  Widget categoriesAndAddCategoryCard() {
+    return Obx(
+      () => GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        children: [
+          ...controller.categories
+              .map((element) => LongPressDraggable(
+                    data: element,
+                    onDragStarted: () => controller.changeDeleting(true),
+                    onDraggableCanceled: (velocity, offset) =>
+                        controller.changeDeleting(false),
+                    onDragEnd: (details) => controller.changeDeleting(false),
+                    feedback: Opacity(
+                      opacity: 0.8,
+                      child: CategoryCard(category: element),
+                    ),
+                    child: CategoryCard(category: element),
+                  ))
+              .toList(),
+          AddCategoryCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget deleteCategoryAndAddWordButton() {
+    return DragTarget<Category>(
+      builder: (context, candidateData, rejectedData) => Obx(
+        () => FloatingActionButton(
+          onPressed: () {
+            if (controller.categories.isEmpty) {
+              EasyLoading.showInfo("Create a Category to add a word");
+              return;
+            }
+            Get.to(
+              () => AddWord(),
+              transition: Transition.downToUp,
+            );
+          },
+          backgroundColor: controller.deleting.value ? Colors.red : Colors.blue,
+          child: Icon(controller.deleting.value ? Icons.delete : Icons.add),
+        ),
+      ),
+      onAccept: (category) {
+        controller.deleteCategory(category);
+        EasyLoading.showSuccess("Delete Success");
+      },
     );
   }
 }
