@@ -4,12 +4,15 @@ import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/category/widgets/add_card.dart';
 import 'package:first_app/app/modules/category/widgets/add_word.dart';
 import 'package:first_app/app/modules/category/widgets/category_card.dart';
+import 'package:first_app/app/modules/categoryMap/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
+import '../../core/values/colors.dart';
+
 class CategoryPage extends GetView<CategoryController> {
-  const CategoryPage({super.key});
+  CategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +22,7 @@ class CategoryPage extends GetView<CategoryController> {
           children: [
             title(),
             categoriesAndAddCategoryCard(),
+            denemeButton(),
           ],
         ),
       ),
@@ -36,6 +40,23 @@ class CategoryPage extends GetView<CategoryController> {
           fontWeight: FontWeight.bold,
         ),
       ),
+    );
+  }
+
+  Widget denemeButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: yellow,
+        //primary: blue, backroundla aynı sanırım
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        minimumSize: const Size(150, 40),
+      ),
+      child: const Text("GO TO MAP"),
+      onPressed: () {
+        Get.toNamed(CategoryMapPage.pageName);
+      },
     );
   }
 
