@@ -21,8 +21,8 @@ class CategoryPage extends GetView<CategoryController> {
         child: ListView(
           children: [
             title(),
+            goToCategoryMap(),
             categoriesAndAddCategoryCard(),
-            denemeButton(),
           ],
         ),
       ),
@@ -43,7 +43,7 @@ class CategoryPage extends GetView<CategoryController> {
     );
   }
 
-  Widget denemeButton() {
+  Widget goToCategoryMap() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: yellow,

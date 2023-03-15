@@ -1,4 +1,6 @@
 import 'package:first_app/app/data/services/storage/services.dart';
+import 'package:first_app/app/modules/ListenWord/binding.dart';
+import 'package:first_app/app/modules/ListenWord/view.dart';
 import 'package:first_app/app/modules/category/binding.dart';
 import 'package:first_app/app/modules/category/view.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,11 @@ class MyApp extends StatelessWidget {
           name: CategoryMapPage.pageName,
           page: () => CategoryMapPage(),
           binding: CategoryMapBinding(),
+        ),
+        GetPage(
+          name: ListenWordPage.pageName,
+          page: () => ListenWordPage(),
+          binding: ListenWordBinding(),
         ),
       ],
       builder: EasyLoading.init(),
