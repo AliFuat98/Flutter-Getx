@@ -31,7 +31,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
             child: Stack(children: [
               Image.asset(
                 "assets/images/map.jpg",
-                width: 250.0.wp,
+                width: 1500,
               ),
               ...categoryController.categories.map((element) {
                 index++;
@@ -106,6 +106,9 @@ class CategoryMapPage extends GetView<CategoryMapController> {
 
         controller.resetAnimation.reset();
         controller.resetAnimation.forward();
+
+        print(Get.width);
+        print(Get.height);
       },
       backgroundColor: Colors.blue,
       child: const Icon(Icons.add),
