@@ -1,4 +1,3 @@
-import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,21 +10,80 @@ class ListenWordPage extends GetView<ListenwordController> {
 
   @override
   Widget build(BuildContext context) {
-    return backButton();
-  }
-  Widget backButton() {
-    return Positioned(
-      left: 4.0.wp,
-      top: 4.0.wp,
-      child: IconButton(
-        icon: const Icon(
-          Icons.backspace,
-          size: 50,
-          color: Colors.red,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Listen Words'),
         ),
-        onPressed: () {
-          Get.back();
-        },
+        body: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 230,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 5, color: Colors.purple),
+                  ),
+                  child: Image.asset('assets/images/map.jpg'),
+                )
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Map',
+                  style: TextStyle(height: 1, fontSize: 50),
+                )
+              ],
+            ),
+            const SizedBox(height: 75),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple, // Background color
+                  ),
+                  child: const Text(
+                    'Hear',
+                    style: TextStyle(fontSize: 40),
+                  ),
+                ),
+                FloatingActionButton.large(
+                  onPressed: () {},
+                  backgroundColor: Colors.green,
+                  child: const Icon(Icons.play_arrow),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple, // Background color
+                  ),
+                  child: const Text(
+                    'Spell',
+                    style: TextStyle(fontSize: 40),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 75),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton.large(
+                  onPressed: () {},
+                  backgroundColor: Colors.red,
+                  child: const Icon(Icons.mic),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
