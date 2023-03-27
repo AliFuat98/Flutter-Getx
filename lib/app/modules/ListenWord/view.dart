@@ -13,20 +13,22 @@ class ListenWordPage extends GetView<ListenwordController> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Colors.amber,
         appBar: AppBar(
           title: const Text('Listen Words'),
         ),
         body: Column(
           children: [
+            SizedBox(height: 15),
             Stack(
               children: [
                 Container(
                   height: 230,
                   width: 300,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 5, color: Colors.purple),
-                  ),
-                  child: Image.asset('assets/images/map.jpg'),
+                      border: Border.all(width: 5, color: Colors.purple),
+                      color: Colors.lightGreenAccent),
+                  child: Image.asset('assets/images/apple.png'),
                 )
               ],
             ),
@@ -34,10 +36,18 @@ class ListenWordPage extends GetView<ListenwordController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
-                Text(
-                  'Map',
-                  style: TextStyle(height: 1, fontSize: 50),
-                )
+                Text("Apple",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 70,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        shadows: [
+                          Shadow(
+                              color: Colors.purple,
+                              offset: Offset(1, 2),
+                              blurRadius: 4)
+                        ]))
               ],
             ),
             const SizedBox(height: 75),
@@ -51,7 +61,7 @@ class ListenWordPage extends GetView<ListenwordController> {
                   ),
                   child: const Text(
                     'Hear',
-                    style: TextStyle(fontSize: 40),
+                    style: TextStyle(fontSize: 50),
                   ),
                 ),
                 FloatingActionButton.large(
@@ -66,7 +76,7 @@ class ListenWordPage extends GetView<ListenwordController> {
                   ),
                   child: const Text(
                     'Spell',
-                    style: TextStyle(fontSize: 40),
+                    style: TextStyle(fontSize: 50),
                   ),
                 ),
               ],
