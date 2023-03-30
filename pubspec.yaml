@@ -69,6 +69,8 @@ flutter:
     - assets/images/ekrankarti.jpg
     - assets/images/map.jpg
     - assets/images/apple.png
+    - assets/images/
+    - assets/images/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

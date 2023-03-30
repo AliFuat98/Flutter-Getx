@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/modules/ListenWord/view.dart';
 import 'package:first_app/app/modules/categoryMap/controller.dart';
@@ -106,9 +104,6 @@ class CategoryMapPage extends GetView<CategoryMapController> {
 
         controller.resetAnimation.reset();
         controller.resetAnimation.forward();
-
-        print(Get.width);
-        print(Get.height);
       },
       backgroundColor: Colors.blue,
       child: const Icon(Icons.add),

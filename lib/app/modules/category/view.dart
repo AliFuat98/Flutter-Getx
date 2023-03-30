@@ -14,6 +14,8 @@ import '../../core/values/colors.dart';
 class CategoryPage extends GetView<CategoryController> {
   CategoryPage({super.key});
 
+  static const pageName = "/category";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,9 +55,9 @@ class CategoryPage extends GetView<CategoryController> {
         ),
         minimumSize: const Size(150, 40),
       ),
-      child: const Text("GO TO MAP"),
+      child: const Text("BACK"),
       onPressed: () {
-        Get.toNamed(CategoryMapPage.pageName);
+        Get.back();
       },
     );
   }
