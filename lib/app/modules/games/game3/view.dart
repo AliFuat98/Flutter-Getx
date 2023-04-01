@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 
 import 'controller.dart';
 
-class Game2Page extends GetView<Game2Controller> {
-  Game2Page({super.key});
+class Game3Page extends GetView<Game3Controller> {
+  Game3Page({super.key});
 
-  static const pageName = "/game2";
+  static const pageName = "/game3";
 
   @override
   Widget build(BuildContext context) {

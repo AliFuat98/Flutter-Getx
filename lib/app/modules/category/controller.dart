@@ -138,4 +138,12 @@ class CategoryController extends GetxController {
     doneWords.removeAt(index);
     doneWords.refresh();
   }
+
+  List<String> getCategoryTitles() {
+    var result = <String>[];
+    for (var element in categories) {
+      result.add(element.title);
+    }
+    return result;
+  }
 }

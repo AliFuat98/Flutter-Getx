@@ -7,6 +7,14 @@ import 'package:first_app/app/modules/category/view.dart';
 import 'package:first_app/app/modules/categoryMap/binding.dart';
 import 'package:first_app/app/modules/categoryMap/view.dart';
 import 'package:first_app/app/modules/games/binding.dart';
+import 'package:first_app/app/modules/games/game1/binding.dart';
+import 'package:first_app/app/modules/games/game1/view.dart';
+import 'package:first_app/app/modules/games/game2/binding.dart';
+import 'package:first_app/app/modules/games/game2/view.dart';
+import 'package:first_app/app/modules/games/game3/binding.dart';
+import 'package:first_app/app/modules/games/game3/view.dart';
+import 'package:first_app/app/modules/games/game4/binding.dart';
+import 'package:first_app/app/modules/games/game4/view.dart';
 import 'package:first_app/app/modules/games/view.dart';
 import 'package:first_app/app/modules/home/binding.dart';
 import 'package:first_app/app/modules/home/view.dart';
@@ -59,6 +67,26 @@ class MyApp extends StatelessWidget {
           name: GamesPage.pageName,
           page: () => GamesPage(),
           binding: GamesBinding(),
+        ),
+        GetPage(
+          name: Game1Page.pageName,
+          page: () => Game1Page(),
+          binding: Game1Binding(),
+        ),
+        GetPage(
+          name: Game2Page.pageName,
+          page: () => Game2Page(),
+          binding: Game2Binding(),
+        ),
+        GetPage(
+          name: Game3Page.pageName,
+          page: () => Game3Page(),
+          binding: Game3Binding(),
+        ),
+        GetPage(
+          name: Game4Page.pageName,
+          page: () => Game4Page(),
+          binding: Game4Binding(),
         ),
       ],
       builder: EasyLoading.init(),
