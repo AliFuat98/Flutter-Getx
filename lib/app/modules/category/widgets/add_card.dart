@@ -110,11 +110,8 @@ class AddCategoryCard extends StatelessWidget {
           int icon = icons[categoryController.chipIndex.value].icon!.codePoint;
           String color =
               icons[categoryController.chipIndex.value].color!.toHex();
-          var category = Category(
-            title: categoryController.editController.text,
-            icon: icon,
-            color: color,
-          );
+          var category = Category.withoutSettings(
+            categoryController.editController.text);
           Get.back();
           categoryController.addCategory(category)
               ? EasyLoading.showSuccess("Create Success")

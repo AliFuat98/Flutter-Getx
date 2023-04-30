@@ -19,7 +19,7 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var squareWidth = Get.width - 12.0.wp;
-    final color = HexColor.fromHex(category.color);
+    final color = Colors.lightGreenAccent;
 
     return GestureDetector(
       onTap: () {
@@ -80,7 +80,7 @@ class CategoryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            category.title,
+            category.name,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 12.0.sp,
@@ -104,7 +104,7 @@ class CategoryCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(6.0.wp),
       child: Icon(
-        IconData(category.icon, fontFamily: "MaterialIcons"),
+        IconData(Icon(Icons.abc_sharp) as int, fontFamily: "MaterialIcons"),
         color: color,
       ),
     );

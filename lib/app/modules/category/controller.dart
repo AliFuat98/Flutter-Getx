@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
 
+import '../../data/models/Word.dart';
+
 class CategoryController extends GetxController {
   CategoryRepository categoryRepository;
 
@@ -21,9 +23,10 @@ class CategoryController extends GetxController {
   final doingWords = <dynamic>[].obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    categories.assignAll(categoryRepository.readCategories());
+    List<Category> data = await categoryRepository.readCategories();
+    categories.assignAll(data);
     ever(categories, (_) => categoryRepository.writeCategories(categories));
   }
 
@@ -38,12 +41,9 @@ class CategoryController extends GetxController {
   }
 
   bool addCategory(Category category) {
-    // burdaki obje karşılaştırması equatible paketi sayesinde oluyor
-    // title icon color karşılaştırılıyor props'ta
     if (categories.contains(category)) {
       return false;
     }
-
     categories.add(category);
     return true;
   }
@@ -60,19 +60,16 @@ class CategoryController extends GetxController {
     selectedCategory.value = category;
   }
 
-  bool updateCategory(Category category, String wordTitle) {
-    var words = category.words ?? [];
-    if (words.any((element) => element["title"] == wordTitle)) {
+  bool updateCategory(Category category, String wordName,String pictureSrc,String audioSrc,int reward) {
+    var words = category.words!;
+    if (words.any((element) => element.name == wordName)) {
       return false;
     }
-
-    var newWord = {'title': wordTitle, 'done': false};
+    Word newWord = Word.withoutID(wordName,pictureSrc,audioSrc,0,-1,reward,category.ID);
     words.add(newWord);
-    var newCategory = category.copyWith(words: words);
     int oldIdx = categories.indexOf(category);
-    categories[oldIdx] = newCategory;
+    categories[oldIdx].words = words;
     categories.refresh();
-
     return true;
   }
 
@@ -106,15 +103,15 @@ class CategoryController extends GetxController {
   }
 
   void updateWords() {
-    var newWords = <Map<String, dynamic>>[];
+    List<Word> newWords = [];
     newWords.addAll([
       ...doingWords,
       ...doneWords,
     ]);
 
-    var newCategory = selectedCategory.value!.copyWith(words: newWords);
+    selectedCategory.value!.words = newWords;
     int oldIdx = categories.indexOf(selectedCategory.value);
-    categories[oldIdx] = newCategory;
+    categories[oldIdx] = selectedCategory.value!;
     categories.refresh();
   }
 
@@ -140,9 +137,9 @@ class CategoryController extends GetxController {
   }
 
   List<String> getCategoryTitles() {
-    var result = <String>[];
-    for (var element in categories) {
-      result.add(element.title);
+    List<String> result = [];
+    for (Category category in categories) {
+      result.add(category.name);
     }
     return result;
   }

@@ -15,7 +15,7 @@ class WordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var category = categoryController.selectedCategory.value!;
-    var color = HexColor.fromHex(category.color);
+    var color = Color(10);
 
     return Scaffold(
       body: Form(

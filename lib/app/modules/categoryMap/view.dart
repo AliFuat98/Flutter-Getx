@@ -33,8 +33,6 @@ class CategoryMapPage extends GetView<CategoryMapController> {
               ),
               ...categoryController.categories.map((element) {
                 index++;
-                var color = HexColor.fromHex(element.color);
-
                 // fazla category olduğunda hata vermemesi için ilerde silinebilir
                 if (index == positionList.length) {
                   index = positionList.length - 1;
@@ -50,19 +48,15 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
-                          color: color,
+                          image: DecorationImage(
+                            image: AssetImage(element.pictureSrc),
+                            fit: BoxFit.cover
+                          ),
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.black, width: 1.5)),
-                      child: Icon(
-                        IconData(
-                          element.icon,
-                          fontFamily: "MaterialIcons",
-                        ),
-                        color: Colors.black,
                       ),
                     ),
-                  ),
-                );
+                  );
               }).toList(),
             ]),
           ),

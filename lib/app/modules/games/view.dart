@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:multiselect/multiselect.dart';
 
 import 'controller.dart';
 
@@ -15,13 +16,12 @@ class GamesPage extends GetView<GamesController> {
   GamesPage({super.key});
 
   static const pageName = "/games";
-  final categoryController = Get.find<CategoryController>();
+  final CategoryController categoryController = Get.find<CategoryController>();
   final caroController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
     final categoryTitleList = categoryController.getCategoryTitles();
-    controller.choosenCategoryTitle.value = categoryTitleList.first;
     return Scaffold(
       appBar: AppBar(title: const Text("geri gelme")),
       backgroundColor: Colors.amber,
@@ -66,36 +66,14 @@ class GamesPage extends GetView<GamesController> {
   }
 
   Widget categoryDropdown(List<String> categoryTitleList) {
-    return Obx(
-      () => Container(
+    return Container(
         padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
-        child: DropdownButton<String>(
-          dropdownColor: Colors.amber[200],
-          value: controller.choosenCategoryTitle.value,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
-          ),
-          alignment: Alignment.center,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          onChanged: (String? value) {
-            // This is called when the user selects an item.
-            controller.choosenCategoryTitle.value =
-                value ?? categoryTitleList.first;
-          },
-          items:
-              categoryTitleList.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
+        child: DropDownMultiSelect(options:categoryTitleList,whenEmpty: "Select Categories",
+          onChanged: (value) {
+          controller.selectedCategories.value = value as List<String>;
+          }, selectedValues: controller.selectedCategories.value,
         ),
-      ),
-    );
+      );
   }
 
   Widget chooseGameTitle() {

@@ -12,6 +12,9 @@ import 'controller.dart';
 class HomePage extends GetView<HomeController> {
   HomePage({super.key});
 
+  static const pageName = "/";
+  final HomeController homeController  = Get.find<HomeController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

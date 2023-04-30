@@ -40,9 +40,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'VELEDE BILGI AKTARIMI',
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      initialBinding: HomeBinding(),
+      initialRoute: HomePage.pageName,
       getPages: [
+        GetPage(
+            name:HomePage.pageName,
+            page: () => HomePage(),
+            binding: HomeBinding()
+        ),
         GetPage(
           name: CategoryPage.pageName,
           page: () => CategoryPage(),
@@ -90,6 +94,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: EasyLoading.init(),
+
     );
   }
 }

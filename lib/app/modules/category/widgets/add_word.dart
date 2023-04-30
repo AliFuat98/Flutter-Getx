@@ -61,8 +61,7 @@ class AddWord extends StatelessWidget {
               }
               var success = categoryController.updateCategory(
                 categoryController.selectedCategory.value!,
-                categoryController.editController.text,
-              );
+                categoryController.editController.text,"","",50);
               if (success) {
                 EasyLoading.showSuccess(
                   "Word is added to the category",
@@ -150,14 +149,14 @@ class AddWord extends StatelessWidget {
                         children: [
                           Icon(
                             IconData(
-                              element.icon,
+                              Icon(Icons.add) as int,
                               fontFamily: "MaterialIcons",
                             ),
-                            color: HexColor.fromHex(element.color),
+                            color: Colors.black,
                           ),
                           SizedBox(width: 3.0.wp),
                           Text(
-                            element.title,
+                            element.name,
                             style: TextStyle(
                               fontSize: 12.0.sp,
                               fontWeight: FontWeight.bold,

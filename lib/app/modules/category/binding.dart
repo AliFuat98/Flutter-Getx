@@ -1,4 +1,5 @@
 import 'package:first_app/app/data/providers/category/provider.dart';
+import 'package:first_app/app/data/providers/word/provider.dart';
 import 'package:first_app/app/data/services/storage/repository.dart';
 import 'package:first_app/app/modules/category/controller.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class CategoryBinding implements Bindings {
       () => CategoryController(
         categoryRepository: CategoryRepository(
           categoryProvider: CategoryProvider(),
+          wordProvider: WordProvider()
         ),
       ),
     );

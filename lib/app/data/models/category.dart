@@ -1,51 +1,72 @@
 import 'package:equatable/equatable.dart';
 
+import 'Word.dart';
+
 class Category extends Equatable {
-  final String title;
-  final int icon;
-  final String color;
-  final List<dynamic>? words;
+  int _ID = -1 ;
+  String _name = "";
+  String _pictureSrc="";
+  int _isCompleted=0;
+  int _reward=50;
+  List<Word>? _words;
 
-  const Category({
-    required this.title,
-    required this.icon,
-    required this.color,
-    this.words,
-  });
+  Category(this._ID,this._name,this._pictureSrc,this._isCompleted,this._reward,[this._words]);
 
-  // yukardaki constant olduğundan copyWith kullanılıyor
-  Category copyWith({
-    String? title,
-    int? icon,
-    String? color,
-    List<dynamic>? words,
-  }) =>
-      Category(
-        title: title ?? this.title,
-        icon: icon ?? this.icon,
-        color: color ?? this.color,
-        words: words ?? this.words,
-      );
+  Category.withoutSettings([this._name = "",this._pictureSrc="",this._isCompleted = 0,this._reward=50]);
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-        title: json["title"],
-        icon: json["icon"],
-        color: json["color"],
-        words: json["words"],
-      );
+    json["ID"],
+    json["Name"],
+    json["PictureSrc"],
+    json["isCompleted"],
+    json["Reward"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "title": title,
-        "icon": icon,
-        "color": color,
-        "words": words,
-      };
+    "Name": _name,
+    "PictureSrc": _pictureSrc,
+    "isCompleted":_isCompleted,
+    "Reward":_reward,
+  };
 
   // equatible paketinden geliyor obje karşılaştırıken kullanılacak
   @override
   List<Object?> get props => [
-        title,
-        icon,
-        color,
-      ];
+    _name,
+  ];
+  int get ID => _ID;
+
+  set ID(int value) {
+    _ID = value;
+  }
+
+  String get name => _name;
+
+  set name(String value) {
+    _name = value;
+  }
+
+  String get pictureSrc => _pictureSrc;
+
+  set pictureSrc(String value) {
+    _pictureSrc = value;
+  }
+
+  int get isCompleted => _isCompleted;
+
+  set isCompleted(int value) {
+    _isCompleted = value;
+  }
+
+  int get reward => _reward;
+
+  set reward(int value) {
+    _reward = value;
+  }
+
+  List<Word> get words => _words!;
+
+  set words(List<Word> value) {
+    _words = value;
+  }
 }
