@@ -4,7 +4,6 @@ import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/category/widgets/add_card.dart';
 import 'package:first_app/app/modules/category/widgets/add_word.dart';
 import 'package:first_app/app/modules/category/widgets/category_card.dart';
-import 'package:first_app/app/modules/categoryMap/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';

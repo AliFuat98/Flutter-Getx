@@ -1,3 +1,4 @@
+import 'package:first_app/app/core/utils/DataHelper.dart';
 import 'package:first_app/app/data/services/storage/services.dart';
 
 import 'package:first_app/app/modules/ListenWord/binding.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 void main() async {
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
+  await DataHelper.init();
   runApp(const MyApp());
 }
 
@@ -43,9 +45,9 @@ class MyApp extends StatelessWidget {
       initialRoute: HomePage.pageName,
       getPages: [
         GetPage(
-            name:HomePage.pageName,
-            page: () => HomePage(),
-            binding: HomeBinding()
+          name: HomePage.pageName,
+          page: () => HomePage(),
+          binding: HomeBinding(),
         ),
         GetPage(
           name: CategoryPage.pageName,
@@ -94,7 +96,6 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: EasyLoading.init(),
-
     );
   }
 }

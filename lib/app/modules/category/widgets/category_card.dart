@@ -19,12 +19,12 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var squareWidth = Get.width - 12.0.wp;
-    final color = Colors.lightGreenAccent;
+    const color = Colors.lightGreenAccent;
 
     return GestureDetector(
       onTap: () {
         categoryController.changeSelectedCategory(category);
-        categoryController.changeWords(category.words ?? []);
+        categoryController.changeWords(category.words);
         Get.to(() => WordPage());
       },
       child: Container(
@@ -89,7 +89,7 @@ class CategoryCard extends StatelessWidget {
           ),
           SizedBox(height: 2.0.wp),
           Text(
-            "${category.words?.length ?? 0} words",
+            "${category.words.length} words",
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.grey,
@@ -104,7 +104,10 @@ class CategoryCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(6.0.wp),
       child: Icon(
-        IconData(Icon(Icons.abc_sharp) as int, fontFamily: "MaterialIcons"),
+        IconData(
+          const Icon(Icons.abc_sharp) as int,
+          fontFamily: "MaterialIcons",
+        ),
         color: color,
       ),
     );

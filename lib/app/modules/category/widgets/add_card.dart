@@ -107,11 +107,11 @@ class AddCategoryCard extends StatelessWidget {
       child: const Text("confirm"),
       onPressed: () {
         if (categoryController.fromKey.currentState!.validate()) {
-          int icon = icons[categoryController.chipIndex.value].icon!.codePoint;
-          String color =
-              icons[categoryController.chipIndex.value].color!.toHex();
-          var category = Category.withoutSettings(
-            categoryController.editController.text);
+          // int icon = icons[categoryController.chipIndex.value].icon!.codePoint;
+          // String color =
+          //     icons[categoryController.chipIndex.value].color!.toHex();
+          var category =
+              Category.withoutSettings(categoryController.editController.text);
           Get.back();
           categoryController.addCategory(category)
               ? EasyLoading.showSuccess("Create Success")

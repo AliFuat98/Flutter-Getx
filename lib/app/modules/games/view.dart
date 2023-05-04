@@ -22,6 +22,8 @@ class GamesPage extends GetView<GamesController> {
   @override
   Widget build(BuildContext context) {
     final categoryTitleList = categoryController.getCategoryTitles();
+    print(categoryTitleList.toString());
+
     return Scaffold(
       appBar: AppBar(title: const Text("geri gelme")),
       backgroundColor: Colors.amber,
@@ -29,7 +31,7 @@ class GamesPage extends GetView<GamesController> {
         child: ListView(
           children: [
             chooseCategoryTitle(),
-            categoryDropdown(categoryTitleList),
+            categoryDropdown(),
             chooseGameTitle(),
             Column(
               children: [
@@ -65,15 +67,22 @@ class GamesPage extends GetView<GamesController> {
     );
   }
 
-  Widget categoryDropdown(List<String> categoryTitleList) {
+  Widget categoryDropdown() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
-        child: DropDownMultiSelect(options:categoryTitleList,whenEmpty: "Select Categories",
+      padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
+      child: Obx(
+        () => DropDownMultiSelect(
+          options: categoryController.categories
+              .map((element) => element.name)
+              .toList(),
+          whenEmpty: "Select Categories",
           onChanged: (value) {
-          controller.selectedCategories.value = value as List<String>;
-          }, selectedValues: controller.selectedCategories.value,
+            controller.selectedCategories.value = value;
+          },
+          selectedValues: controller.selectedCategories.value,
         ),
-      );
+      ),
+    );
   }
 
   Widget chooseGameTitle() {

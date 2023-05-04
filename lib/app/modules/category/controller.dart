@@ -60,12 +60,19 @@ class CategoryController extends GetxController {
     selectedCategory.value = category;
   }
 
-  bool updateCategory(Category category, String wordName,String pictureSrc,String audioSrc,int reward) {
-    var words = category.words!;
+  bool updateCategory(
+    Category category,
+    String wordName,
+    String pictureSrc,
+    String audioSrc,
+    int reward,
+  ) {
+    var words = category.words;
     if (words.any((element) => element.name == wordName)) {
       return false;
     }
-    Word newWord = Word.withoutID(wordName,pictureSrc,audioSrc,0,-1,reward,category.ID);
+    Word newWord = Word.withoutID(
+        wordName, pictureSrc, audioSrc, 0, -1, reward, category.ID);
     words.add(newWord);
     int oldIdx = categories.indexOf(category);
     categories[oldIdx].words = words;
