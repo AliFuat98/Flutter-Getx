@@ -21,9 +21,6 @@ class GamesPage extends GetView<GamesController> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryTitleList = categoryController.getCategoryTitles();
-    print(categoryTitleList.toString());
-
     return Scaffold(
       appBar: AppBar(title: const Text("geri gelme")),
       backgroundColor: Colors.amber,

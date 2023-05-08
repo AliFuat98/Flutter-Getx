@@ -1,4 +1,3 @@
-import 'package:first_app/app/core/utils/DataHelper.dart';
 import 'package:first_app/app/data/services/storage/services.dart';
 
 import 'package:first_app/app/modules/ListenWord/binding.dart';
@@ -30,7 +29,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 void main() async {
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
-  await DataHelper.init();
   runApp(const MyApp());
 }
 

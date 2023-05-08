@@ -4,6 +4,7 @@ import 'package:first_app/app/modules/categoryMap/controller.dart';
 import 'package:first_app/app/widgets/positions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 import '../category/controller.dart';
 
@@ -42,21 +43,20 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                   top: positionList[index].topPosition,
                   child: InkWell(
                     onTap: () {
-                      Get.toNamed(ListenWordPage.pageName);
+                      Get.toNamed(ListenWordPage.pageName, arguments: element);
                     },
                     child: Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(element.pictureSrc),
-                            fit: BoxFit.cover
-                          ),
+                              image: AssetImage(element.pictureSrc),
+                              fit: BoxFit.cover),
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.black, width: 1.5)),
-                      ),
                     ),
-                  );
+                  ),
+                );
               }).toList(),
             ]),
           ),
@@ -86,6 +86,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
 
   Widget resetScaleButton() {
     return FloatingActionButton(
+      heroTag: const Uuid().v4(),
       onPressed: () {
         final animationReset = Matrix4Tween(
           begin: controller.transCtrl.value.value,

@@ -23,6 +23,7 @@ class DataHelper {
   }
 
   static void onCreate(Database db, int version) async {
+    print("on create first time");
     db.execute(wordTable);
     db.execute(categoryTable);
     wordTableRows.forEach((element) {
