@@ -1,10 +1,12 @@
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/data/models/Word.dart';
 import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
 import 'package:first_app/app/modules/games/game3/view.dart';
 import 'package:first_app/app/modules/games/game4/view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -29,6 +31,7 @@ class GamesPage extends GetView<GamesController> {
           children: [
             chooseCategoryTitle(),
             categoryDropdown(),
+            gameModeDropdown(),
             chooseGameTitle(),
             Column(
               children: [
@@ -77,6 +80,27 @@ class GamesPage extends GetView<GamesController> {
             controller.selectedCategories.value = value;
           },
           selectedValues: controller.selectedCategories.value,
+        ),
+      ),
+    );
+  }
+
+  Widget gameModeDropdown() {
+    var choseList = ["kolay", "normal", "zor", "extreme"];
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
+      child: Obx(
+        () => DropdownButton(
+          value: controller.chosenGameMode.value,
+          onChanged: (value) {
+            controller.chosenGameMode.value = value ?? choseList.first;
+          },
+          items: choseList.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -177,20 +201,51 @@ class GamesPage extends GetView<GamesController> {
   }
 
   void goToGame(int value) {
-    switch (value) {
-      case 0:
-        Get.toNamed(Game1Page.pageName);
-        break;
-      case 1:
-        Get.toNamed(Game2Page.pageName);
-        break;
-      case 2:
-        Get.toNamed(Game3Page.pageName);
-        break;
-      case 3:
-        Get.toNamed(Game4Page.pageName);
-        break;
-      default:
+    try {
+      if (controller.selectedCategories.value.isEmpty) {
+        EasyLoading.showError("Choose a category");
+        return;
+      }
+
+      // get chosen categories
+      var categoryList = categoryController.categories
+          .map(
+            (category) {
+              if (controller.selectedCategories.value.contains(category.name)) {
+                return category;
+              }
+            },
+          )
+          .where((e) => e != null)
+          .toList();
+
+      // get chosen words from chosen categories
+      List<Word> words = <Word>[];
+      for (var category in categoryList) {
+        for (var word in category!.words) {
+          words.add(word);
+        }
+      }
+
+      switch (value) {
+        case 0:
+          Get.toNamed(Game1Page.pageName);
+          break;
+        case 1:
+          Get.toNamed(Game2Page.pageName);
+          break;
+        case 2:
+          Get.toNamed(Game3Page.pageName,
+              arguments: [words, controller.chosenGameMode.value]);
+          break;
+        case 3:
+          Get.toNamed(Game4Page.pageName);
+          break;
+        default:
+      }
+    } catch (e) {
+      EasyLoading.showError("something goes wrong");
+      return;
     }
   }
 }

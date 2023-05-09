@@ -13,7 +13,7 @@ class HomePage extends GetView<HomeController> {
   HomePage({super.key});
 
   static const pageName = "/";
-  final HomeController homeController  = Get.find<HomeController>();
+  final HomeController homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +25,17 @@ class HomePage extends GetView<HomeController> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "MAIN MENU",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 25.0.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "MAIN MENU",
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 25.0.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
