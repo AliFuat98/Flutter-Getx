@@ -19,11 +19,13 @@ class CategoryPage extends GetView<CategoryController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: [
-            title(),
-            goToCategoryMap(),
+            title(), // my categories
             categoriesAndAddCategoryCard(),
+            SizedBox(height: 5.0.hp),
+            getBackButton(),
+            SizedBox(height: 5.0.hp)
           ],
         ),
       ),
@@ -44,7 +46,7 @@ class CategoryPage extends GetView<CategoryController> {
     );
   }
 
-  Widget goToCategoryMap() {
+  Widget getBackButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: yellow,
@@ -63,27 +65,29 @@ class CategoryPage extends GetView<CategoryController> {
 
   Widget categoriesAndAddCategoryCard() {
     return Obx(
-      () => GridView.count(
-        crossAxisCount: 2,
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
-        children: [
-          ...controller.categories
-              .map((element) => LongPressDraggable(
-                    data: element,
-                    onDragStarted: () => controller.changeDeleting(true),
-                    onDraggableCanceled: (velocity, offset) =>
-                        controller.changeDeleting(false),
-                    onDragEnd: (details) => controller.changeDeleting(false),
-                    feedback: Opacity(
-                      opacity: 0.8,
+      () => Expanded(
+        child: GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
+          children: [
+            ...controller.categories
+                .map((element) => LongPressDraggable(
+                      data: element,
+                      onDragStarted: () => controller.changeDeleting(true),
+                      onDraggableCanceled: (velocity, offset) =>
+                          controller.changeDeleting(false),
+                      onDragEnd: (details) => controller.changeDeleting(false),
+                      feedback: Opacity(
+                        opacity: 0.8,
+                        child: CategoryCard(category: element),
+                      ),
                       child: CategoryCard(category: element),
-                    ),
-                    child: CategoryCard(category: element),
-                  ))
-              .toList(),
-          AddCategoryCard(),
-        ],
+                    ))
+                .toList(),
+            AddCategoryCard(),
+          ],
+        ),
       ),
     );
   }
@@ -107,7 +111,7 @@ class CategoryPage extends GetView<CategoryController> {
         ),
       ),
       onAccept: (category) {
-        controller.deleteCategory(category);
+        //controller.deleteCategory(category);
         EasyLoading.showSuccess("Delete Success");
       },
     );

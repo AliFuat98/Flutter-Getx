@@ -1,5 +1,4 @@
 import 'package:first_app/app/data/services/storage/repository.dart';
-import 'package:flutter/foundation.dart' as found;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
@@ -19,15 +18,13 @@ class CategoryController extends GetxController {
   final chipIndex = 0.obs;
   final deleting = false.obs;
   final selectedCategory = Rx<Category?>(null);
-  final doneWords = <dynamic>[].obs;
-  final doingWords = <dynamic>[].obs;
 
   @override
   void onInit() async {
     super.onInit();
     List<Category> data = await categoryRepository.readCategories();
     categories.assignAll(data);
-    ever(categories, (_) => categoryRepository.writeCategories(categories));
+    //ever(categories, (_) => categoryRepository.writeCategories(categories));
   }
 
   @override
@@ -36,10 +33,7 @@ class CategoryController extends GetxController {
     super.onClose();
   }
 
-  void changeChipIndex(int value) {
-    chipIndex.value = value;
-  }
-
+  // yeni kategori ekleme
   bool addCategory(Category category) {
     if (categories.contains(category)) {
       return false;
@@ -48,14 +42,17 @@ class CategoryController extends GetxController {
     return true;
   }
 
-  void changeDeleting(bool value) {
-    deleting.value = value;
-  }
-
+  // kategori sil
   void deleteCategory(Category category) {
     categories.remove(category);
   }
 
+  // sürükle bırak ile categori silerken kullanılır
+  void changeDeleting(bool value) {
+    deleting.value = value;
+  }
+
+  // kategori seçme işleminden sonra seçilenin tutulması
   void changeSelectedCategory(Category? category) {
     selectedCategory.value = category;
   }
@@ -80,69 +77,12 @@ class CategoryController extends GetxController {
     return true;
   }
 
-  void changeWords(List<dynamic> select) {
-    doingWords.clear();
-    doneWords.clear();
-    for (var i = 0; i < select.length; i++) {
-      var word = select[i];
-      var status = word["done"];
-      if (status == true) {
-        doneWords.add(word);
-      } else {
-        doingWords.add(word);
-      }
-    }
-  }
-
+  // yeni kelime ekleme önceden seçilmiş olan kategoriye
   bool addWord(String title) {
-    var word = {"title": title, "done": false};
-    if (doingWords
-        .any((element) => found.mapEquals<String, dynamic>(word, element))) {
-      return false;
-    }
-    var doneWord = {"title": title, "done": true};
-    if (doneWords.any(
-        (element) => found.mapEquals<String, dynamic>(doneWord, element))) {
-      return false;
-    }
-    doingWords.add(word);
     return true;
   }
 
-  void updateWords() {
-    List<Word> newWords = [];
-    newWords.addAll([
-      ...doingWords,
-      ...doneWords,
-    ]);
-
-    selectedCategory.value!.words = newWords;
-    int oldIdx = categories.indexOf(selectedCategory.value);
-    categories[oldIdx] = selectedCategory.value!;
-    categories.refresh();
-  }
-
-  void doneWord(String title) {
-    var doingWord = {"title": title, "done": false};
-    int index = doingWords.indexWhere(
-        (element) => found.mapEquals<String, dynamic>(doingWord, element));
-    doingWords.removeAt(index);
-
-    var doneWord = {"title": title, "done": true};
-    doneWords.add(doneWord);
-
-    doingWords.refresh();
-    doneWords.refresh();
-  }
-
-  void deleteDoneWord(dynamic doneWord) {
-    int index = doneWords.indexWhere(
-        (element) => found.mapEquals<String, dynamic>(doneWord, element));
-
-    doneWords.removeAt(index);
-    doneWords.refresh();
-  }
-
+  // kategorilerin başlıklarını çekmek için
   List<String> getCategoryTitles() {
     List<String> result = [];
     for (Category category in categories) {

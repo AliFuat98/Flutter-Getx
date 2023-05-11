@@ -1,16 +1,16 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
-import 'package:first_app/app/modules/word/widgets/doing_word_list.dart';
-import 'package:first_app/app/modules/word/widgets/done_word_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class WordPage extends StatelessWidget {
   WordPage({super.key});
 
   final categoryController = Get.find<CategoryController>();
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +20,12 @@ class WordPage extends StatelessWidget {
     return Scaffold(
       body: Form(
         key: categoryController.fromKey,
-        child: ListView(
+        child: Column(
           children: [
             backButton(),
             categoryIconAndName(color, category),
-            getTotalDoneWordProgress(color),
             wordNameTextField(),
-            DoingWordList(),
-            DoneWordList(),
+            getWordsList(category),
           ],
         ),
       ),
@@ -42,7 +40,6 @@ class WordPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Get.back();
-              categoryController.updateWords();
               categoryController.changeSelectedCategory(null);
               categoryController.editController.clear();
             },
@@ -55,18 +52,15 @@ class WordPage extends StatelessWidget {
     );
   }
 
-  Widget categoryIconAndName(Color color, dynamic category) {
+  Widget categoryIconAndName(Color color, Category category) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0.wp),
       child: Row(
         children: [
-          Icon(
-            IconData(category.icon, fontFamily: "MaterialIcons"),
-            color: color,
-          ),
+          const Icon(Icons.abc),
           SizedBox(width: 3.0.wp),
           Text(
-            category.title,
+            category.name,
             style: TextStyle(
               fontSize: 12.0.sp,
               fontWeight: FontWeight.bold,
@@ -75,47 +69,6 @@ class WordPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget getTotalDoneWordProgress(Color color) {
-    return Obx(() {
-      var totalWords = categoryController.doingWords.length +
-          categoryController.doneWords.length;
-      return Padding(
-        padding: EdgeInsets.only(
-          left: 16.0.wp,
-          top: 3.0.wp,
-          right: 16.0.wp,
-        ),
-        child: Row(
-          children: [
-            Text(
-              "$totalWords words",
-              style: TextStyle(
-                fontSize: 12.0.sp,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(width: 3.0.wp),
-            Expanded(
-              child: StepProgressIndicator(
-                // 0 total step hata vermesin die
-                totalSteps: totalWords == 0 ? 1 : totalWords,
-                currentStep: categoryController.doneWords.length,
-                size: 5,
-                padding: 0,
-                selectedGradientColor: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [color.withOpacity(0.5), color],
-                ),
-                unselectedColor: Colors.grey[300]!,
-              ),
-            ),
-          ],
-        ),
-      );
-    });
   }
 
   Widget wordNameTextField() {
@@ -154,6 +107,58 @@ class WordPage extends StatelessWidget {
           }
           return null;
         },
+      ),
+    );
+  }
+
+  Widget getWordsList(Category category) {
+    return Flexible(
+      child: Padding(
+        padding: EdgeInsets.all(5.0.wp),
+        child: ListView.builder(
+          itemCount: category.words.length,
+          itemBuilder: (context, index) {
+            return Dismissible(
+              key: Key(category.words[index].wordID.toString()),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                // delete the word
+              },
+              background: Container(
+                alignment: AlignmentDirectional.centerEnd,
+                color: Colors.red,
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage(category.words[index].pictureSrc),
+                ),
+                title: Text(category.words[index].name),
+                trailing: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    audioPlayer
+                        .play(AssetSource(category.words[index].audioSrc));
+                  },
+                  child: const Icon(
+                    Icons.play_arrow_outlined,
+                    size: 20,
+                    color: const Color.fromARGB(255, 10, 74, 185),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

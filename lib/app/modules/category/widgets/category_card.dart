@@ -24,7 +24,6 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         categoryController.changeSelectedCategory(category);
-        categoryController.changeWords(category.words);
         Get.to(() => WordPage());
       },
       child: Container(
@@ -103,13 +102,7 @@ class CategoryCard extends StatelessWidget {
   Widget getCategoryIcon(Color color) {
     return Padding(
       padding: EdgeInsets.all(6.0.wp),
-      child: Icon(
-        IconData(
-          const Icon(Icons.abc_sharp) as int,
-          fontFamily: "MaterialIcons",
-        ),
-        color: color,
-      ),
+      child: const Icon(Icons.abc_sharp),
     );
   }
 }

@@ -59,21 +59,23 @@ class AddWord extends StatelessWidget {
                 EasyLoading.showError("Please select a category");
                 return;
               }
-              var success = categoryController.updateCategory(
-                  categoryController.selectedCategory.value!,
-                  categoryController.editController.text,
-                  "",
-                  "",
-                  50);
+              var success = true;
+              // var success = categoryController.updateCategory(
+              //     categoryController.selectedCategory.value!,
+              //     categoryController.editController.text,
+              //     "",
+              //     "",
+              //     50);
               if (success) {
                 EasyLoading.showSuccess(
                   "Word is added to the category",
                 );
                 Get.back();
                 categoryController.changeSelectedCategory(null);
-              } else {
-                EasyLoading.showError("word is already exist");
               }
+              // else {
+              //   EasyLoading.showError("word is already exist");
+              // }
               categoryController.editController.clear();
             },
             child: Text(
@@ -150,13 +152,7 @@ class AddWord extends StatelessWidget {
                       // ICON AND TITLE
                       Row(
                         children: [
-                          Icon(
-                            IconData(
-                              const Icon(Icons.add) as int,
-                              fontFamily: "MaterialIcons",
-                            ),
-                            color: Colors.black,
-                          ),
+                          const Icon(Icons.add),
                           SizedBox(width: 3.0.wp),
                           Text(
                             element.name,

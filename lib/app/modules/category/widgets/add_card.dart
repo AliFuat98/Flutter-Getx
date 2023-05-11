@@ -3,7 +3,6 @@ import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
-import 'package:first_app/app/widgets/icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -15,7 +14,6 @@ class AddCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icons = getIcons();
     var squareWith = Get.width - 12.0.wp;
     return Container(
       width: squareWith / 2,
@@ -32,13 +30,11 @@ class AddCategoryCard extends StatelessWidget {
                 child: Column(
                   children: [
                     categoryNameInputField(),
-                    getIconList(icons),
-                    confirmButton(icons),
+                    confirmButton(),
                   ],
                 ),
               ));
           categoryController.editController.clear();
-          categoryController.changeChipIndex(0);
         },
         child: DottedBorder(
           color: Colors.grey[400]!,
@@ -70,31 +66,7 @@ class AddCategoryCard extends StatelessWidget {
     );
   }
 
-  Widget getIconList(List<Icon> icons) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0.wp),
-      child: Wrap(
-        spacing: 2.0.wp,
-        children: icons
-            .map((e) => Obx(() {
-                  final index = icons.indexOf(e);
-                  return ChoiceChip(
-                    selectedColor: Colors.grey[200],
-                    pressElevation: 0,
-                    backgroundColor: Colors.white,
-                    label: e,
-                    selected: categoryController.chipIndex.value == index,
-                    onSelected: (bool selected) {
-                      categoryController.chipIndex.value = selected ? index : 0;
-                    },
-                  );
-                }))
-            .toList(),
-      ),
-    );
-  }
-
-  Widget confirmButton(List<Icon> icons) {
+  Widget confirmButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: yellow,
@@ -113,9 +85,9 @@ class AddCategoryCard extends StatelessWidget {
           var category =
               Category.withoutSettings(categoryController.editController.text);
           Get.back();
-          categoryController.addCategory(category)
-              ? EasyLoading.showSuccess("Create Success")
-              : EasyLoading.showError("dublicate task");
+          // categoryController.addCategory(category)
+          //     ? EasyLoading.showSuccess("Create Success")
+          //     : EasyLoading.showError("dublicate task");
         }
       },
     );
