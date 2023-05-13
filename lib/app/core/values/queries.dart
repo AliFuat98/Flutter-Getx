@@ -11,6 +11,23 @@ const String categoryTable = """CREATE TABLE IF NOT EXISTS "Category" (
 "Reward"	INTEGER,
 PRIMARY KEY("ID" AUTOINCREMENT)
 );""";
+
+const String gameTable = """CREATE TABLE IF NOT EXISTS "Game" (
+"GameID"	INTEGER,
+"Name"	TEXT,
+"Type"	INTEGER,
+"Reward"	INTEGER,
+"PictureSrc"	TEXT,
+PRIMARY KEY("GameID" AUTOINCREMENT)
+);""";
+
+const List<String> gameTableRows = [
+  """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (1,'test1',1,50,"assets/images/game/game1.jpg");""",
+  """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (2,'test2',2,50,"assets/images/game/game2.jpg");""",
+  """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (3,'Listen And Select',3,50,"assets/images/game/game3.jpg");""",
+  """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (4,'tes4',4,50,"assets/images/game/game4.jpg");""",
+];
+
 const List<String> wordTableRows = [
   """INSERT INTO "Word" ("wordID","Name","PictureSrc","AudioSrc","isPronounced","PronunciationScore","Reward","categoryID") VALUES (1,'Aunt','assets/images/wordImages/family/aunt.jpg','audios/aunt.mp3',0,-1.0,50,1);""",
   """INSERT INTO "Word" ("wordID","Name","PictureSrc","AudioSrc","isPronounced","PronunciationScore","Reward","categoryID") VALUES (2,'Baby','assets/images/wordImages/family/baby.jpg','audios/baby.mp3',0,-1.0,50,1);""",

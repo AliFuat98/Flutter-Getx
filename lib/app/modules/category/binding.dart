@@ -1,4 +1,5 @@
 import 'package:first_app/app/data/providers/category/provider.dart';
+import 'package:first_app/app/data/providers/game/provider.dart';
 import 'package:first_app/app/data/providers/word/provider.dart';
 import 'package:first_app/app/data/services/storage/repository.dart';
 import 'package:first_app/app/modules/category/controller.dart';
@@ -9,9 +10,10 @@ class CategoryBinding implements Bindings {
   void dependencies() {
     Get.lazyPut(
       () => CategoryController(
-        categoryRepository: CategoryRepository(
+        categoryRepository: GeneralRepository(
           categoryProvider: CategoryProvider(),
-          wordProvider: WordProvider()
+          wordProvider: WordProvider(),
+          gameProvider: GameProvider(),
         ),
       ),
     );

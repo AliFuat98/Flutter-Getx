@@ -6,7 +6,7 @@ import 'package:first_app/app/data/models/category.dart';
 import '../../data/models/Word.dart';
 
 class CategoryController extends GetxController {
-  CategoryRepository categoryRepository;
+  GeneralRepository categoryRepository;
 
   CategoryController({
     required this.categoryRepository,

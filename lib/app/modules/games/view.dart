@@ -139,7 +139,7 @@ class GamesPage extends GetView<GamesController> {
             color: Colors.blueAccent[700],
             margin: EdgeInsets.symmetric(horizontal: 6.0.wp),
             child: Image.asset(
-              'assets/images/game/game${index + 1}.jpg',
+              controller.games.elementAt(index).pictureSrc,
               height: 40.0.hp,
               width: 40.0.hp,
               fit: BoxFit.cover,

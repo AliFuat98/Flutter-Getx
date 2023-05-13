@@ -26,10 +26,14 @@ class DataHelper {
     print("on create first time");
     db.execute(wordTable);
     db.execute(categoryTable);
+    db.execute(gameTable);
     wordTableRows.forEach((element) {
       db.execute(element);
     });
     categoryTableRows.forEach((element) {
+      db.execute(element);
+    });
+    gameTableRows.forEach((element) {
       db.execute(element);
     });
   }

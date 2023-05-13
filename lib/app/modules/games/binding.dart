@@ -1,4 +1,5 @@
 import 'package:first_app/app/data/providers/category/provider.dart';
+import 'package:first_app/app/data/providers/game/provider.dart';
 import 'package:first_app/app/data/providers/word/provider.dart';
 import 'package:first_app/app/data/services/storage/repository.dart';
 import 'package:first_app/app/modules/category/controller.dart';
@@ -8,13 +9,19 @@ import 'controller.dart';
 class GamesBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => GamesController());
-    Get.lazyPut(
-      () => CategoryController(
-        categoryRepository: CategoryRepository(
+    Get.lazyPut(() => GamesController(
+          gameRepository: GeneralRepository(
             categoryProvider: CategoryProvider(),
-            wordProvider: WordProvider()
-        ),
-      ));
+            wordProvider: WordProvider(),
+            gameProvider: GameProvider(),
+          ),
+        ));
+    Get.lazyPut(() => CategoryController(
+          categoryRepository: GeneralRepository(
+            categoryProvider: CategoryProvider(),
+            wordProvider: WordProvider(),
+            gameProvider: GameProvider(),
+          ),
+        ));
   }
 }
