@@ -1,4 +1,4 @@
-import 'package:first_app/app/data/services/storage/repository.dart';
+import 'package:first_app/app/data/services/category/category_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
@@ -6,7 +6,7 @@ import 'package:first_app/app/data/models/category.dart';
 import '../../data/models/Word.dart';
 
 class CategoryController extends GetxController {
-  GeneralRepository categoryRepository;
+  CategoryRepository categoryRepository;
 
   CategoryController({
     required this.categoryRepository,

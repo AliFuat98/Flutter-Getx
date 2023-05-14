@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:multiselect/multiselect.dart';
 
@@ -118,34 +119,38 @@ class GamesPage extends GetView<GamesController> {
   }
 
   Widget gameImageSlider() {
+    //var gameList = controller.games.elementAt(0);
     return GestureDetector(
       onDoubleTap: () => goToGame(controller.activeIndexOfDot.value),
-      child: CarouselSlider.builder(
-        carouselController: caroController,
-        options: CarouselOptions(
-          height: 40.0.hp,
-          initialPage: 0,
-          //autoPlay: true,
-          //autoPlayInterval: const Duration(seconds: 5),
-          enlargeCenterPage: true,
-          enlargeStrategy: CenterPageEnlargeStrategy.height,
-          onPageChanged: (index, reason) {
-            controller.activeIndexOfDot.value = index;
-          },
+      child: Obx(
+        () => CarouselSlider(
+          carouselController: caroController,
+          options: CarouselOptions(
+            height: 40.0.hp,
+            initialPage: 0,
+            //autoPlay: true,
+            //autoPlayInterval: const Duration(seconds: 5),
+            enlargeCenterPage: true,
+            enlargeStrategy: CenterPageEnlargeStrategy.height,
+            onPageChanged: (index, reason) {
+              controller.activeIndexOfDot.value = index;
+            },
+          ),
+          items: [
+            ...controller.games.map((element) {
+              return Container(
+                color: Colors.blueAccent[700],
+                margin: EdgeInsets.symmetric(horizontal: 6.0.wp),
+                child: Image.asset(
+                  element.pictureSrc,
+                  height: 40.0.hp,
+                  width: 40.0.hp,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }).toList(),
+          ],
         ),
-        itemCount: 4,
-        itemBuilder: (context, index, realIndex) {
-          return Container(
-            color: Colors.blueAccent[700],
-            margin: EdgeInsets.symmetric(horizontal: 6.0.wp),
-            child: Image.asset(
-              controller.games.elementAt(index).pictureSrc,
-              height: 40.0.hp,
-              width: 40.0.hp,
-              fit: BoxFit.cover,
-            ),
-          );
-        },
       ),
     );
   }

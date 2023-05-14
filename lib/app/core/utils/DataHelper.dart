@@ -2,27 +2,30 @@ import 'package:first_app/app/core/values/queries.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
+//import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
 
 import '../../data/models/Word.dart';
 
 class DataHelper {
+  static final DataHelper instance = DataHelper._init();
   static Database? _database;
 
-  static Future<void> init() async {
+  DataHelper._init();
+
+  Future<Database> get database async {
     if (_database != null) {
-      return;
+      return _database!;
     }
-    sqflite_ffi.sqfliteFfiInit();
-    databaseFactory = sqflite_ffi.databaseFactoryFfi;
+    // sqflite_ffi.sqfliteFfiInit();
+    // databaseFactory = sqflite_ffi.databaseFactoryFfi;
     String dbPath = await getDatabasesPath();
     String myDbPath = join(dbPath, "database.db");
     print(myDbPath);
-    _database = await openDatabase(myDbPath,
-        singleInstance: true, version: 1, onCreate: onCreate);
+    return await openDatabase(myDbPath,
+        singleInstance: true, version: 1, onCreate: _onCreate);
   }
 
-  static void onCreate(Database db, int version) async {
+  static void _onCreate(Database db, int version) async {
     print("on create first time");
     db.execute(wordTable);
     db.execute(categoryTable);
@@ -38,25 +41,29 @@ class DataHelper {
     });
   }
 
-  static Future<int> insert(String table, Object object) async {
+  Future<int> insert(String table, Object object) async {
+    final db = await instance.database;
+
     if (object.runtimeType.toString() == "Word") {
       Word newWord = object as Word;
-      return await _database!.insert(table, newWord.toJson());
+      return await db.insert(table, newWord.toJson());
     }
     Category newCategory = object as Category;
-    return await _database!.insert(table, newCategory.toJson());
+    return await db.insert(table, newCategory.toJson());
   }
 
-  static Future<List<Map<String, dynamic>>> getAll(String table) async {
-    final List<Map<String, dynamic>> maps = await _database!.query(table);
+  Future<List<Map<String, dynamic>>> getAll(String table) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(table);
+    print(maps.length);
     return maps;
   }
 
-  static Future<void> insertAll(
-      String table, List<Map<String, dynamic>> maps) async {
+  Future<void> insertAll(String table, List<Map<String, dynamic>> maps) async {
     try {
+      final db = await instance.database;
       maps.forEach((element) async {
-        await _database!.insert(table, element);
+        await db.insert(table, element);
       });
     } catch (e, s) {
       print(e);

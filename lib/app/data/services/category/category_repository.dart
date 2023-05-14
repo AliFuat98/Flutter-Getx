@@ -1,20 +1,15 @@
-import 'package:first_app/app/data/models/game.dart';
+import 'package:first_app/app/data/models/Word.dart';
+import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/data/providers/category/provider.dart';
-import 'package:first_app/app/data/providers/game/provider.dart';
+import 'package:first_app/app/data/providers/word/provider.dart';
 
-import '../../models/Word.dart';
-import '../../models/category.dart';
-import '../../providers/word/provider.dart';
-
-class GeneralRepository {
+class CategoryRepository {
   CategoryProvider categoryProvider;
   WordProvider wordProvider;
-  GameProvider gameProvider;
 
-  GeneralRepository({
+  CategoryRepository({
     required this.categoryProvider,
     required this.wordProvider,
-    required this.gameProvider,
   });
 
   Future<List<Category>> readCategories() async {
@@ -33,9 +28,4 @@ class GeneralRepository {
 
   void writeCategories(List<Category> categories) =>
       categoryProvider.writeCategories(categories);
-
-  Future<List<Game>> readGames() async {
-    List<Game> games = await gameProvider.readGames();
-    return games;
-  }
 }

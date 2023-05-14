@@ -25,8 +25,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());

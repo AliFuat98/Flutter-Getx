@@ -1,11 +1,10 @@
-import 'package:first_app/app/core/utils/dataHelper.dart';
-import 'package:first_app/app/data/services/storage/repository.dart';
+import 'package:first_app/app/data/services/game/game_repository.dart';
 import 'package:get/get.dart';
 
 import '../../data/models/game.dart';
 
 class GamesController extends GetxController {
-  GeneralRepository gameRepository;
+  GameRepository gameRepository;
 
   GamesController({
     required this.gameRepository,
@@ -28,10 +27,9 @@ class GamesController extends GetxController {
 
   @override
   void onInit() async {
-    super.onInit();
-    await DataHelper.init();
     List<Game> data = await gameRepository.readGames();
     games.assignAll(data);
+    super.onInit();
     //ever(categories, (_) => categoryRepository.writeCategories(categories));
   }
 }
