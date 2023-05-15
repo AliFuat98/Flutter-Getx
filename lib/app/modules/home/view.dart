@@ -1,6 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/modules/category/view.dart';
-import 'package:first_app/app/modules/categoryMap/view.dart';
+import 'package:first_app/app/modules/category_map/view.dart';
 import 'package:first_app/app/modules/games/view.dart';
 import 'package:first_app/app/modules/home/widgets/menuitem.dart';
 import 'package:first_app/app/modules/store/view.dart';

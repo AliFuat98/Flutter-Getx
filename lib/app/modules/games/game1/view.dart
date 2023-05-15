@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/models/Word.dart';
+import '../../../data/models/word.dart';
 import 'controller.dart';
 
 class Game1Page extends GetView<Game1Controller> {
@@ -51,63 +51,59 @@ class Game1Page extends GetView<Game1Controller> {
         ]));
   }
 
-  Widget getGameTable(){
+  Widget getGameTable() {
     return Container(
       width: 900,
       height: 515,
       margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
       padding: const EdgeInsets.all(5),
-      child: Obx(()=> GridView.builder(
+      child: Obx(() => GridView.builder(
           padding: const EdgeInsets.all(5),
           itemCount: controller.number_of_words,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 20.0,
-              mainAxisSpacing: 15.0),
+              crossAxisCount: 4, crossAxisSpacing: 20.0, mainAxisSpacing: 15.0),
           itemBuilder: (context, index) {
             Map<String, String> allCouples = controller.couples;
             return GestureDetector(
               onTap: () {
                 controller.handleCardClick(index);
-                print(controller.gameTable.value[controller.gameWords[index].name]);
+                print(controller
+                    .gameTable.value[controller.gameWords[index].name]);
               },
               child: getImageCard(index),
-
             );
-          }) ),
+          })),
     );
-
   }
 
   Container getImageCard(index) {
     Word word = controller.gameWords[index];
     return Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(controller.gameTable.value[word.name] == true
-                          ? word.pictureSrc
-                          : "assets/images/game/mark.png"),
-                      fit: BoxFit.cover),
-                  color: Colors.amber,
-                  border: Border.all(
-                    color: Colors.pink,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(10)),
-            );
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(controller.gameTable.value[word.name] == true
+                  ? word.pictureSrc
+                  : "assets/images/game/mark.png"),
+              fit: BoxFit.cover),
+          color: Colors.amber,
+          border: Border.all(
+            color: Colors.pink,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10)),
+    );
   }
+
   void trackWord(Word word) async {
     bool control = await Future<bool>.delayed(
       const Duration(seconds: 2),
-          () {
+      () {
         return controller.gameTable.value[word.name]!;
       },
     );
-    if (control && !controller.gameTable.value[controller.couples[word.name]]!) {
+    if (control &&
+        !controller.gameTable.value[controller.couples[word.name]]!) {
       controller.gameTable.value[word.name] = false;
     }
   }
-
 }
-
-

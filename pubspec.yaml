@@ -80,10 +80,10 @@ flutter:
     - assets/images/
     - assets/images/icons/
     - assets/images/game/
-    - assets/images/categoryImages/
-    - assets/images/wordImages/family/
-    - assets/images/wordImages/foods/
-    - assets/images/wordImages/fruits/
+    - assets/images/category_images/
+    - assets/images/word_images/family/
+    - assets/images/word_images/foods/
+    - assets/images/word_images/fruits/
     - assets/audios/
   #   - images/a_dot_ham.jpeg
 

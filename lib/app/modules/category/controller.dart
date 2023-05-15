@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
 
-import '../../data/models/Word.dart';
+import '../../data/models/word.dart';
 
 class CategoryController extends GetxController {
   CategoryRepository categoryRepository;

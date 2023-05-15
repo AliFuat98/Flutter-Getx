@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 
-import '../../../data/models/Word.dart';
+import '../../../data/models/word.dart';
 
 class Game1Controller extends GetxController {
-
   // All words that come from selected categories
   late List<Word> selectedWords;
   // Word to be inserted to the game after shuffling
@@ -11,8 +10,8 @@ class Game1Controller extends GetxController {
   // Difficulty of the game
   late String gameMode;
   late int number_of_words;
-  late Map<String,String> couples;
-  Rx<Map<String,bool>> gameTable = Rx<Map<String,bool>>({});
+  late Map<String, String> couples;
+  Rx<Map<String, bool>> gameTable = Rx<Map<String, bool>>({});
   final gameOver = false.obs;
   final totalScore = 0.0.obs;
   final totalCoinCount = 0.obs;
@@ -40,21 +39,27 @@ class Game1Controller extends GetxController {
       baseScore.value *= 15;
     }
     generateGameWords();
-
   }
 
-  void generateGameWords(){
+  void generateGameWords() {
     List<Word> temporaryList = [];
     couples = {};
     gameWords = [];
     selectedWords.shuffle();
-    for(int i=0;i<number_of_words;i++){
-      temporaryList.insert(i,selectedWords[i]);
+    for (int i = 0; i < number_of_words; i++) {
+      temporaryList.insert(i, selectedWords[i]);
     }
     temporaryList.forEach((element) {
       gameWords.add(element);
-      gameWords.add(Word.withoutID(element.name+"twin",element.pictureSrc,element.audioSrc,element.isPronounced,element.pronunciationScore, element.reward,element.moduleID));
-      couples[element.name] = element.name+"twin";
+      gameWords.add(Word.withoutID(
+          element.name + "twin",
+          element.pictureSrc,
+          element.audioSrc,
+          element.isPronounced,
+          element.pronunciationScore,
+          element.reward,
+          element.moduleID));
+      couples[element.name] = element.name + "twin";
     });
     gameWords.shuffle();
 
@@ -63,34 +68,17 @@ class Game1Controller extends GetxController {
       gameTable.value[name] = false;
     });
   }
-  void checkGameOver(){
+
+  void checkGameOver() {
     gameOver.value = !gameTable.value.containsValue(false);
   }
 
-  void handleCardClick(int index){
+  void handleCardClick(int index) {
     Word clickedWord = gameWords[index];
     String name = clickedWord.name;
-    if(gameTable.value[name] == false)
-    {
+    if (gameTable.value[name] == false) {
       gameTable.value[name] = true;
-
     }
     gameTable.refresh();
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

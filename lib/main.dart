@@ -1,11 +1,11 @@
 import 'package:first_app/app/data/services/storage/services.dart';
 
-import 'package:first_app/app/modules/ListenWord/binding.dart';
-import 'package:first_app/app/modules/ListenWord/view.dart';
+import 'package:first_app/app/modules/listen_word/binding.dart';
+import 'package:first_app/app/modules/listen_word/view.dart';
 import 'package:first_app/app/modules/category/binding.dart';
 import 'package:first_app/app/modules/category/view.dart';
-import 'package:first_app/app/modules/categoryMap/binding.dart';
-import 'package:first_app/app/modules/categoryMap/view.dart';
+import 'package:first_app/app/modules/category_map/binding.dart';
+import 'package:first_app/app/modules/category_map/view.dart';
 import 'package:first_app/app/modules/games/binding.dart';
 import 'package:first_app/app/modules/games/game1/binding.dart';
 import 'package:first_app/app/modules/games/game1/view.dart';
@@ -29,6 +29,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());

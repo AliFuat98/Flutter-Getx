@@ -1,5 +1,5 @@
 import 'package:first_app/app/core/utils/extensions.dart';
-import 'package:first_app/app/data/models/Word.dart';
+import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
@@ -234,7 +234,8 @@ class GamesPage extends GetView<GamesController> {
 
       switch (value) {
         case 0:
-          Get.toNamed(Game1Page.pageName,arguments: [words,controller.chosenGameMode.value]);
+          Get.toNamed(Game1Page.pageName,
+              arguments: [words, controller.chosenGameMode.value]);
           break;
         case 1:
           Get.toNamed(Game2Page.pageName);

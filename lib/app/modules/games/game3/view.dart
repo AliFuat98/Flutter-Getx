@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
-import 'package:first_app/app/data/models/Word.dart';
+import 'package:first_app/app/data/models/word.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';

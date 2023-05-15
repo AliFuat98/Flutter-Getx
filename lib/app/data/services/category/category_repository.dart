@@ -1,4 +1,4 @@
-import 'package:first_app/app/data/models/Word.dart';
+import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/data/providers/category/provider.dart';
 import 'package:first_app/app/data/providers/word/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
-import 'package:first_app/app/modules/ListenWord/view.dart';
-import 'package:first_app/app/modules/categoryMap/controller.dart';
+import 'package:first_app/app/modules/listen_word/view.dart';
+import 'package:first_app/app/modules/category_map/controller.dart';
 import 'package:first_app/app/widgets/positions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

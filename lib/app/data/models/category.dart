@@ -1,39 +1,45 @@
 import 'package:equatable/equatable.dart';
 
-import 'Word.dart';
+import 'word.dart';
 
 class Category extends Equatable {
-  int _ID = -1 ;
+  int _ID = -1;
   String _name = "";
-  String _pictureSrc="";
-  int _isCompleted=0;
-  int _reward=50;
+  String _pictureSrc = "";
+  int _isCompleted = 0;
+  int _reward = 50;
   List<Word>? _words;
 
-  Category(this._ID,this._name,this._pictureSrc,this._isCompleted,this._reward,[this._words]);
+  Category(
+      this._ID, this._name, this._pictureSrc, this._isCompleted, this._reward,
+      [this._words]);
 
-  Category.withoutSettings([this._name = "",this._pictureSrc="",this._isCompleted = 0,this._reward=50]);
+  Category.withoutSettings(
+      [this._name = "",
+      this._pictureSrc = "",
+      this._isCompleted = 0,
+      this._reward = 50]);
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-    json["ID"],
-    json["Name"],
-    json["PictureSrc"],
-    json["isCompleted"],
-    json["Reward"],
-  );
+        json["ID"],
+        json["Name"],
+        json["PictureSrc"],
+        json["isCompleted"],
+        json["Reward"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "Name": _name,
-    "PictureSrc": _pictureSrc,
-    "isCompleted":_isCompleted,
-    "Reward":_reward,
-  };
+        "Name": _name,
+        "PictureSrc": _pictureSrc,
+        "isCompleted": _isCompleted,
+        "Reward": _reward,
+      };
 
   // equatible paketinden geliyor obje karşılaştırıken kullanılacak
   @override
   List<Object?> get props => [
-    _name,
-  ];
+        _name,
+      ];
   int get ID => _ID;
 
   set ID(int value) {

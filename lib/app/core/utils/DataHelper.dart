@@ -1,12 +1,12 @@
 import 'package:first_app/app/core/values/queries.dart';
-import 'package:first_app/app/data/models/GameUser.dart';
-import 'package:first_app/app/data/models/User.dart';
+import 'package:first_app/app/data/models/game_user.dart';
+import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 //import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
 
-import '../../data/models/Word.dart';
+import '../../data/models/word.dart';
 
 class DataHelper {
   static final DataHelper instance = DataHelper._init();

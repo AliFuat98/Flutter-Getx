@@ -1,5 +1,5 @@
 import '../../../core/utils/DataHelper.dart';
-import '../../models/Word.dart';
+import '../../models/word.dart';
 
 class WordProvider {
   Future<List<Word>> readWords() async {

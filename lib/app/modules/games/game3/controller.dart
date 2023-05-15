@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:first_app/app/core/utils/DataHelper.dart';
-import 'package:first_app/app/data/models/GameUser.dart';
-import 'package:first_app/app/data/models/User.dart';
-import 'package:first_app/app/data/models/Word.dart';
+import 'package:first_app/app/data/models/game_user.dart';
+import 'package:first_app/app/data/models/user.dart';
+import 'package:first_app/app/data/models/word.dart';
 
 import 'package:get/get.dart';
 
