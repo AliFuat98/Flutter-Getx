@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../data/models/word.dart';
 
@@ -46,8 +47,8 @@ class Game1Controller extends GetxController {
     couples = {};
     gameWords = [];
     selectedWords.shuffle();
-    for (int i = 0; i < number_of_words; i++) {
-      temporaryList.insert(i, selectedWords[i]);
+    for (int i = 0; i < number_of_words/2; i++) {
+      temporaryList.add(selectedWords[i]);
     }
     temporaryList.forEach((element) {
       gameWords.add(element);
@@ -73,12 +74,28 @@ class Game1Controller extends GetxController {
     gameOver.value = !gameTable.value.containsValue(false);
   }
 
-  void handleCardClick(int index) {
-    Word clickedWord = gameWords[index];
+  void handleCardClick(Word currentWord) {
+    Word clickedWord = currentWord;
     String name = clickedWord.name;
+    String coupleName = couples[name]!;
     if (gameTable.value[name] == false) {
       gameTable.value[name] = true;
+      gameTable.refresh();
+      trackWord(name, coupleName);
     }
-    gameTable.refresh();
+
+  }
+
+  Future<void> trackWord(String name,String coupleName) async {
+    bool control = await Future<bool>.delayed(
+      const Duration(seconds: 3),
+          () {
+        return gameTable.value[coupleName]!;
+      },
+    );
+    if (!control ) {
+      gameTable.value[name] = false;
+      gameTable.refresh();
+    }
   }
 }

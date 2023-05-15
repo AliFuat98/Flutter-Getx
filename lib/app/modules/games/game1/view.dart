@@ -57,32 +57,30 @@ class Game1Page extends GetView<Game1Controller> {
       height: 515,
       margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
       padding: const EdgeInsets.all(5),
-      child: Obx(() => GridView.builder(
+      child: GridView.builder(
           padding: const EdgeInsets.all(5),
           itemCount: controller.number_of_words,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4, crossAxisSpacing: 20.0, mainAxisSpacing: 15.0),
           itemBuilder: (context, index) {
+            Word currentWord = controller.gameWords[index];
             Map<String, String> allCouples = controller.couples;
-            return GestureDetector(
+            return Obx(() =>GestureDetector(
               onTap: () {
-                controller.handleCardClick(index);
-                print(controller
-                    .gameTable.value[controller.gameWords[index].name]);
+                controller.handleCardClick(currentWord);
               },
-              child: getImageCard(index),
-            );
-          })),
+              child: getImageCard(currentWord),
+            ));
+          }),
     );
   }
 
-  Container getImageCard(index) {
-    Word word = controller.gameWords[index];
+  Container getImageCard(Word currentWord) {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(controller.gameTable.value[word.name] == true
-                  ? word.pictureSrc
+              image: AssetImage(controller.gameTable.value[currentWord.name] == true
+                  ? currentWord.pictureSrc
                   : "assets/images/game/mark.png"),
               fit: BoxFit.cover),
           color: Colors.amber,
