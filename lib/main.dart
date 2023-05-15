@@ -12,6 +12,7 @@ import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/binding.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
 import 'package:first_app/app/modules/games/game3/binding.dart';
+import 'package:first_app/app/modules/games/game3/controller.dart';
 import 'package:first_app/app/modules/games/game3/view.dart';
 import 'package:first_app/app/modules/games/game4/binding.dart';
 import 'package:first_app/app/modules/games/game4/view.dart';

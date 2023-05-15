@@ -1,26 +1,69 @@
 import 'dart:math';
 
+import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/data/models/GameUser.dart';
+import 'package:first_app/app/data/models/User.dart';
 import 'package:first_app/app/data/models/Word.dart';
+
 import 'package:get/get.dart';
 
 class Game3Controller extends GetxController {
+  // all words coming from the chosen categories
   late List<Word> words;
+
+  // this will store 10 game correct word
+  late List<Word> correctWordList;
+  final currentCorrectWordIndex = 0.obs;
+
   late String gameMode;
-  late Rx<Word> correctWord;
+
+  // randomWords chosen words for the game from words list
+  Rx<List<Word>> randomWords = Rx<List<Word>>([]);
+
   final totalScore = 0.0.obs;
   final totalCoinCount = 0.obs;
+
+  // it depends on the words count
   final baseScore = 0.0.obs;
+
+  // to decrease the score after wrong choises
   final guestCount = 0.obs;
-  final changeQuestion = 0.obs;
-  Rx<List<Word>> randomWords = Rx<List<Word>>([]);
+
+  final questionCount = 2;
+
+  // check wheter if the game is ended
+  final gameOver = false.obs;
+
+  late DateTime startTime;
 
   @override
   void onInit() {
     super.onInit();
+
+    // get arguments
     words = Get.arguments[0] as List<Word>;
     gameMode = Get.arguments[1] as String;
+
+    startGame();
+  }
+
+  void startGame() {
+    startTime = DateTime.now();
+    gameOver.value = false;
+    guestCount.value = 0;
+    totalScore.value = 0;
+    totalCoinCount.value = 0;
+    currentCorrectWordIndex.value = 0;
+
+    words.shuffle();
+
+    // create questions correct answers
+    correctWordList = words.sublist(0, questionCount);
+
+    // choise first game questions
     randomWords.value = _getRandomWords();
-    getRandomCorrectWord();
+
+    // fill base score according to game mode
     baseScore.value = words.length.toDouble();
     if (gameMode == "kolay") {
       baseScore.value *= 2;
@@ -33,7 +76,11 @@ class Game3Controller extends GetxController {
     }
   }
 
-  void correctAnswer() {
+  Word getCorrectWord() {
+    return correctWordList.elementAt(currentCorrectWordIndex.value);
+  }
+
+  Future correctAnswer() async {
     // get coin if s/he knows the answer in the first try
     if (guestCount.value == 0) {
       if (gameMode == "kolay") {
@@ -47,40 +94,69 @@ class Game3Controller extends GetxController {
       }
     }
     // get score
-    totalScore.value +=
-        baseScore.value / pow(2, (guestCount.value + changeQuestion.value));
-    changeQuestion.value = 0;
+    totalScore.value += baseScore.value / pow(2, guestCount.value);
+    currentCorrectWordIndex.value++;
+    // game over
+    if (currentCorrectWordIndex.value >= questionCount) {
+      gameOver.value = true;
+      currentCorrectWordIndex.value--; // hata almamak için
+      await insertGameInfo();
+    }
+  }
+
+  Future insertGameInfo() async {
+    final elapsed = DateTime.now().difference(startTime);
+    await DataHelper.instance.insert(
+      "GameUser",
+      GameUser(
+        1,
+        3,
+        totalScore.value,
+        elapsed.inSeconds,
+        DateTime.now().toUtc(),
+        gameOver.value,
+      ),
+    );
+
+    // get user and update her/his coins
+    var userMap = await DataHelper.instance.getAll("User");
+    List<User> users = List.generate(userMap.length, (i) {
+      return User.fromJson(userMap[i]);
+    });
+    var user = users.elementAt(0);
+
+    await DataHelper.instance.update(
+      "User",
+      User(
+        1,
+        "velet",
+        "veled",
+        5,
+        user.coin + totalCoinCount.value,
+      ),
+    );
   }
 
   void wrongAnswer() {
     guestCount.value++;
-    changeQuestion.value = 0;
   }
 
-  void getRandomCorrectWord() {
-    Random random = Random();
-    int index = random.nextInt(randomWords.value.length);
-    correctWord = Rx(randomWords.value.elementAt(index));
-
+  void getNextGame() {
     guestCount.value = 0;
-  }
-
-  void changeRandomwords() {
+    // next game
     randomWords.value = _getRandomWords();
-    getRandomCorrectWord();
-    changeQuestion.value++;
   }
 
   List<Word> _getRandomWords() {
     switch (gameMode) {
       case "kolay":
-        return _getRandomWordsWithCount(2);
+        return _getRandomWordsWithCount(1);
       case "normal":
-        return _getRandomWordsWithCount(4);
+        return _getRandomWordsWithCount(3);
       case "zor":
-        return _getRandomWordsWithCount(6);
+        return _getRandomWordsWithCount(5);
       case "extreme":
-        return _getRandomWordsWithCount(9);
+        return _getRandomWordsWithCount(8);
       default:
     }
     return List.empty();
@@ -88,6 +164,11 @@ class Game3Controller extends GetxController {
 
   List<Word> _getRandomWordsWithCount(int count) {
     List<Word> result = <Word>[];
+
+    // add the correct word beforehand
+    var correctWord = correctWordList.elementAt(currentCorrectWordIndex.value);
+    result.add(correctWord);
+
     Random random = Random();
 
     for (int i = 0; i < count; i++) {
@@ -101,6 +182,7 @@ class Game3Controller extends GetxController {
         result.add(word);
       }
     }
+    result.shuffle();
     return result;
   }
 }

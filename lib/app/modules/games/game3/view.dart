@@ -18,14 +18,7 @@ class Game3Page extends GetView<Game3Controller> {
     return Scaffold(
       body: SafeArea(
         child: Stack(children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/game3Back.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          getBackgroundImage(),
           Column(
             children: [
               getGameTitle(),
@@ -33,28 +26,8 @@ class Game3Page extends GetView<Game3Controller> {
                 height: 5.0.hp,
               ),
               getPlayScoreCoin(),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0.hp),
-                  child: Center(
-                    child: Obx(
-                      () => GridView.count(
-                        crossAxisCount: (controller.gameMode == "zor" ||
-                                controller.gameMode == "extreme")
-                            ? 3
-                            : 2,
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        children: [
-                          ...controller.randomWords.value
-                              .map((word) => getSquareImage(word))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              getNextPrevious(),
+              getImages(),
+              getNextButton(),
               SizedBox(
                 height: 5.0.hp,
               )
@@ -66,7 +39,7 @@ class Game3Page extends GetView<Game3Controller> {
     );
   }
 
-  Widget getNextPrevious() {
+  Widget getNextButton() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
       child: Row(
@@ -78,21 +51,7 @@ class Game3Page extends GetView<Game3Controller> {
               elevation: 0,
             ),
             onPressed: () {
-              controller.changeRandomwords();
-            },
-            child: const Icon(
-              Icons.navigate_before,
-              size: 50,
-              color: const Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              controller.changeRandomwords();
+              controller.getNextGame();
             },
             child: const Icon(
               Icons.navigate_next,
@@ -108,10 +67,17 @@ class Game3Page extends GetView<Game3Controller> {
   Widget getSquareImage(Word word) {
     var squareWidth = Get.width - 20.0.wp;
     return GestureDetector(
-      onTap: () {
-        if (word.wordID == controller.correctWord.value.wordID) {
-          EasyLoading.showSuccess("doğru");
-          controller.correctAnswer();
+      onTap: () async {
+        if (word.wordID == controller.getCorrectWord().wordID) {
+          await controller.correctAnswer();
+
+          // Get dialogs
+          if (controller.gameOver.value) {
+            await getEndGameDialog();
+          } else {
+            await getCorrectAnswerDialog();
+            controller.getNextGame();
+          }
         } else {
           EasyLoading.showError("yanlış");
           controller.wrongAnswer();
@@ -138,6 +104,126 @@ class Game3Page extends GetView<Game3Controller> {
     );
   }
 
+  Future getCorrectAnswerDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: false,
+      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
+      radius: 5,
+      title: "CORRECT ANSWER",
+      content: Row(
+        children: [
+          Image.asset(
+            "assets/images/game3Back.jpg",
+            fit: BoxFit.contain,
+            width: 25.0.wp,
+          ),
+          Column(
+            children: const [
+              Text("HELAL"),
+              Text("OLSUN"),
+              Text("LEN SANA"),
+              Text("VELED"),
+            ],
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              elevation: 0,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+            child: const Icon(
+              Icons.navigate_next,
+              size: 50,
+              color: const Color.fromARGB(255, 10, 74, 185),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future getEndGameDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: false,
+      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
+      radius: 5,
+      title: "GAME IS OVER",
+      content: Row(
+        children: [
+          Image.asset(
+            "assets/images/game3Back.jpg",
+            fit: BoxFit.contain,
+            width: 25.0.wp,
+          ),
+          Column(
+            children: const [
+              Text("HELAL"),
+              Text("OLSUN"),
+              Text("LEN SANA"),
+              Text("VELED"),
+            ],
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              elevation: 0,
+            ),
+            onPressed: () {
+              Get.back();
+              Get.back();
+            },
+            child: const Icon(
+              Icons.menu,
+              size: 50,
+              color: const Color.fromARGB(255, 10, 74, 185),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              elevation: 0,
+            ),
+            onPressed: () {
+              Get.back();
+              controller.startGame();
+            },
+            child: const Icon(
+              Icons.restart_alt,
+              size: 50,
+              color: const Color.fromARGB(255, 10, 74, 185),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getImages() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.all(5.0.hp),
+        child: Center(
+          child: Obx(
+            () => GridView.count(
+              crossAxisCount: (controller.gameMode == "zor" ||
+                      controller.gameMode == "extreme")
+                  ? 3
+                  : 2,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              children: [
+                ...controller.randomWords.value
+                    .map((word) => getSquareImage(word))
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget backButton() {
     return Positioned(
       left: 4.0.wp,
@@ -149,9 +235,20 @@ class Game3Page extends GetView<Game3Controller> {
           color: Colors.red,
         ),
         onPressed: () {
-          // database'e skor'lar kayıt edilecek.
+          controller.insertGameInfo();
           Get.back();
         },
+      ),
+    );
+  }
+
+  Widget getBackgroundImage() {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/game3Back.jpg"),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -198,7 +295,7 @@ class Game3Page extends GetView<Game3Controller> {
                 ),
                 onPressed: () {
                   audioPlayer
-                      .play(AssetSource(controller.correctWord.value.audioSrc));
+                      .play(AssetSource(controller.getCorrectWord().audioSrc));
                 },
                 child: const Icon(
                   Icons.play_arrow,

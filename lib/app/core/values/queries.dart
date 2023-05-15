@@ -21,11 +21,35 @@ const String gameTable = """CREATE TABLE IF NOT EXISTS "Game" (
 PRIMARY KEY("GameID" AUTOINCREMENT)
 );""";
 
+const String userTable = """CREATE TABLE IF NOT EXISTS "User" (
+"UserID"	INTEGER,
+"Name"	TEXT,
+"Surname"	TEXT,
+"Age"	INTEGER,
+"Coin"	INTEGER,
+PRIMARY KEY("UserID" AUTOINCREMENT)
+);""";
+
+const String GameUserTable = """CREATE TABLE IF NOT EXISTS "GameUser" (
+"UserID"	INTEGER,
+"GameID"	TEXT,
+"Score" FLOAT,
+"Date"  TEXT,
+"Timetaken" INTEGER,
+"IsFinished" BOOLEAN,
+FOREIGN KEY (UserID) REFERENCES User(UserID),
+FOREIGN KEY (GameID) REFERENCES Game(GameID)
+);""";
+
 const List<String> gameTableRows = [
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (1,'test1',1,50,"assets/images/game/game1.jpg");""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (2,'test2',2,50,"assets/images/game/game2.jpg");""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (3,'Listen And Select',3,50,"assets/images/game/game3.jpg");""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (4,'tes4',4,50,"assets/images/game/game4.jpg");""",
+];
+
+const List<String> userTableRows = [
+  """INSERT INTO "User" ("UserID","Name","Surname","Age","Coin") VALUES (1,"velet","veled",5,0);""",
 ];
 
 const List<String> wordTableRows = [

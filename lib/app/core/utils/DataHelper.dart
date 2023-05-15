@@ -1,4 +1,6 @@
 import 'package:first_app/app/core/values/queries.dart';
+import 'package:first_app/app/data/models/GameUser.dart';
+import 'package:first_app/app/data/models/User.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -16,8 +18,6 @@ class DataHelper {
     if (_database != null) {
       return _database!;
     }
-    // sqflite_ffi.sqfliteFfiInit();
-    // databaseFactory = sqflite_ffi.databaseFactoryFfi;
     String dbPath = await getDatabasesPath();
     String myDbPath = join(dbPath, "database.db");
     print(myDbPath);
@@ -30,6 +30,8 @@ class DataHelper {
     db.execute(wordTable);
     db.execute(categoryTable);
     db.execute(gameTable);
+    db.execute(userTable);
+    db.execute(GameUserTable);
     wordTableRows.forEach((element) {
       db.execute(element);
     });
@@ -39,17 +41,50 @@ class DataHelper {
     gameTableRows.forEach((element) {
       db.execute(element);
     });
+    userTableRows.forEach((element) {
+      db.execute(element);
+    });
   }
 
   Future<int> insert(String table, Object object) async {
     final db = await instance.database;
+    int result = -1;
 
-    if (object.runtimeType.toString() == "Word") {
-      Word newWord = object as Word;
-      return await db.insert(table, newWord.toJson());
+    switch (object.runtimeType.toString()) {
+      case "Word":
+        Word newWord = object as Word;
+        result = await db.insert(table, newWord.toJson());
+        break;
+      case "Category":
+        Category newCategory = object as Category;
+        result = await db.insert(table, newCategory.toJson());
+        break;
+      case "GameUser":
+        GameUser newGameUser = object as GameUser;
+        result = await db.insert(table, newGameUser.toJson());
+        break;
+      default:
     }
-    Category newCategory = object as Category;
-    return await db.insert(table, newCategory.toJson());
+    return result;
+  }
+
+  Future<int> update(String table, Object object) async {
+    final db = await instance.database;
+    int result = -1;
+
+    switch (object.runtimeType.toString()) {
+      case "User":
+        User newUser = object as User;
+        result = await db.update(
+          table,
+          newUser.toJson(),
+          where: '${newUser.userID} = ?',
+          whereArgs: [newUser.userID],
+        );
+        break;
+      default:
+    }
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> getAll(String table) async {
