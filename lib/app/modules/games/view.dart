@@ -14,6 +14,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:multiselect/multiselect.dart';
 
 import 'controller.dart';
+import 'game5/view.dart';
 
 class GamesPage extends GetView<GamesController> {
   GamesPage({super.key});
@@ -159,7 +160,7 @@ class GamesPage extends GetView<GamesController> {
     return Obx(
       () => AnimatedSmoothIndicator(
         activeIndex: controller.activeIndexOfDot.value,
-        count: 4,
+        count: 5,
         onDotClicked: (index) => {
           controller.activeIndexOfDot.value = index,
           caroController.animateToPage(index),
@@ -247,6 +248,10 @@ class GamesPage extends GetView<GamesController> {
           break;
         case 3:
           Get.toNamed(Game4Page.pageName,
+              arguments: [words, controller.chosenGameMode.value]);
+          break;
+        case 4:
+          Get.toNamed(Game5Page.pageName,
               arguments: [words, controller.chosenGameMode.value]);
           break;
         default:

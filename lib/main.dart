@@ -28,6 +28,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'app/modules/games/game5/binding.dart';
+import 'app/modules/games/game5/view.dart';
+
 void main() async {
   //sqfliteFfiInit();
   //databaseFactory = databaseFactoryFfi;
@@ -96,6 +99,11 @@ class MyApp extends StatelessWidget {
           page: () => Game4Page(),
           binding: Game4Binding(),
         ),
+        GetPage(
+          name: Game5Page.pageName,
+          page: () => Game5Page(),
+          binding: Game5Binding(),
+        )
       ],
       builder: EasyLoading.init(),
     );

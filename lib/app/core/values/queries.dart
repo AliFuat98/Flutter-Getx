@@ -46,6 +46,7 @@ const List<String> gameTableRows = [
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (2,'test2',2,50,"assets/images/game/game2.jpg");""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (3,'Listen And Select',3,50,"assets/images/game/game3.jpg");""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (4,'tes4',4,50,"assets/images/game/game4.jpg");""",
+  """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (5,'Listen and Evaluate',5,50,"assets/images/game/game5.jpg");"""
 ];
 
 const List<String> userTableRows = [
