@@ -92,16 +92,5 @@ class Game1Page extends GetView<Game1Controller> {
     );
   }
 
-  void trackWord(Word word) async {
-    bool control = await Future<bool>.delayed(
-      const Duration(seconds: 2),
-      () {
-        return controller.gameTable.value[word.name]!;
-      },
-    );
-    if (control &&
-        !controller.gameTable.value[controller.couples[word.name]]!) {
-      controller.gameTable.value[word.name] = false;
-    }
   }
-}
+
