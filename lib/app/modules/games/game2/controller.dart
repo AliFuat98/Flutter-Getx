@@ -143,7 +143,7 @@ class Game2Controller extends GetxController {
   void getNextGame() async {
     guestCount.value = 0;
 
-    if (currentMissingWordIndex.value + 1 > questionCount) {
+    if (currentMissingWordIndex.value + 1 >= questionCount) {
       gameOver.value = true;
       await insertGameInfo();
     } else {

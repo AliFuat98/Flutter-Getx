@@ -50,8 +50,12 @@ class Game3Page extends GetView<Game3Controller> {
               backgroundColor: Colors.blue,
               elevation: 0,
             ),
-            onPressed: () {
+            onPressed: () async {
               controller.getNextGame();
+              // Get dialogs
+              if (controller.gameOver.value) {
+                await getEndGameDialog();
+              }
             },
             child: const Icon(
               Icons.navigate_next,
