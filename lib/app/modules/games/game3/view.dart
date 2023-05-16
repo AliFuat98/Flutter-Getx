@@ -136,7 +136,7 @@ class Game3Page extends GetView<Game3Controller> {
             child: const Icon(
               Icons.navigate_next,
               size: 50,
-              color: const Color.fromARGB(255, 10, 74, 185),
+              color: Color.fromARGB(255, 10, 74, 185),
             ),
           ),
         ],
@@ -177,9 +177,11 @@ class Game3Page extends GetView<Game3Controller> {
             child: const Icon(
               Icons.menu,
               size: 50,
-              color: const Color.fromARGB(255, 10, 74, 185),
+              color: Color.fromARGB(255, 10, 74, 185),
             ),
           ),
+
+          // RESTART GAME
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -192,7 +194,7 @@ class Game3Page extends GetView<Game3Controller> {
             child: const Icon(
               Icons.restart_alt,
               size: 50,
-              color: const Color.fromARGB(255, 10, 74, 185),
+              color: Color.fromARGB(255, 10, 74, 185),
             ),
           ),
         ],

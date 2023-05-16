@@ -128,10 +128,10 @@ class Game3Controller extends GetxController {
     await DataHelper.instance.update(
       "User",
       User(
-        1,
-        "velet",
-        "veled",
-        5,
+        user.userID,
+        user.name,
+        user.surname,
+        user.age,
         user.coin + totalCoinCount.value,
       ),
     );
