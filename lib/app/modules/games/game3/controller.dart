@@ -95,11 +95,9 @@ class Game3Controller extends GetxController {
     }
     // get score
     totalScore.value += baseScore.value / pow(2, guestCount.value);
-    currentCorrectWordIndex.value++;
     // game over
-    if (currentCorrectWordIndex.value >= questionCount) {
+    if (currentCorrectWordIndex.value + 1 >= questionCount) {
       gameOver.value = true;
-      currentCorrectWordIndex.value--; // hata almamak için
       await insertGameInfo();
     }
   }
@@ -141,10 +139,16 @@ class Game3Controller extends GetxController {
     guestCount.value++;
   }
 
-  void getNextGame() {
+  void getNextGame() async {
     guestCount.value = 0;
-    // next game
-    randomWords.value = _getRandomWords();
+
+    if (currentCorrectWordIndex.value + 1 > questionCount) {
+      gameOver.value = true;
+      await insertGameInfo();
+    } else {
+      currentCorrectWordIndex.value++;
+      randomWords.value = _getRandomWords();
+    }
   }
 
   List<Word> _getRandomWords() {

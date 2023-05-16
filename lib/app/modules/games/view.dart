@@ -238,7 +238,8 @@ class GamesPage extends GetView<GamesController> {
               arguments: [words, controller.chosenGameMode.value]);
           break;
         case 1:
-          Get.toNamed(Game2Page.pageName);
+          Get.toNamed(Game2Page.pageName,
+              arguments: [words, controller.chosenGameMode.value]);
           break;
         case 2:
           Get.toNamed(Game3Page.pageName,

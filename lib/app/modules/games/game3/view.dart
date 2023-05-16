@@ -56,7 +56,7 @@ class Game3Page extends GetView<Game3Controller> {
             child: const Icon(
               Icons.navigate_next,
               size: 50,
-              color: const Color.fromARGB(255, 10, 74, 185),
+              color: Color.fromARGB(255, 10, 74, 185),
             ),
           ),
         ],
