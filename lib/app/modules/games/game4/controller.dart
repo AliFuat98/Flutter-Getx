@@ -11,7 +11,7 @@ class Game4Controller extends GetxController {
   late String gameMode;
 
   // deneme
-  RxMap<int, ExtendedWord> wordMap = RxMap();
+  RxMap<int, ExtendedWordGame4> wordMap = RxMap();
 
   final totalScore = 0.0.obs;
   final totalCoinCount = 0.obs;
@@ -19,16 +19,16 @@ class Game4Controller extends GetxController {
   // it depends on the words count
   final baseScore = 0.0.obs;
 
-  // check wheter if the game is ended
-  final gameOver = false.obs;
-
   late DateTime startTime;
 
   // how many move happened
   final moveCount = 0.obs;
   //late int maxMoveCount;
 
+  // check wheter if the game is ended
+  // if current couple count is 8 then game is over
   final chosenWordCount = 8;
+  final gameOver = false.obs;
   int currentCoupleCount = 0;
 
   @override
@@ -53,11 +53,11 @@ class Game4Controller extends GetxController {
     final subWord = words.sublist(0, chosenWordCount);
     var imageWord = List.generate(
       subWord.length,
-      (index) => ExtendedWord(subWord.elementAt(index), true, 0, false),
+      (index) => ExtendedWordGame4(subWord.elementAt(index), true, 0, false),
     );
     var voiceWord = List.generate(
       subWord.length,
-      (index) => ExtendedWord(subWord.elementAt(index), false, 0, false),
+      (index) => ExtendedWordGame4(subWord.elementAt(index), false, 0, false),
     );
 
     imageWord.addAll(voiceWord);
@@ -89,7 +89,7 @@ class Game4Controller extends GetxController {
 
   // draggedWord sürüklenen hangisi ise
   // üstüne gelinen on dragged
-  void handleDrag(ExtendedWord draggedWord, ExtendedWord onDragged) {
+  void handleDrag(ExtendedWordGame4 draggedWord, ExtendedWordGame4 onDragged) {
     if (!_checkTheSibling(draggedWord.index, onDragged.index)) {
       return;
     }
@@ -102,8 +102,8 @@ class Game4Controller extends GetxController {
   }
 
   Future _correctAnswer(
-    ExtendedWord draggedWord,
-    ExtendedWord onDragged,
+    ExtendedWordGame4 draggedWord,
+    ExtendedWordGame4 onDragged,
   ) async {
     // get some score from the correct drag
     totalScore.value += baseScore.value;
@@ -183,11 +183,11 @@ class Game4Controller extends GetxController {
   }
 }
 
-class ExtendedWord {
+class ExtendedWordGame4 {
   Word word;
   bool isImage;
   int index;
   bool isCompleted;
 
-  ExtendedWord(this.word, this.isImage, this.index, this.isCompleted);
+  ExtendedWordGame4(this.word, this.isImage, this.index, this.isCompleted);
 }

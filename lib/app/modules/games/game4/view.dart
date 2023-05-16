@@ -15,24 +15,26 @@ class Game4Page extends GetView<Game4Controller> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(children: [
-          getBackgroundImage(),
-          Column(
-            children: [
-              getGameTitle(),
-              SizedBox(
-                height: 5.0.hp,
-              ),
-              getPlayScoreCoin(),
-              getImages(),
-              getMenuButton(),
-              SizedBox(
-                height: 5.0.hp,
-              )
-            ],
-          ),
-          backButton(),
-        ]),
+        child: Stack(
+          children: [
+            getBackgroundImage(),
+            Column(
+              children: [
+                getGameTitle(),
+                SizedBox(
+                  height: 5.0.hp,
+                ),
+                getPlayScoreCoin(),
+                getImages(),
+                getMenuButton(),
+                SizedBox(
+                  height: 5.0.hp,
+                )
+              ],
+            ),
+            backButton(),
+          ],
+        ),
       ),
     );
   }
@@ -214,7 +216,7 @@ class Game4Page extends GetView<Game4Controller> {
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) {
-                ExtendedWord? extendedword = controller.wordMap[index];
+                ExtendedWordGame4? extendedword = controller.wordMap[index];
                 return getDraggableImage(extendedword);
               },
             ),
@@ -224,7 +226,7 @@ class Game4Page extends GetView<Game4Controller> {
     );
   }
 
-  Widget getDraggableImage(ExtendedWord? extendedWord) {
+  Widget getDraggableImage(ExtendedWordGame4? extendedWord) {
     return LongPressDraggable(
       data: extendedWord,
       feedback: Opacity(
@@ -235,9 +237,9 @@ class Game4Page extends GetView<Game4Controller> {
     );
   }
 
-  Widget getSquareImage(ExtendedWord? extendedWord) {
+  Widget getSquareImage(ExtendedWordGame4? extendedWord) {
     var squareWidth = Get.width - 20.0.wp;
-    return DragTarget<ExtendedWord>(
+    return DragTarget<ExtendedWordGame4>(
       onAccept: (data) async {
         if (extendedWord == null) {
           return;
