@@ -1,195 +1,217 @@
+import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/DataHelper.dart';
 import 'package:first_app/app/data/models/game_user.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/word.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class GameWord{
+  String name;
+  String pictureSrc;
+  String audioSrc;
+  bool isCorrect;
+
+  GameWord(this.name,this.pictureSrc,this.audioSrc,this.isCorrect);
+}
+ 
 class Game5Controller extends GetxController {
   // all words coming from the chosen categories
   late List<Word> words;
-
-  // this will store 10 game correct word
-  late List<Word> missingWordList;
-  final currentMissingWordIndex = 0.obs;
-
   late String gameMode;
-
-  // randomWords chosen words for the game from words list
-  Rx<List<Word>> randomWords = Rx<List<Word>>([]);
-  Rx<List<Word>> randomWordsWithotMissing = Rx<List<Word>>([]);
-
-  final totalScore = 0.0.obs;
+  late Rx<List<GameWord>> gameWords = Rx<List<GameWord>>([]);
+  final wordIndex = 0.obs;
+  AudioPlayer general_audio_player = AudioPlayer();
+  AudioPlayer choice_audio_player = AudioPlayer();
+  AudioPlayer listen_audio_player = AudioPlayer();
+  late Rx<MaterialAccentColor> wrongButton;
+  final is_wrong_clickable = false.obs;
+  late Rx<MaterialAccentColor> correctButton;
+  final is_correct_clickable = false.obs;
+  late IconButton playButton;
+  late IconButton correctIcon;
+  late IconButton wrongIcon;
   final totalCoinCount = 0.obs;
-
-  // it depends on the words count
-  final baseScore = 0.0.obs;
-
-  // to decrease the score after wrong choises
-  final guestCount = 0.obs;
-
-  final questionCount = 2;
-
-  // check wheter if the game is ended
+  final totalScore = 0.obs;
+  Rx<IconButton> currentButton = IconButton(onPressed: (){}, icon: Icon(Icons.add)).obs;
   final gameOver = false.obs;
-
-  late DateTime startTime;
 
   @override
   void onInit() {
     super.onInit();
-
-    // get arguments
     words = Get.arguments[0] as List<Word>;
     gameMode = Get.arguments[1] as String;
-
-    print("Ben geldim");
-  }
-
-  void startGame() {
-    startTime = DateTime.now();
-    gameOver.value = false;
-    guestCount.value = 0;
-    totalScore.value = 0;
-    totalCoinCount.value = 0;
-    currentMissingWordIndex.value = 0;
-
-    words.shuffle();
-
-    // create questions getting missing words
-    missingWordList = words.sublist(0, questionCount);
-
-    // choise first game questions
-    randomWords.value = _getRandomWords();
-
-    // fill base score according to game mode
-    baseScore.value = words.length.toDouble();
-    if (gameMode == "kolay") {
-      baseScore.value *= 2;
-    } else if (gameMode == "normal") {
-      baseScore.value *= 5;
-    } else if (gameMode == "zor") {
-      baseScore.value *= 10;
-    } else if (gameMode == "extreme") {
-      baseScore.value *= 15;
-    }
-  }
-
-  Word getMissingWord() {
-    return missingWordList.elementAt(currentMissingWordIndex.value);
-  }
-
-  Future correctAnswer() async {
-    // get coin if s/he knows the answer in the first try
-    if (guestCount.value == 0) {
-      if (gameMode == "kolay") {
-        totalCoinCount.value += 5;
-      } else if (gameMode == "normal") {
-        totalCoinCount.value += 5;
-      } else if (gameMode == "zor") {
-        totalCoinCount.value += 10;
-      } else if (gameMode == "extreme") {
-        totalCoinCount.value += 10;
-      }
-    }
-    // get score
-    totalScore.value += baseScore.value / pow(2, guestCount.value);
-
-    // game over
-    if (currentMissingWordIndex.value + 1 >= questionCount) {
-      gameOver.value = true;
-      await insertGameInfo();
-    }
-  }
-
-  Future insertGameInfo() async {
-    final elapsed = DateTime.now().difference(startTime);
-    await DataHelper.instance.insert(
-      "GameUser",
-      GameUser(
-        1,
-        2,
-        totalScore.value,
-        elapsed.inSeconds,
-        DateTime.now().toUtc(),
-        gameOver.value,
-      ),
+    wrongButton = Colors.deepPurpleAccent.obs;
+    correctButton = createColor(Colors.blue).obs;
+    correctIcon = IconButton(
+      splashRadius: 50.0,
+      splashColor: Colors.green,
+      color: Colors.lightGreen,
+      iconSize: 50,
+      icon: Icon(Icons.check),
+      onPressed: (){
+      },
     );
-
-    // get user and update her/his coins
-    var userMap = await DataHelper.instance.getAll("User");
-    List<User> users = List.generate(userMap.length, (i) {
-      return User.fromJson(userMap[i]);
-    });
-    var user = users.elementAt(0);
-
-    await DataHelper.instance.update(
-      "User",
-      User(
-        user.userID,
-        user.name,
-        user.surname,
-        user.age,
-        user.coin + totalCoinCount.value,
-      ),
+    wrongIcon = IconButton(
+      splashRadius: 50.0,
+      splashColor: Colors.green,
+      color: Colors.red,
+      iconSize: 50,
+      icon: Icon(Icons.close),
+      onPressed: (){
+      },
     );
+    playButton = IconButton(
+      splashRadius: 50.0,
+      splashColor: Colors.green,
+      color: Colors.lightGreen,
+      iconSize: 50,
+      icon: Icon(Icons.play_circle),
+      onPressed: (){
+        listen_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+
+      },
+    );
+    currentButton.value = playButton;
+    generateWords();
   }
-
-  void wrongAnswer() {
-    guestCount.value++;
-  }
-
-  void getNextGame() async {
-    guestCount.value = 0;
-
-    if (currentMissingWordIndex.value + 1 >= questionCount) {
-      gameOver.value = true;
-      await insertGameInfo();
-    } else {
-      currentMissingWordIndex.value++;
-      randomWords.value = _getRandomWords();
-    }
-  }
-
-  List<Word> _getRandomWords() {
-    switch (gameMode) {
-      case "kolay":
-        return _getRandomWordsWithCount(2);
-      case "normal":
-        return _getRandomWordsWithCount(2);
-      case "zor":
-        return _getRandomWordsWithCount(3);
-      case "extreme":
-        return _getRandomWordsWithCount(3);
-      default:
-    }
-    return List.empty();
-  }
-
-  List<Word> _getRandomWordsWithCount(int count) {
-    List<Word> result = <Word>[];
-
-    // add the correct word beforehand
-    var correctWord = missingWordList.elementAt(currentMissingWordIndex.value);
+  void generateWords(){
     Random random = Random();
-
-    for (int i = 0; i < count; i++) {
-      int index = random.nextInt(words.length);
-      var word = words.elementAt(index);
-
-      // aynısı eklendiyse tekrar gir for'a
-      if (result.contains(word) || word.wordID == correctWord.wordID) {
-        i--;
-      } else {
-        result.add(word);
+    int number_of_correct_words = random.nextInt(8) + 1;
+    int number_of_incorrect_words = 10 - number_of_correct_words;
+    words.shuffle();
+    List<Word> sublist = words.getRange(0,10+number_of_incorrect_words).toList();
+    int index = 10;
+    for(int i= 0;i<10;i++){
+      if(i<number_of_correct_words){
+        gameWords.value.add(GameWord(sublist[i].name,sublist[i].pictureSrc, sublist[i].audioSrc,true));
+      }
+      else{
+        gameWords.value.add(GameWord(sublist[i].name,sublist[i].pictureSrc, sublist[index].audioSrc,false));
+        index++;
       }
     }
-    randomWordsWithotMissing.value = [...result];
-
-    result.add(correctWord);
-    result.shuffle();
-
-    return result;
+    gameWords.value.shuffle();
+    gameWords.value.forEach((element) {
+      print("element:${element.name}  isCorrect:${element.isCorrect}");
+    });
   }
+  void playStartingSpeech() async{
+    await Future.delayed(Duration(seconds: 2));
+    general_audio_player.play(AssetSource("audios/Game5/firstSpeech.mp3"));
+    int counter = 0;
+    StreamSubscription<void>? audioPlayerCompletionListener;
+    audioPlayerCompletionListener = general_audio_player.onPlayerComplete.listen((event) async {
+      if(counter ==0){
+        await Future.delayed(Duration(seconds: 1));
+        general_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+        counter++;
+      }
+      else if(counter==1){
+        audioPlayerCompletionListener!.cancel();
+        is_wrong_clickable.value = true;
+        is_correct_clickable.value = true;
+        is_correct_clickable.refresh();
+        is_wrong_clickable.refresh();
+        wrongButton.refresh();
+        correctButton.refresh();
+      }
+    });
+
+  }
+
+  Future<void> handleUserSelect(bool choice,Function callback) async {
+    is_wrong_clickable.value = false;
+    is_correct_clickable.value = false;
+    is_correct_clickable.refresh();
+    is_wrong_clickable.refresh();
+    StreamSubscription<void>? audioPlayerCompletionListener;
+    audioPlayerCompletionListener= choice_audio_player.onPlayerComplete.listen((event) async{
+      await Future.delayed(Duration(seconds: 1));
+      if(wordIndex.value == 9){
+        gameOver.value = true;
+        gameOver.refresh();
+        callback();
+        return;
+      }
+      wordIndex.value++;
+      wordIndex.refresh();
+      currentButton.value = playButton;
+      currentButton.refresh();
+      correctButton.value = createColor(Colors.blue);
+      correctButton.refresh();
+      wrongButton.value = Colors.deepPurpleAccent;
+      StreamSubscription<void>? audioPlayerCompletionListener2;
+      audioPlayerCompletionListener2= listen_audio_player.onPlayerComplete.listen((event) async {
+        await Future.delayed(Duration(seconds: 1));
+        is_wrong_clickable.value = true;
+        is_correct_clickable.value = true;
+        is_correct_clickable.refresh();
+        is_wrong_clickable.refresh();
+        audioPlayerCompletionListener2!.cancel();
+      });
+      audioPlayerCompletionListener!.cancel();
+      await Future.delayed(Duration(seconds: 1));
+      await listen_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+    });
+
+    if(gameWords.value[wordIndex.value].isCorrect == choice){
+      if(choice == true){
+        correctButton.value = createColor(Colors.lightGreen);
+        correctButton.refresh();
+      }
+      else{
+        wrongButton.value = createColor(Colors.lightGreen);
+        wrongButton.refresh();
+      }
+      currentButton.value = correctIcon;
+      currentButton.refresh();
+      totalScore.value+=1000;
+      totalScore.refresh();
+      await choice_audio_player.play(AssetSource("audios/Game5/correct.mp3"));
+    }
+    else{
+      if(choice == true){
+        correctButton.value = Colors.redAccent;
+        correctButton.refresh();
+      }
+      else{
+        wrongButton.value = Colors.redAccent;
+        wrongButton.refresh();
+      }
+      currentButton.value = wrongIcon;
+      currentButton.refresh();
+      totalScore.value+=500;
+      totalScore.refresh();
+      await choice_audio_player.play(AssetSource("audios/Game5/wrong.mp3"));
+
+    }
+    totalCoinCount.value = totalScore.value ~/ 200;
+    totalCoinCount.refresh();
+
+  }
+
+  MaterialAccentColor createColor(MaterialColor color){
+
+    return MaterialAccentColor(
+      color.value,
+      <int, Color>{
+        100: color[100]!, // Replace with the desired swatch value
+        400: color[400]!,
+        200: color[200]!,
+        700: color[700]!,
+      },
+    );
+
+
+
+
+
+
+
+  }
+
 }
