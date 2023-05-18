@@ -1,6 +1,7 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/modules/listen_word/view.dart';
 import 'package:first_app/app/modules/category_map/controller.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:first_app/app/widgets/positions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                 "assets/images/map.jpg",
                 width: 1500,
               ),
-              ...categoryController.categories.map((element) {
+              ...categoryController.categories.map((category) {
                 index++;
                 // fazla category olduğunda hata vermemesi için ilerde silinebilir
                 if (index == positionList.length) {
@@ -43,14 +44,15 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                   top: positionList[index].topPosition,
                   child: InkWell(
                     onTap: () {
-                      Get.toNamed(ListenWordPage.pageName, arguments: element);
+                      Get.toNamed(ListenWordPage.pageName, arguments: category);
                     },
                     child: Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(element.pictureSrc),
+                              image:
+                                  getImage(category.isNew, category.pictureSrc),
                               fit: BoxFit.cover),
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.black, width: 1.5)),

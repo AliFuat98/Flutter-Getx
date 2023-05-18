@@ -21,6 +21,9 @@ import 'package:first_app/app/modules/home/binding.dart';
 import 'package:first_app/app/modules/home/view.dart';
 import 'package:first_app/app/modules/store/binding.dart';
 import 'package:first_app/app/modules/store/view.dart';
+import 'package:first_app/app/modules/word/binding.dart';
+import 'package:first_app/app/modules/word/view.dart';
+import 'package:first_app/app/modules/word/widgets/add_word.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,8 +35,8 @@ import 'app/modules/games/game5/binding.dart';
 import 'app/modules/games/game5/view.dart';
 
 void main() async {
-  //sqfliteFfiInit();
-  //databaseFactory = databaseFactoryFfi;
+  // sqfliteFfiInit();
+  // databaseFactory = databaseFactoryFfi;
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());
@@ -73,6 +76,17 @@ class MyApp extends StatelessWidget {
           name: StorePage.pageName,
           page: () => StorePage(),
           binding: StoreBinding(),
+        ),
+        GetPage(
+          name: WordPage.pageName,
+          page: () => WordPage(),
+          binding: WordBinding(),
+        ),
+        GetPage(
+          name: AddWord.pageName,
+          page: () => AddWord(),
+          binding: WordBinding(),
+          transition: Transition.downToUp,
         ),
         GetPage(
           name: GamesPage.pageName,

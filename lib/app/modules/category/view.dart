@@ -1,8 +1,7 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
-import 'package:first_app/app/modules/category/widgets/add_card.dart';
-import 'package:first_app/app/modules/category/widgets/add_word.dart';
+import 'package:first_app/app/modules/category/widgets/add_category.dart';
 import 'package:first_app/app/modules/category/widgets/category_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -29,7 +28,7 @@ class CategoryPage extends GetView<CategoryController> {
           ],
         ),
       ),
-      floatingActionButton: deleteCategoryAndAddWordButton(),
+      floatingActionButton: deleteCategoryAndAddCategoryButton(),
     );
   }
 
@@ -72,37 +71,39 @@ class CategoryPage extends GetView<CategoryController> {
           physics: const ClampingScrollPhysics(),
           children: [
             ...controller.categories
-                .map((element) => LongPressDraggable(
-                      data: element,
-                      onDragStarted: () => controller.changeDeleting(true),
-                      onDraggableCanceled: (velocity, offset) =>
-                          controller.changeDeleting(false),
-                      onDragEnd: (details) => controller.changeDeleting(false),
-                      feedback: Opacity(
-                        opacity: 0.8,
-                        child: CategoryCard(category: element),
-                      ),
+                .map(
+                  (element) => LongPressDraggable(
+                    data: element,
+                    onDragStarted: () => controller.changeDeleting(true),
+                    onDraggableCanceled: (velocity, offset) =>
+                        controller.changeDeleting(false),
+                    onDragEnd: (details) => controller.changeDeleting(false),
+                    feedback: Opacity(
+                      opacity: 0.8,
                       child: CategoryCard(category: element),
-                    ))
+                    ),
+                    child: CategoryCard(category: element),
+                  ),
+                )
                 .toList(),
-            AddCategoryCard(),
           ],
         ),
       ),
     );
   }
 
-  Widget deleteCategoryAndAddWordButton() {
+  Widget deleteCategoryAndAddCategoryButton() {
     return DragTarget<Category>(
       builder: (context, candidateData, rejectedData) => Obx(
         () => FloatingActionButton(
           onPressed: () {
             if (controller.categories.isEmpty) {
-              EasyLoading.showInfo("Create a Category to add a word");
+              EasyLoading.showInfo("Create a Category first");
               return;
             }
+            controller.editController.clear();
             Get.to(
-              () => AddWord(),
+              () => AddCategory(),
               transition: Transition.downToUp,
             );
           },
@@ -110,8 +111,12 @@ class CategoryPage extends GetView<CategoryController> {
           child: Icon(controller.deleting.value ? Icons.delete : Icons.add),
         ),
       ),
-      onAccept: (category) {
-        //controller.deleteCategory(category);
+      onAccept: (category) async {
+        var result = await controller.deleteCategory(category);
+        if (result == -1) {
+          EasyLoading.showError("Something goes wrong");
+          return;
+        }
         EasyLoading.showSuccess("Delete Success");
       },
     );

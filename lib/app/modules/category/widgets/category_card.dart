@@ -1,6 +1,7 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -24,7 +25,7 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         categoryController.changeSelectedCategory(category);
-        Get.to(() => WordPage());
+        Get.toNamed(WordPage.pageName);
       },
       child: Container(
         width: squareWidth / 2,
@@ -44,7 +45,7 @@ class CategoryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getStepProcessor(color),
-            getCategoryIcon(color),
+            getCategoryImage(),
             getCategoryCardInfo(),
           ],
         ),
@@ -74,7 +75,7 @@ class CategoryCard extends StatelessWidget {
 
   Widget getCategoryCardInfo() {
     return Padding(
-      padding: EdgeInsets.all(6.0.wp),
+      padding: EdgeInsets.symmetric(horizontal: 6.0.wp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -99,10 +100,15 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  Widget getCategoryIcon(Color color) {
+  Widget getCategoryImage() {
     return Padding(
       padding: EdgeInsets.all(6.0.wp),
-      child: const Icon(Icons.abc_sharp),
+      child: Image(
+        image: getImage(category.isNew, category.pictureSrc),
+        width: 10.0.wp,
+        height: 10.0.wp,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

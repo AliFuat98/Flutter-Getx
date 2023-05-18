@@ -2,14 +2,20 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
+import 'package:first_app/app/modules/word/controller.dart';
+import 'package:first_app/app/modules/word/widgets/add_word.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-class WordPage extends StatelessWidget {
+class WordPage extends GetView<WordController> {
   WordPage({super.key});
 
+  static const pageName = "/word";
+
   final categoryController = Get.find<CategoryController>();
+
   AudioPlayer audioPlayer = AudioPlayer();
 
   @override
@@ -18,17 +24,27 @@ class WordPage extends StatelessWidget {
     var color = Colors.black;
 
     return Scaffold(
-      body: Form(
-        key: categoryController.fromKey,
-        child: Column(
-          children: [
-            backButton(),
-            categoryIconAndName(color, category),
-            wordNameTextField(),
-            getWordsList(category),
-          ],
-        ),
+      body: Column(
+        children: [
+          backButton(),
+          categoryImageAndName(color, category),
+          //wordNameTextField(),
+          getWordsList(category),
+        ],
       ),
+      floatingActionButton: addWordButton(),
+    );
+  }
+
+  Widget addWordButton() {
+    final category = categoryController.selectedCategory.value;
+    return FloatingActionButton(
+      onPressed: () {
+        if (category == null) return;
+        Get.toNamed(AddWord.pageName);
+      },
+      backgroundColor: Colors.blue,
+      child: const Icon(Icons.add),
     );
   }
 
@@ -52,12 +68,16 @@ class WordPage extends StatelessWidget {
     );
   }
 
-  Widget categoryIconAndName(Color color, Category category) {
+  Widget categoryImageAndName(Color color, Category category) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0.wp),
       child: Row(
         children: [
-          const Icon(Icons.abc),
+          Image(
+            image: getImage(category.isNew, category.pictureSrc),
+            width: 10.0.wp,
+            height: 10.0.wp,
+          ),
           SizedBox(width: 3.0.wp),
           Text(
             category.name,

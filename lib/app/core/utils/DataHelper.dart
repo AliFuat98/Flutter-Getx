@@ -4,7 +4,6 @@ import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-//import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
 
 import '../../data/models/word.dart';
 
@@ -82,15 +81,30 @@ class DataHelper {
           whereArgs: [newUser.userID],
         );
         break;
+      case "Category":
+        Category category = object as Category;
+        result = await db.update(
+          table,
+          category.toJson(),
+          where: 'ID = ?',
+          whereArgs: [category.ID],
+        );
+        break;
       default:
     }
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> getAllNotDeleted(String table) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query(table, where: "IsDeleted = 0");
+    return maps;
+  }
+
   Future<List<Map<String, dynamic>>> getAll(String table) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(table);
-    print(maps.length);
     return maps;
   }
 

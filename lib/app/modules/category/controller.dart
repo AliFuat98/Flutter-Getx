@@ -1,9 +1,9 @@
+import 'package:first_app/app/core/utils/DataHelper.dart';
 import 'package:first_app/app/data/services/category/category_repository.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:first_app/app/data/models/category.dart';
-
-import '../../data/models/word.dart';
 
 class CategoryController extends GetxController {
   CategoryRepository categoryRepository;
@@ -18,6 +18,9 @@ class CategoryController extends GetxController {
   final chipIndex = 0.obs;
   final deleting = false.obs;
   final selectedCategory = Rx<Category?>(null);
+
+  // adding new category store the data in here
+  final selectedCategoryImageFilePath = Rx<String?>(null);
 
   @override
   void onInit() async {
@@ -34,17 +37,52 @@ class CategoryController extends GetxController {
   }
 
   // yeni kategori ekleme
-  bool addCategory(Category category) {
-    if (categories.contains(category)) {
+  Future<bool> insertCategory() async {
+    final categoryName = editController.text;
+    var imagePath = await savePermenantTheImageAndGetThePath(
+        selectedCategoryImageFilePath.value);
+    if (imagePath == null) {
       return false;
     }
-    categories.add(category);
+
+    Category category = Category.withoutSettings(categoryName, imagePath);
+
+    var nameCheck = categories.any(
+      (element) => element.name.toLowerCase() == categoryName.toLowerCase(),
+    );
+
+    if (nameCheck) {
+      return false;
+    }
+
+    final result = await DataHelper.instance.insert("Category", category);
+    if (result == 0) {
+      return false;
+    }
+    categories.value = await categoryRepository.readCategories();
     return true;
   }
 
   // kategori sil
-  void deleteCategory(Category category) {
+  Future<int> deleteCategory(Category category) async {
+    category.isDeleted = true;
+    final result = await DataHelper.instance.update("Category", category);
+    if (result == 0) {
+      return -1;
+    }
     categories.remove(category);
+
+    // delete the category image from the device
+    if (category.isNew) {
+      deleteFile(category.pictureSrc);
+
+      // delete category words images and voice data
+      for (var word in category.words) {
+        //deleteImage(word.pictureSrc);
+        //deleteVoice(word.audioSrc);
+      }
+    }
+    return 1;
   }
 
   // sürükle bırak ile categori silerken kullanılır
@@ -55,26 +93,6 @@ class CategoryController extends GetxController {
   // kategori seçme işleminden sonra seçilenin tutulması
   void changeSelectedCategory(Category? category) {
     selectedCategory.value = category;
-  }
-
-  bool updateCategory(
-    Category category,
-    String wordName,
-    String pictureSrc,
-    String audioSrc,
-    int reward,
-  ) {
-    var words = category.words;
-    if (words.any((element) => element.name == wordName)) {
-      return false;
-    }
-    Word newWord = Word.withoutID(
-        wordName, pictureSrc, audioSrc, 0, -1, reward, category.ID);
-    words.add(newWord);
-    int oldIdx = categories.indexOf(category);
-    categories[oldIdx].words = words;
-    categories.refresh();
-    return true;
   }
 
   // yeni kelime ekleme önceden seçilmiş olan kategoriye

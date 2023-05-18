@@ -92,13 +92,16 @@ class Game1Controller extends GetxController {
     for (var element in temporaryList) {
       gameWords.add(element);
       gameWords.add(Word.withoutID(
-          "${element.name}twin",
-          element.pictureSrc,
-          element.audioSrc,
-          element.isPronounced,
-          element.pronunciationScore,
-          element.reward,
-          element.moduleID));
+        "${element.name}twin",
+        element.pictureSrc,
+        element.audioSrc,
+        element.isPronounced,
+        element.pronunciationScore,
+        element.reward,
+        element.moduleID,
+        element.isNew,
+        element.isDeleted,
+      ));
       couples[element.name] = "${element.name}twin";
       couples["${element.name}twin"] = element.name;
     }
