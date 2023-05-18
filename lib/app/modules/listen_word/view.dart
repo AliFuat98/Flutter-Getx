@@ -28,6 +28,8 @@ class ListenWordPage extends GetView<ListenwordController> {
           getPrevPlayNext(),
           SizedBox(height: 5.0.hp),
           getRecordButton(),
+          SizedBox(height: 10.0.hp),
+          getScoreBoard(),
         ],
       ),
     );
@@ -117,11 +119,57 @@ class ListenWordPage extends GetView<ListenwordController> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FloatingActionButton.large(
-          onPressed: () {},
+          onPressed: () {
+            controller.handleButtonPress();
+          },
           backgroundColor: Colors.red,
           child: const Icon(Icons.mic),
         ),
       ],
     );
+  }
+  Widget getScoreBoard(){
+    return Container(
+      margin: EdgeInsets.fromLTRB(20.0.wp,0.0.wp, 20.0.wp, 0.0.wp),
+      width: 100.0.wp,
+      decoration: BoxDecoration(
+        color: Colors.purple,
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.star,
+            color: Colors.yellow,
+            size: 24.0,
+          ),
+          SizedBox(width: 8.0),
+          Text(
+            'Score: 100',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+
+
+
+
+
+
   }
 }

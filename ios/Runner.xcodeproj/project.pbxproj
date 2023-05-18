@@ -121,7 +121,6 @@
 				AEEE333D6D3DC9578A823A21 /* Pods-Runner.release.xcconfig */,
 				1EC2C47E61266AA7A0740EF9 /* Pods-Runner.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -364,6 +363,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"sqlite3\"",
+					"-framework",
+					"\"FMDB\"",
+					"-framework",
+					"\"audioplayers_darwin\"",
+					"-framework",
+					"\"path_provider_foundation\"",
+					"-framework",
+					"\"sqflite\"",
+					"-lc++",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.firstApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -492,6 +504,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"sqlite3\"",
+					"-framework",
+					"\"FMDB\"",
+					"-framework",
+					"\"audioplayers_darwin\"",
+					"-framework",
+					"\"path_provider_foundation\"",
+					"-framework",
+					"\"sqflite\"",
+					"-lc++",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.firstApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -513,6 +538,19 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"sqlite3\"",
+					"-framework",
+					"\"FMDB\"",
+					"-framework",
+					"\"audioplayers_darwin\"",
+					"-framework",
+					"\"path_provider_foundation\"",
+					"-framework",
+					"\"sqflite\"",
+					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.firstApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
