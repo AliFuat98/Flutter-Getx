@@ -39,17 +39,17 @@ class WordController extends GetxController {
 
   Future stop() async {
     final cachPath = await recorder.value.stopRecorder();
-    final perminantPath = await savePermenantTheAudioAndGetThePath(cachPath);
+    //final perminantPath = await savePermenantTheAudioAndGetThePath(cachPath);
     print('audio path is cach ----------------- $cachPath');
-    print('audio path is perminant----------------- $perminantPath');
+    //print('audio path is perminant----------------- $perminantPath');
 
-    wordAudioFilePath.value = perminantPath;
+    wordAudioFilePath.value = cachPath;
 
     recorder.refresh();
   }
 
   Future record() async {
-    await recorder.value.startRecorder(toFile: "xx");
+    await recorder.value.startRecorder(toFile: "xx.wav", codec: Codec.pcm16WAV);
     recorder.refresh();
   }
 }

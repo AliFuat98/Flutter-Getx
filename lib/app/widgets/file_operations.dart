@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 ImageProvider getImage(bool isnew, String src) {
   try {
@@ -73,26 +72,8 @@ Future<String?> savePermenantTheAudioAndGetThePath(
     final name = basename(inputFilepath);
     final outputFilePath = File('${directory.path}/$name.wav');
 
-    convertToWav(inputFilepath, outputFilePath.path);
-
     return outputFilePath.path;
   } catch (e) {
     return null;
-  }
-}
-
-final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
-
-Future<void> convertToWav(String inputFile, String outputFile) async {
-  deleteFile(outputFile);
-
-  final arguments =
-      '-i $inputFile -acodec pcm_s16le -ac 1 -ar 44100 $outputFile';
-
-  int result = await _flutterFFmpeg.execute(arguments);
-  if (result == 0) {
-    print('Audio file converted to WAV format.');
-  } else {
-    print('Error converting audio file to WAV format.');
   }
 }
