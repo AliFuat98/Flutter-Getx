@@ -54,7 +54,7 @@ dependencies:
   flutter_sound: ^9.2.13
   permission_handler: ^10.2.0
   wav: ^1.2.0
-  flutter_ffmpeg: ^0.4.2
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:
@@ -91,7 +91,7 @@ flutter:
     - assets/images/word_images/foods/
     - assets/images/word_images/fruits/
     - assets/audios/
-    - assets/audios/game5/
+    - assets/audios/game_5/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

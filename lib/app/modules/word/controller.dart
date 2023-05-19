@@ -43,14 +43,13 @@ class WordController extends GetxController {
     print('audio path is cach ----------------- $cachPath');
     //print('audio path is perminant----------------- $perminantPath');
 
-    //wordAudioFilePath.value = perminantPath;
     wordAudioFilePath.value = cachPath;
 
     recorder.refresh();
   }
 
   Future record() async {
-    await recorder.value.startRecorder(toFile: "xx.aac", codec: Codec.aacADTS);
+    await recorder.value.startRecorder(toFile: "xx.wav", codec: Codec.pcm16WAV);
     recorder.refresh();
   }
 }

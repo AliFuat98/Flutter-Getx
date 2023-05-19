@@ -128,9 +128,10 @@ class ListenWordPage extends GetView<ListenwordController> {
       ],
     );
   }
-  Widget getScoreBoard(){
+
+  Widget getScoreBoard() {
     return Container(
-      margin: EdgeInsets.fromLTRB(20.0.wp,0.0.wp, 20.0.wp, 0.0.wp),
+      margin: EdgeInsets.fromLTRB(20.0.wp, 0.0.wp, 20.0.wp, 0.0.wp),
       width: 100.0.wp,
       decoration: BoxDecoration(
         color: Colors.purple,
@@ -154,22 +155,16 @@ class ListenWordPage extends GetView<ListenwordController> {
             size: 24.0,
           ),
           SizedBox(width: 8.0),
-          Text(
-            'Score: 100',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Obx(() => Text(
+                'Score: ${controller.pronunciationScore.value}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
         ],
       ),
     );
-
-
-
-
-
-
   }
 }
