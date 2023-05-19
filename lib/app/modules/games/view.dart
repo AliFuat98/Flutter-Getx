@@ -1,17 +1,15 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/word.dart';
-import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
 import 'package:first_app/app/modules/games/game3/view.dart';
 import 'package:first_app/app/modules/games/game4/view.dart';
+import 'package:first_app/app/modules/games/widgets/choose_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:multiselect/multiselect.dart';
 
 import 'controller.dart';
 import 'game5/view.dart';
@@ -20,38 +18,90 @@ class GamesPage extends GetView<GamesController> {
   GamesPage({super.key});
 
   static const pageName = "/games";
-  final CategoryController categoryController = Get.find<CategoryController>();
   final caroController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("geri gelme")),
+      //appBar: AppBar(title: const Text("geri gelme")),
       backgroundColor: Colors.amber,
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: [
-            chooseCategoryTitle(),
-            categoryDropdown(),
+            backButton(),
+            chooseCategoryButton(),
+            //chooseCategoryTitle(),
+            //categoryDropdown(),
             gameModeDropdown(),
-            chooseGameTitle(),
-            Column(
-              children: [
-                gameImageSlider(),
-                SizedBox(height: 5.0.hp),
-                sliderDots(),
-                SizedBox(height: 2.0.hp),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //chooseGameTitle(),
+            Expanded(
+              child: Container(
+                color: Colors.red,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    previousNextButton(Icons.arrow_left),
-                    playButton(),
-                    previousNextButton(Icons.arrow_right),
+                    gameImageSlider(),
+                    SizedBox(height: 5.0.hp),
+                    sliderDots(),
+                    SizedBox(height: 5.0.hp),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        previousNextButton(Icons.arrow_left, false),
+                        playButton(),
+                        previousNextButton(Icons.arrow_right, true),
+                      ],
+                    ),
+                    SizedBox(height: 5.0.hp),
                   ],
                 ),
-                SizedBox(height: 5.0.hp),
-              ],
+              ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget backButton() {
+    return Padding(
+      padding: EdgeInsets.all(1.0.wp),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget chooseCategoryButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            minimumSize: Size.fromHeight(20.0.sp),
+            textStyle: TextStyle(fontSize: 14.0.sp)),
+        onPressed: () {
+          Get.to(
+            () => ChooseCategory(),
+            transition: Transition.downToUp,
+          );
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(1.0.wp),
+              child: Icon(Icons.category, size: 7.0.wp),
+            ),
+            SizedBox(width: 5.0.wp),
+            const Expanded(child: Text("choose category"))
           ],
         ),
       ),
@@ -65,24 +115,6 @@ class GamesPage extends GetView<GamesController> {
       child: Text(
         "Choose a Category",
         style: TextStyle(fontSize: 4.0.hp, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget categoryDropdown() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
-      child: Obx(
-        () => DropDownMultiSelect(
-          options: categoryController.categories
-              .map((element) => element.name)
-              .toList(),
-          whenEmpty: "Select Categories",
-          onChanged: (value) {
-            controller.selectedCategories.value = value;
-          },
-          selectedValues: controller.selectedCategories.value,
-        ),
       ),
     );
   }
@@ -173,13 +205,17 @@ class GamesPage extends GetView<GamesController> {
     );
   }
 
-  Widget previousNextButton(IconData? data) {
+  Widget previousNextButton(IconData? data, bool next) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
         elevation: 0,
       ),
       onPressed: () {
+        if (next) {
+          caroController.nextPage();
+          return;
+        }
         caroController.previousPage();
       },
       child: Icon(
@@ -208,30 +244,12 @@ class GamesPage extends GetView<GamesController> {
 
   void goToGame(int value) {
     try {
-      if (controller.selectedCategories.value.isEmpty) {
+      if (controller.selectedCategoryIDs.value.isEmpty) {
         EasyLoading.showError("Choose a category");
         return;
       }
 
-      // get chosen categories
-      var categoryList = categoryController.categories
-          .map(
-            (category) {
-              if (controller.selectedCategories.value.contains(category.name)) {
-                return category;
-              }
-            },
-          )
-          .where((e) => e != null)
-          .toList();
-
-      // get chosen words from chosen categories
-      List<Word> words = <Word>[];
-      for (var category in categoryList) {
-        for (var word in category!.words) {
-          words.add(word);
-        }
-      }
+      List<Word> words = controller.getWordsFromChosenCategories();
 
       switch (value) {
         case 0:
