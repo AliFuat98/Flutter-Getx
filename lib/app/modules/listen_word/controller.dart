@@ -35,8 +35,12 @@ class ListenwordController extends GetxController {
     if (status != PermissionStatus.granted) {
       print("Permission is not granted");
     } else {
-      await recorder.openRecorder();
+      //await recorder.openRecorder();
     }
+  }
+
+  double getProgress() {
+    return (currentWordIndex.value + 1) / selectedCategory.words.length;
   }
 
   void decreaseCurrentWordIndex() {
