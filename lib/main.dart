@@ -35,8 +35,8 @@ import 'app/modules/games/game5/binding.dart';
 import 'app/modules/games/game5/view.dart';
 
 void main() async {
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  // sqfliteFfiInit();
+  // databaseFactory = databaseFactoryFfi;
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());

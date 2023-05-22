@@ -35,7 +35,7 @@ class ListenwordController extends GetxController {
     if (status != PermissionStatus.granted) {
       print("Permission is not granted");
     } else {
-      //await recorder.openRecorder();
+      await recorder.openRecorder();
     }
   }
 
