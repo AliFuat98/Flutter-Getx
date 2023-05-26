@@ -53,7 +53,7 @@ class ListenWordPage extends GetView<ListenwordController> {
           ),
           boxShadow: [
             BoxShadow(
-              color: darkBlue,
+              color: darkBlue100,
               blurRadius: 10,
               spreadRadius: 1.7.hp,
             )
@@ -181,14 +181,14 @@ class ListenWordPage extends GetView<ListenwordController> {
               decoration: BoxDecoration(
                 border: Border.all(
                   width: 5,
-                  color: darkBlue,
+                  color: darkBlue100,
                 ),
                 borderRadius: BorderRadius.all(
                   Radius.circular(
                     30.0.hp,
                   ),
                 ),
-                color: darkBlue,
+                color: darkBlue100,
                 image: DecorationImage(
                   image: AssetImage(
                     wordS
@@ -278,7 +278,7 @@ class ListenWordPage extends GetView<ListenwordController> {
             () => Icon(
               Icons.arrow_back,
               color: controller.currentWordIndex.value == 0
-                  ? darkBlue
+                  ? darkBlue100
                   : Colors.white,
             ),
           ),
@@ -299,7 +299,7 @@ class ListenWordPage extends GetView<ListenwordController> {
               Icons.arrow_forward,
               color: controller.currentWordIndex.value ==
                       controller.selectedCategory.words.length - 1
-                  ? darkBlue
+                  ? darkBlue100
                   : Colors.white,
             ),
           ),

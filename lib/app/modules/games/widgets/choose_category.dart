@@ -1,4 +1,5 @@
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/games/controller.dart';
 import 'package:first_app/app/widgets/file_operations.dart';
@@ -13,6 +14,7 @@ class ChooseCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: brightBlue50,
       body: SafeArea(
           child: Column(
         children: [
@@ -88,7 +90,7 @@ class ChooseCategory extends StatelessWidget {
           margin: EdgeInsets.all(1.0.wp),
           decoration: BoxDecoration(
             color: controller.checkChosen(category.ID)
-                ? Colors.greenAccent[400]
+                ? brightBlue300
                 : Colors.white,
             boxShadow: [
               BoxShadow(

@@ -1,2 +1,0 @@
-her oyun için farklı dosya farklı binding farklı contorller,
-en dıştaki controller ve view tüm oyunların gösterileceği sayafa için

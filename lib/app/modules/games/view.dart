@@ -1,4 +1,5 @@
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
@@ -23,38 +24,31 @@ class GamesPage extends GetView<GamesController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(title: const Text("geri gelme")),
-      backgroundColor: Colors.amber,
+      backgroundColor: brightBlue50,
       body: SafeArea(
         child: Column(
           children: [
             backButton(),
             chooseCategoryButton(),
-            //chooseCategoryTitle(),
-            //categoryDropdown(),
             gameModeDropdown(),
-            //chooseGameTitle(),
             Expanded(
-              child: Container(
-                color: Colors.red,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    gameImageSlider(),
-                    SizedBox(height: 5.0.hp),
-                    sliderDots(),
-                    SizedBox(height: 5.0.hp),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        previousNextButton(Icons.arrow_left, false),
-                        playButton(),
-                        previousNextButton(Icons.arrow_right, true),
-                      ],
-                    ),
-                    SizedBox(height: 5.0.hp),
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  gameImageSlider(),
+                  SizedBox(height: 5.0.hp),
+                  sliderDots(),
+                  SizedBox(height: 5.0.hp),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      previousNextButton(Icons.arrow_left, false),
+                      playButton(),
+                      previousNextButton(Icons.arrow_right, true),
+                    ],
+                  ),
+                  SizedBox(height: 5.0.hp),
+                ],
               ),
             )
           ],
@@ -86,8 +80,9 @@ class GamesPage extends GetView<GamesController> {
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            minimumSize: Size.fromHeight(20.0.sp),
-            textStyle: TextStyle(fontSize: 14.0.sp)),
+          minimumSize: Size.fromHeight(10.0.hp),
+          textStyle: TextStyle(fontSize: 3.0.hp),
+        ),
         onPressed: () {
           Get.to(
             () => ChooseCategory(),
@@ -98,7 +93,7 @@ class GamesPage extends GetView<GamesController> {
           children: [
             Padding(
               padding: EdgeInsets.all(1.0.wp),
-              child: Icon(Icons.category, size: 7.0.wp),
+              child: Icon(Icons.category, size: 5.0.hp),
             ),
             SizedBox(width: 5.0.wp),
             const Expanded(child: Text("choose category"))
@@ -108,23 +103,30 @@ class GamesPage extends GetView<GamesController> {
     );
   }
 
-  Widget chooseCategoryTitle() {
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(2.0.wp),
-      child: Text(
-        "Choose a Category",
-        style: TextStyle(fontSize: 4.0.hp, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
   Widget gameModeDropdown() {
     var choseList = ["kolay", "normal", "zor", "extreme"];
     return Container(
+      decoration: const BoxDecoration(
+        color: darkBlue100,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(15),
+          bottomRight: Radius.circular(15),
+        ),
+      ),
+      //alignment: AlignmentDirectional.center,
       padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
+      width: 50.0.wp,
       child: Obx(
         () => DropdownButton(
+          isExpanded: true,
+          iconEnabledColor: Colors.white,
+          underline: Container(),
+          borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(15)),
+          dropdownColor: Colors.blue,
+          focusColor: Colors.blue,
+          iconSize: 5.0.wp,
           value: controller.chosenGameMode.value,
           onChanged: (value) {
             controller.chosenGameMode.value = value ?? choseList.first;
@@ -132,21 +134,14 @@ class GamesPage extends GetView<GamesController> {
           items: choseList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(
+                value.toUpperCase(),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             );
           }).toList(),
         ),
-      ),
-    );
-  }
-
-  Widget chooseGameTitle() {
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(4.0.hp),
-      child: Text(
-        "Choose a game",
-        style: TextStyle(fontSize: 20.0.sp, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -172,14 +167,21 @@ class GamesPage extends GetView<GamesController> {
           items: [
             ...controller.games.map((element) {
               return Container(
-                color: Colors.blueAccent[700],
-                margin: EdgeInsets.symmetric(horizontal: 6.0.wp),
-                child: Image.asset(
-                  element.pictureSrc,
-                  height: 40.0.hp,
-                  width: 40.0.hp,
-                  fit: BoxFit.cover,
+                height: 40.0.hp,
+                //width: 40.0.hp,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    width: 2,
+                    color: brightBlue200,
+                    strokeAlign: BorderSide.strokeAlignInside,
+                  ),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(element.pictureSrc),
+                  ),
                 ),
+                margin: EdgeInsets.symmetric(horizontal: 4.0.wp),
               );
             }).toList(),
           ],
@@ -198,8 +200,9 @@ class GamesPage extends GetView<GamesController> {
           caroController.animateToPage(index),
         },
         effect: JumpingDotEffect(
-          dotWidth: 4.0.wp,
-          //dotColor:activeDotColor:
+          dotWidth: 4.0.hp,
+          dotColor: darkBlue100,
+          activeDotColor: brightBlue100,
         ),
       ),
     );
@@ -208,8 +211,7 @@ class GamesPage extends GetView<GamesController> {
   Widget previousNextButton(IconData? data, bool next) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
-        elevation: 0,
+        backgroundColor: blue,
       ),
       onPressed: () {
         if (next) {
@@ -220,8 +222,8 @@ class GamesPage extends GetView<GamesController> {
       },
       child: Icon(
         data,
-        size: 25,
-        color: const Color.fromARGB(255, 10, 74, 185),
+        size: 5.0.hp,
+        color: Colors.white,
       ),
     );
   }
@@ -230,13 +232,17 @@ class GamesPage extends GetView<GamesController> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
-        elevation: 0,
       ),
       onPressed: () => goToGame(controller.activeIndexOfDot.value),
-      child: const Text(
-        "Oyna",
-        style: TextStyle(
-          color: Colors.black,
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 40.0.wp, maxHeight: 30.0.wp),
+        padding: EdgeInsets.all(0.5.hp),
+        child: Text(
+          "OYNA",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 3.0.hp,
+          ),
         ),
       ),
     );
@@ -245,7 +251,10 @@ class GamesPage extends GetView<GamesController> {
   void goToGame(int value) {
     try {
       if (controller.selectedCategoryIDs.value.isEmpty) {
-        EasyLoading.showError("Choose a category");
+        Get.to(
+          () => ChooseCategory(),
+          transition: Transition.downToUp,
+        );
         return;
       }
 

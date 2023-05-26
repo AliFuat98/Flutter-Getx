@@ -1,6 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/word.dart';
+import 'package:first_app/app/modules/games/widgets/game_button.dart';
+import 'package:first_app/app/modules/games/widgets/game_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -21,59 +24,78 @@ class Game2Page extends GetView<Game2Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle(),
-              SizedBox(
-                height: 5.0.hp,
-              ),
-              getPlayScoreCoin(),
+              getGameTitle("olmayanı bul"),
+              getScoreTable(),
               SizedBox(
                 height: 5.0.hp,
               ),
               getWordVoiceButtons(),
               getImages(),
-              getNextButton(),
+              getNextAndMenuButton(),
               SizedBox(
                 height: 5.0.hp,
               )
             ],
           ),
-          backButton(),
         ]),
       ),
     );
   }
 
-  Widget getNextButton() {
+  Widget getBackgroundImage() {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/backgroundGame2.jpg"),
+          fit: BoxFit.fitHeight,
+        ),
+      ),
+    );
+  }
+
+  Widget getWordVoiceButtons() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () async {
-              controller.getNextGame();
-              // Get dialogs
-              if (controller.gameOver.value) {
-                await getEndGameDialog();
-              }
-            },
-            child: const Icon(
-              Icons.navigate_next,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
+      child: Obx(
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ...controller.randomWordsWithotMissing.value.map((word) {
+              return getGameButton(
+                Icons.play_arrow_outlined,
+                () {
+                  audioPlayer.play(AssetSource(word.audioSrc));
+                },
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getImages() {
+    return Expanded(
+      child: SizedBox(
+        width: 400,
+        child: Center(
+          child: Obx(
+            () => GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              children: [
+                ...controller.randomWords.value
+                    .map((word) => getSquareImage(word))
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget getSquareImage(Word word) {
-    var squareWidth = Get.width - 20.0.wp;
     return GestureDetector(
       onTap: () async {
         if (word.wordID == controller.getMissingWord().wordID) {
@@ -92,9 +114,7 @@ class Game2Page extends GetView<Game2Controller> {
         }
       },
       child: Container(
-        width: squareWidth / 5,
-        height: squareWidth / 5,
-        margin: EdgeInsets.all(3.0.wp),
+        margin: EdgeInsets.all(2.0.hp),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -112,41 +132,90 @@ class Game2Page extends GetView<Game2Controller> {
     );
   }
 
+  Widget getNextAndMenuButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          getMenuButton(),
+          getGameButton(
+            Icons.navigate_next,
+            () async {
+              controller.getNextGame();
+              // Get dialogs
+              if (controller.gameOver.value) {
+                await getEndGameDialog();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   Future getCorrectAnswerDialog() async {
     await Get.defaultDialog(
       barrierDismissible: false,
-      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
       radius: 5,
-      title: "CORRECT ANSWER",
-      content: Row(
+      title: "CORRECT",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getGameButton(
+                  Icons.navigate_next,
+                  () {
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getMenuButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
-            "assets/images/game3Back.jpg",
-            fit: BoxFit.contain,
-            width: 25.0.wp,
-          ),
-          Column(
-            children: const [
-              Text("HELAL"),
-              Text("OLSUN"),
-              Text("LEN SANA"),
-              Text("VELED"),
-            ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Get.back();
+          getGameButton(
+            Icons.menu_outlined,
+            () async {
+              if (controller.gameOver.value) {
+                await getEndGameDialog();
+              } else {
+                await getMenuDialog();
+              }
             },
-            child: const Icon(
-              Icons.navigate_next,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -155,228 +224,177 @@ class Game2Page extends GetView<Game2Controller> {
   Future getEndGameDialog() async {
     await Get.defaultDialog(
       barrierDismissible: false,
-      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
       radius: 5,
-      title: "GAME IS OVER",
-      content: Row(
-        children: [
-          Image.asset(
-            "assets/images/game3Back.jpg",
-            fit: BoxFit.contain,
-            width: 25.0.wp,
-          ),
-          Column(
-            children: const [
-              Text("HELAL"),
-              Text("OLSUN"),
-              Text("LEN SANA"),
-              Text("VELED"),
-            ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
+      title: "GAME OVER",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
             ),
-            onPressed: () {
-              Get.back();
-              Get.back();
-            },
-            child: const Icon(
-              Icons.menu,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-
-          // RESTART GAME
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Get.back();
-              controller.startGame();
-            },
-            child: const Icon(
-              Icons.restart_alt,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getImages() {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(5.0.hp),
-        child: Center(
-          child: Obx(
-            () => GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ...controller.randomWords.value
-                    .map((word) => getSquareImage(word))
+                // GO TO MENU
+                getGameButton(
+                  Icons.menu,
+                  () async {
+                    await controller.insertGameInfo();
+                    Get.back();
+                    Get.back();
+                  },
+                ),
+                // RESTART GAME
+                getGameButton(
+                  Icons.restart_alt,
+                  () async {
+                    Get.back();
+                    await controller.insertGameInfo();
+                    controller.startGame();
+                  },
+                ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget backButton() {
-    return Positioned(
-      left: 4.0.wp,
-      top: 4.0.wp,
-      child: IconButton(
-        icon: const Icon(
-          Icons.backspace,
-          size: 50,
-          color: Colors.red,
-        ),
-        onPressed: () {
-          controller.insertGameInfo();
-          Get.back();
-        },
-      ),
-    );
-  }
-
-  Widget getBackgroundImage() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/backgroundGame2.jpg"),
-          fit: BoxFit.fitHeight,
-        ),
-      ),
-    );
-  }
-
-  Widget getGameTitle() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(4.0.wp),
-        child: Text(
-          "OLMAYANI BUL",
-          style: TextStyle(
-            fontSize: 24.0.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget getWordVoiceButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
-      child: Obx(
-        () => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ...controller.randomWordsWithotMissing.value.map((word) {
-              return getSingleVoiceButton(word.audioSrc);
-            }).toList(),
           ],
         ),
       ),
     );
   }
 
-  Widget getSingleVoiceButton(String audioSrc) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: const Color.fromARGB(255, 10, 74, 185),
-          width: 2.0,
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          elevation: 0,
-        ),
-        onPressed: () {
-          audioPlayer.play(AssetSource(audioSrc));
-        },
-        child: const Icon(
-          Icons.play_arrow_outlined,
-          size: 25,
-          color: Color.fromARGB(255, 10, 74, 185),
+  Future getMenuDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: true,
+      radius: 5,
+      title: "PAUSED",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // GO TO MENU
+                getGameButton(
+                  Icons.menu,
+                  () async {
+                    await controller.insertGameInfo();
+                    Get.back();
+                    Get.back();
+                  },
+                ),
+                // RESTART GAME
+                getGameButton(
+                  Icons.restart_alt,
+                  () async {
+                    Get.back();
+                    await controller.insertGameInfo();
+                    controller.startGame();
+                  },
+                ),
+
+                // CONTINUE
+                getGameButton(
+                  Icons.pause_sharp,
+                  () {
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget getPlayScoreCoin() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Question mark
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 10, 74, 185),
-                width: 2.0,
+  Widget getScoreTable() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            darkBlue300,
+            darkBlue100,
+            darkBlue100,
+            darkBlue300,
+          ],
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(3)),
+      ),
+      padding: EdgeInsets.all(3.0.wp),
+      child: Obx(
+        () => SizedBox(
+          width: 100.0.wp,
+          height: 10.0.hp,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 2.0.wp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getIconAndTextInfo(Icons.monetization_on,
+                        "Coins: ${controller.totalCoinCount.value}"),
+                    getIconAndTextInfo(Icons.sports_volleyball,
+                        controller.gameMode.toUpperCase()),
+                  ],
+                ),
               ),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                elevation: 0,
+              Padding(
+                padding: EdgeInsets.only(left: 2.0.wp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getIconAndTextInfo(
+                        Icons.medical_services_outlined, "Move: ${0}"),
+                    getIconAndTextInfo(Icons.scoreboard,
+                        "score: ${controller.totalScore.value}"),
+                  ],
+                ),
               ),
-              onPressed: () {},
-              child: const Icon(
-                Icons.question_mark,
-                size: 25,
-                color: Color.fromARGB(255, 10, 74, 185),
-              ),
-            ),
+            ],
           ),
-          // score table
-          Obx(
-            () => SizedBox(
-              width: 70.0.wp,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getIconAndTextInfo(Icons.monetization_on,
-                          "coins: ${controller.totalCoinCount.value}"),
-                      getIconAndTextInfo(
-                          Icons.sports_volleyball, controller.gameMode),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 3.0.wp,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getIconAndTextInfo(
-                          Icons.medical_services_outlined, "Move: ${0}"),
-                      getIconAndTextInfo(Icons.scoreboard,
-                          "score: ${controller.totalScore.value}"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -384,13 +402,20 @@ class Game2Page extends GetView<Game2Controller> {
   Widget getIconAndTextInfo(IconData data, String text) {
     return Expanded(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(data, size: 5.0.wp),
+          Icon(
+            data,
+            size: 3.0.hp,
+            color: brightBlue50,
+          ),
+          SizedBox(width: 2.0.wp),
           Text(
             text,
             style: TextStyle(
-              fontSize: 10.0.sp,
+              overflow: TextOverflow.fade,
+              color: brightBlue50,
+              fontSize: 2.0.hp,
               fontWeight: FontWeight.w600,
             ),
           ),

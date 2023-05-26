@@ -1,6 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/word.dart';
+import 'package:first_app/app/modules/games/widgets/game_button.dart';
+import 'package:first_app/app/modules/games/widgets/game_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -21,195 +24,41 @@ class Game3Page extends GetView<Game3Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle(),
-              SizedBox(
-                height: 5.0.hp,
-              ),
-              getPlayScoreCoin(),
+              getGameTitle("dinle ve seç"),
+              getScoreTable(),
+              SizedBox(height: 2.0.hp),
+              getGameButton(Icons.play_arrow, () {
+                audioPlayer.play(
+                  AssetSource(controller.getCorrectWord().audioSrc),
+                );
+              }),
               getImages(),
-              getNextButton(),
+              getNextAndMenuButton(),
               SizedBox(
                 height: 5.0.hp,
               )
             ],
           ),
-          backButton(),
         ]),
       ),
     );
   }
 
-  Widget getNextButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () async {
-              controller.getNextGame();
-              // Get dialogs
-              if (controller.gameOver.value) {
-                await getEndGameDialog();
-              }
-            },
-            child: const Icon(
-              Icons.navigate_next,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getSquareImage(Word word) {
-    var squareWidth = Get.width - 20.0.wp;
-    return GestureDetector(
-      onTap: () async {
-        if (word.wordID == controller.getCorrectWord().wordID) {
-          await controller.correctAnswer();
-
-          // Get dialogs
-          if (controller.gameOver.value) {
-            await getEndGameDialog();
-          } else {
-            await getCorrectAnswerDialog();
-            controller.getNextGame();
-          }
-        } else {
-          EasyLoading.showError("yanlış");
-          controller.wrongAnswer();
-        }
-      },
-      child: Container(
-        width: squareWidth / 5,
-        height: squareWidth / 5,
-        margin: EdgeInsets.all(3.0.wp),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[300]!,
-              blurRadius: 7,
-              offset: const Offset(0, 7),
-            )
-          ],
+  Widget getBackgroundImage() {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/game3Back.jpg"),
+          fit: BoxFit.cover,
         ),
-        child: Image(
-          image: AssetImage(word.pictureSrc),
-        ),
-      ),
-    );
-  }
-
-  Future getCorrectAnswerDialog() async {
-    await Get.defaultDialog(
-      barrierDismissible: false,
-      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
-      radius: 5,
-      title: "CORRECT ANSWER",
-      content: Row(
-        children: [
-          Image.asset(
-            "assets/images/game3Back.jpg",
-            fit: BoxFit.contain,
-            width: 25.0.wp,
-          ),
-          Column(
-            children: const [
-              Text("HELAL"),
-              Text("OLSUN"),
-              Text("LEN SANA"),
-              Text("VELED"),
-            ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-            child: const Icon(
-              Icons.navigate_next,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future getEndGameDialog() async {
-    await Get.defaultDialog(
-      barrierDismissible: false,
-      titlePadding: EdgeInsets.symmetric(vertical: 3.0.wp),
-      radius: 5,
-      title: "GAME IS OVER",
-      content: Row(
-        children: [
-          Image.asset(
-            "assets/images/game3Back.jpg",
-            fit: BoxFit.contain,
-            width: 25.0.wp,
-          ),
-          Column(
-            children: const [
-              Text("HELAL"),
-              Text("OLSUN"),
-              Text("LEN SANA"),
-              Text("VELED"),
-            ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Get.back();
-              Get.back();
-            },
-            child: const Icon(
-              Icons.menu,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-
-          // RESTART GAME
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-            onPressed: () {
-              Get.back();
-              controller.startGame();
-            },
-            child: const Icon(
-              Icons.restart_alt,
-              size: 50,
-              color: Color.fromARGB(255, 10, 74, 185),
-            ),
-          ),
-        ],
       ),
     );
   }
 
   Widget getImages() {
     return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(5.0.hp),
+      child: SizedBox(
+        width: 400,
         child: Center(
           child: Obx(
             () => GridView.count(
@@ -230,111 +79,328 @@ class Game3Page extends GetView<Game3Controller> {
     );
   }
 
-  Widget backButton() {
-    return Positioned(
-      left: 4.0.wp,
-      top: 4.0.wp,
-      child: IconButton(
-        icon: const Icon(
-          Icons.backspace,
-          size: 50,
-          color: Colors.red,
-        ),
-        onPressed: () {
-          controller.insertGameInfo();
-          Get.back();
-        },
-      ),
-    );
-  }
+  Widget getSquareImage(Word word) {
+    return GestureDetector(
+      onTap: () async {
+        if (word.wordID == controller.getCorrectWord().wordID) {
+          await controller.correctAnswer();
 
-  Widget getBackgroundImage() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/game3Back.jpg"),
-          fit: BoxFit.cover,
+          // Get dialogs
+          if (controller.gameOver.value) {
+            await getEndGameDialog();
+          } else {
+            await getCorrectAnswerDialog();
+            controller.getNextGame();
+          }
+        } else {
+          EasyLoading.showError("yanlış");
+          controller.wrongAnswer();
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.all(1.5.hp),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300]!,
+              blurRadius: 7,
+              offset: const Offset(0, 7),
+            )
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget getGameTitle() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(4.0.wp),
-        child: Text(
-          "DİNLE VE SEÇ",
-          style: TextStyle(
-            fontSize: 24.0.sp,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Image(
+          image: AssetImage(word.pictureSrc),
         ),
       ),
     );
   }
 
-  Widget getPlayScoreCoin() {
+  Widget getNextAndMenuButton() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  elevation: 0,
+          getMenuButton(),
+          getGameButton(
+            Icons.navigate_next,
+            () async {
+              controller.getNextGame();
+              // Get dialogs
+              if (controller.gameOver.value) {
+                await getEndGameDialog();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future getCorrectAnswerDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: false,
+      radius: 5,
+      title: "CORRECT",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getGameButton(
+                  Icons.navigate_next,
+                  () {
+                    Get.back();
+                  },
                 ),
-                onPressed: () {},
-                child: const Icon(
-                  Icons.question_mark,
-                  size: 25,
-                  color: const Color.fromARGB(255, 10, 74, 185),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getMenuButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          getGameButton(
+            Icons.menu_outlined,
+            () async {
+              if (controller.gameOver.value) {
+                await getEndGameDialog();
+              } else {
+                await getMenuDialog();
+              }
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Future getEndGameDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: false,
+      radius: 5,
+      title: "GAME OVER",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // GO TO MENU
+                getGameButton(
+                  Icons.menu,
+                  () async {
+                    await controller.insertGameInfo();
+                    Get.back();
+                    Get.back();
+                  },
+                ),
+                // RESTART GAME
+                getGameButton(
+                  Icons.restart_alt,
+                  () async {
+                    Get.back();
+                    await controller.insertGameInfo();
+                    controller.startGame();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future getMenuDialog() async {
+    await Get.defaultDialog(
+      barrierDismissible: true,
+      radius: 5,
+      title: "PAUSED",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/images/avatar.jpg",
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  const Expanded(
+                    child: Text("Mesajınızı giriniz"),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // GO TO MENU
+                getGameButton(
+                  Icons.menu,
+                  () async {
+                    await controller.insertGameInfo();
+                    Get.back();
+                    Get.back();
+                  },
+                ),
+                // RESTART GAME
+                getGameButton(
+                  Icons.restart_alt,
+                  () async {
+                    Get.back();
+                    await controller.insertGameInfo();
+                    controller.startGame();
+                  },
+                ),
+
+                // CONTINUE
+                getGameButton(
+                  Icons.pause_sharp,
+                  () {
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getScoreTable() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            darkBlue300,
+            darkBlue100,
+            darkBlue100,
+            darkBlue300,
+          ],
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(3)),
+      ),
+      padding: EdgeInsets.all(3.0.wp),
+      child: Obx(
+        () => SizedBox(
+          width: 100.0.wp,
+          height: 10.0.hp,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 2.0.wp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getIconAndTextInfo(Icons.monetization_on,
+                        "Coins: ${controller.totalCoinCount.value}"),
+                    getIconAndTextInfo(Icons.sports_volleyball,
+                        controller.gameMode.toUpperCase()),
+                  ],
                 ),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  elevation: 0,
-                ),
-                onPressed: () {
-                  audioPlayer
-                      .play(AssetSource(controller.getCorrectWord().audioSrc));
-                },
-                child: const Icon(
-                  Icons.play_arrow,
-                  size: 25,
-                  color: const Color.fromARGB(255, 10, 74, 185),
+              Padding(
+                padding: EdgeInsets.only(left: 2.0.wp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getIconAndTextInfo(
+                        Icons.medical_services_outlined, "Move: ${0}"),
+                    getIconAndTextInfo(Icons.scoreboard,
+                        "score: ${controller.totalScore.value}"),
+                  ],
                 ),
               ),
             ],
           ),
-          Obx(
-            () => Row(
-              children: [
-                Icon(Icons.scoreboard),
-                SizedBox(width: 1.0),
-                Text(
-                  "score: ${controller.totalScore.value}",
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                SizedBox(width: 2.0),
-                Icon(Icons.monetization_on),
-                SizedBox(width: 1.0),
-                Text(
-                  "coins: ${controller.totalCoinCount.value}",
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                SizedBox(width: 2.0),
-                Icon(Icons.sports_volleyball),
-                SizedBox(width: 1.0),
-                Text(
-                  controller.gameMode,
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ],
+        ),
+      ),
+    );
+  }
+
+  Widget getIconAndTextInfo(IconData data, String text) {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(
+            data,
+            size: 3.0.hp,
+            color: brightBlue50,
+          ),
+          SizedBox(width: 2.0.wp),
+          Text(
+            text,
+            style: TextStyle(
+              overflow: TextOverflow.fade,
+              color: brightBlue50,
+              fontSize: 2.0.hp,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
