@@ -267,72 +267,72 @@ class StoreController extends GetxController {
 }
 
 // Usage example
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Store App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: StorePage(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       title: 'Store App',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: StorePage(),
+//     );
+//   }
+// }
 
-class StorePage extends StatelessWidget {
-  final StoreController storeController = Get.put(StoreController());
+// class StorePage extends StatelessWidget {
+//   final StoreController storeController = Get.put(StoreController());
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Store'),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: DropdownButton(
-              value: storeController.selectedCategory.value,
-              items: storeController.categories.map((String category) {
-                return DropdownMenuItem(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (String? selectedCategory) {
-                storeController.filterByCategory(selectedCategory);
-              },
-            ),
-          ),
-          Expanded(
-            child: Obx(
-              () => ListView.builder(
-                itemCount: storeController.filteredContents.length,
-                itemBuilder: (context, index) {
-                  Content content = storeController.filteredContents[index];
-                  return ListTile(
-                    leading: Image.asset(content.image),
-                    title: Text(content.title),
-                    subtitle: Text('Price: ${content.price}'),
-                    trailing: ElevatedButton(
-                      child: Text('Buy'),
-                      onPressed: () {
-                        storeController.buyContent(content);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Store'),
+//       ),
+//       body: Column(
+//         children: [
+//           Container(
+//             padding: EdgeInsets.all(16.0),
+//             child: DropdownButton(
+//               value: storeController.selectedCategory.value,
+//               items: storeController.categories.map((String category) {
+//                 return DropdownMenuItem(
+//                   value: category,
+//                   child: Text(category),
+//                 );
+//               }).toList(),
+//               onChanged: (String? selectedCategory) {
+//                 storeController.filterByCategory(selectedCategory);
+//               },
+//             ),
+//           ),
+//           Expanded(
+//             child: Obx(
+//               () => ListView.builder(
+//                 itemCount: storeController.filteredContents.length,
+//                 itemBuilder: (context, index) {
+//                   Content content = storeController.filteredContents[index];
+//                   return ListTile(
+//                     leading: Image.asset(content.image),
+//                     title: Text(content.title),
+//                     subtitle: Text('Price: ${content.price}'),
+//                     trailing: ElevatedButton(
+//                       child: Text('Buy'),
+//                       onPressed: () {
+//                         storeController.buyContent(content);
+//                       },
+//                     ),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
