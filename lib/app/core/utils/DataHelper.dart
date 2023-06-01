@@ -1,4 +1,5 @@
 import 'package:first_app/app/core/values/queries.dart';
+import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/category.dart';
@@ -31,6 +32,7 @@ class DataHelper {
     db.execute(gameTable);
     db.execute(userTable);
     db.execute(GameUserTable);
+    db.execute(contentTable);
     wordTableRows.forEach((element) {
       db.execute(element);
     });
@@ -41,6 +43,9 @@ class DataHelper {
       db.execute(element);
     });
     userTableRows.forEach((element) {
+      db.execute(element);
+    });
+    contentTableRows.forEach((element) {
       db.execute(element);
     });
   }
@@ -88,6 +93,15 @@ class DataHelper {
           category.toJson(),
           where: 'ID = ?',
           whereArgs: [category.ID],
+        );
+        break;
+      case "Content":
+        Content content = object as Content;
+        result = await db.update(
+          table,
+          content.toJson(),
+          where: 'ID = ?',
+          whereArgs: [content.id],
         );
         break;
       default:

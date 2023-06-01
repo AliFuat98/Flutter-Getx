@@ -1,8 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
+import 'package:first_app/app/data/models/content.dart';
+import 'package:first_app/app/modules/games/widgets/game_button.dart';
+import 'package:first_app/app/modules/store/widgets/content_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 
 import 'controller.dart';
 
@@ -20,6 +25,9 @@ class StorePage extends GetWidget<StoreController> {
         child: Scaffold(
           backgroundColor: brightBlue50,
           appBar: AppBar(
+            backgroundColor: darkBlue200,
+            shadowColor: brightBlue100,
+            elevation: 3,
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 10.0),
@@ -32,7 +40,7 @@ class StorePage extends GetWidget<StoreController> {
                       ),
                       const SizedBox(width: 5.0),
                       Text(
-                        '${controller.earnedPoints.value}',
+                        '${controller.earnedCoins.value}',
                         style: const TextStyle(fontSize: 18.0),
                       ),
                     ],
@@ -104,68 +112,76 @@ class StorePage extends GetWidget<StoreController> {
                 itemCount: controller.purchasedContents.length,
                 itemBuilder: (context, index) {
                   final content = controller.purchasedContents[index];
-                  final categoryColor = Colors.primaries[
-                      controller.categories.indexOf(content.category) %
-                          Colors.primaries.length];
+                  final categoryColor = Colors
+                      .primaries[content.category % Colors.primaries.length];
 
-                  return Card(
-                    color: categoryColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.asset(
-                              content.image,
-                              fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      controller.selectedContent.value = content;
+                      Get.to(
+                        () => ContentDetail(),
+                        transition: Transition.downToUp,
+                      );
+                    },
+                    child: Card(
+                      color: categoryColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.asset(
+                                content.pictureSrc,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                content.title,
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white, // Ürün adının rengi
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  content.name,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white, // Ürün adının rengi
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 5.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.monetization_on,
-                                    size: 16.0,
-                                    color: Colors.amber,
-                                  ),
-                                  SizedBox(width: 5.0),
-                                  Text(
-                                    'Puan: ${content.price}',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber, // Puanın rengi
+                                SizedBox(height: 5.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.monetization_on,
+                                      size: 16.0,
+                                      color: Colors.amber,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                'Kategori: ${content.category}',
-                                style: TextStyle(fontSize: 14.0),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                                    SizedBox(width: 5.0),
+                                    Text(
+                                      'Puan: ${content.price}',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.amber, // Puanın rengi
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5.0),
+                                Text(
+                                  'Kategori: ${content.category}',
+                                  style: TextStyle(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -178,19 +194,19 @@ class StorePage extends GetWidget<StoreController> {
   }
 
   Widget getCategoriesv2() {
-    return GestureDetector(
-      onDoubleTap: () {},
-      child: CarouselSlider(
+    return Obx(
+      () => CarouselSlider(
         carouselController: caroController,
         options: CarouselOptions(
           height: 5.0.hp,
-          initialPage: 0,
+          initialPage: controller.selectedCategory.value,
           //autoPlay: true,
           //autoPlayInterval: const Duration(seconds: 5),
           enlargeCenterPage: true,
           enlargeStrategy: CenterPageEnlargeStrategy.height,
           onPageChanged: (index, reason) {
-            controller.filterByCategory(controller.categories[index]);
+            controller.filterByCategory(index);
+            controller.selectedCategory.value = index;
           },
         ),
         items: [
@@ -242,7 +258,7 @@ class StorePage extends GetWidget<StoreController> {
               ..sort((a, b) => a.price.compareTo(b.price));
 
             return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.9,
                 crossAxisSpacing: 10.0,
@@ -251,9 +267,8 @@ class StorePage extends GetWidget<StoreController> {
               itemCount: sortedContents.length,
               itemBuilder: (context, index) {
                 final content = sortedContents[index];
-                final categoryColor = Colors.primaries[
-                    controller.categories.indexOf(content.category) %
-                        Colors.primaries.length];
+                final categoryColor = Colors
+                    .primaries[content.category % Colors.primaries.length];
 
                 final isContentPurchased =
                     controller.isContentPurchased(content);
@@ -267,17 +282,17 @@ class StorePage extends GetWidget<StoreController> {
 
                 return AnimatedOpacity(
                   opacity: opacity,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   child: GestureDetector(
                     onTap: () {
-                      if (!isContentPurchased) {
-                        controller.buyContent(content);
-                        // Redirect to purchased items tab
-                        DefaultTabController.of(context)!.animateTo(1);
-                      }
+                      controller.selectedContent.value = content;
+                      Get.to(
+                        () => ContentDetail(),
+                        transition: Transition.downToUp,
+                      );
                     },
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       height: height,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
@@ -290,38 +305,38 @@ class StorePage extends GetWidget<StoreController> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.asset(
-                                content.image,
+                                content.pictureSrc,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  content.title,
-                                  style: TextStyle(
+                                  content.name,
+                                  style: const TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white, // Ürün adının rengi
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(height: 5.0),
+                                const SizedBox(height: 5.0),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.monetization_on,
                                       size: 16.0,
                                       color: Colors.amber,
                                     ),
-                                    SizedBox(width: 5.0),
+                                    const SizedBox(width: 5.0),
                                     Text(
                                       'Puan: ${content.price}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.amber, // Puanın rengi
@@ -329,36 +344,12 @@ class StorePage extends GetWidget<StoreController> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 5.0),
-                                ElevatedButton(
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (!canAffordContent)
-                                        Icon(
-                                          Icons.lock,
-                                          color: Colors.white,
-                                          size: 20.0,
-                                        ),
-                                      SizedBox(width: 5.0),
-                                      Text(buttonText),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: canAffordContent
-                                        ? Colors.green
-                                        : Colors.red,
-                                    textStyle: TextStyle(fontSize: 14.0),
-                                  ),
-                                  onPressed: canAffordContent
-                                      ? () {
-                                          controller.buyContent(content);
-                                          // Redirect to purchased items tab
-                                          DefaultTabController.of(context)!
-                                              .animateTo(1);
-                                        }
-                                      : null,
+                                const SizedBox(height: 5.0),
+                                getBuyButton(
+                                  canAffordContent,
+                                  buttonText,
+                                  content,
+                                  context,
                                 ),
                               ],
                             ),
@@ -371,6 +362,97 @@ class StorePage extends GetWidget<StoreController> {
               },
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget getBuyButton(bool canAffordContent, String buttonText, Content content,
+      BuildContext context) {
+    return ElevatedButton(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (!canAffordContent)
+            Icon(
+              Icons.lock,
+              color: Colors.white,
+              size: 20.0,
+            ),
+          SizedBox(width: 5.0),
+          Text(buttonText),
+        ],
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: canAffordContent ? Colors.green : Colors.red,
+        textStyle: const TextStyle(fontSize: 14.0),
+      ),
+      onPressed: canAffordContent
+          ? () {
+              getBuyDialog(content, context);
+            }
+          : () {
+              EasyLoading.showError("");
+            },
+    );
+  }
+
+  Future getBuyDialog(Content content, BuildContext context) async {
+    await Get.defaultDialog(
+      barrierDismissible: true,
+      radius: 5,
+      title: "SATIN AL",
+      backgroundColor: brightBlue50,
+      content: SizedBox(
+        height: 25.0.hp,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    content.pictureSrc,
+                    fit: BoxFit.cover,
+                    width: 25.0.wp,
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "${content.price} coinlik ürün satın almak üzeresin",
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 2.0.hp),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // CANCEL BUY
+                getGameButton(
+                  Icons.cancel_presentation,
+                  () async {
+                    Get.back();
+                  },
+                ),
+                // BUY
+                getGameButton(
+                  Icons.add_circle_outline_sharp,
+                  () async {
+                    Get.back();
+                    controller.buyContent(content);
+                    // Redirect to purchased items tab
+                    DefaultTabController.of(context).animateTo(1);
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

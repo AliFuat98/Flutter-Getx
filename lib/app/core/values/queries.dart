@@ -51,6 +51,33 @@ FOREIGN KEY (UserID) REFERENCES User(UserID),
 FOREIGN KEY (GameID) REFERENCES Game(GameID)
 );""";
 
+const String contentTable = """CREATE TABLE IF NOT EXISTS "Content" (
+"ID"	INTEGER,
+"Name" TEXT,
+"PictureSrc"	TEXT,
+"isPurchased" BOOLEAN,
+"Price"	INTEGER,
+"Category"	INTEGER,
+PRIMARY KEY("ID" AUTOINCREMENT)
+);""";
+
+const List<String> contentTableRows = [
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (1,"Ürün-1","assets/images/awards/1.png", 1,100,1) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (2,"Ürün-2","assets/images/awards/2.png", 0,150,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (3,"Ürün-3","assets/images/awards/3.png", 0,200,3) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (4,"Ürün-4","assets/images/awards/4.png", 0,250,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (5,"Ürün-5","assets/images/awards/5.png", 0,300,5) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (6,"Ürün-6","assets/images/awards/6.png", 0,350,6) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (7,"Ürün-7","assets/images/awards/7.png", 0,400,7) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (8,"Ürün-8","assets/images/awards/8.png", 0,450,1) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (9,"Ürün-9","assets/images/awards/9.png", 0,500,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (10,"Ürün-10","assets/images/awards/10.png", 0,550,3) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (11,"Ürün-11","assets/images/awards/11.png", 0,600,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (12,"Ürün-12","assets/images/awards/12.png", 0,650,5) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (13,"Ürün-13","assets/images/awards/13.png", 0,700,6) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","Price","Category") VALUES (14,"Ürün-14","assets/images/awards/14.png", 0,750,7) ;""",
+];
+
 const List<String> gameTableRows = [
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (1,'test1',1,50,"assets/images/game/game1.jpg") ;""",
   """INSERT INTO "Game" ("GameID","Name","Type","Reward","PictureSrc") VALUES (2,'test2',2,50,"assets/images/game/game2.jpg") ;""",
@@ -60,7 +87,7 @@ const List<String> gameTableRows = [
 ];
 
 const List<String> userTableRows = [
-  """INSERT INTO "User" ("UserID","Name","Surname","Age","Coin") VALUES (1,"velet","veled",5,0) ;""",
+  """INSERT INTO "User" ("UserID","Name","Surname","Age","Coin") VALUES (1,"velet","veled",5,1000) ;""",
 ];
 
 const List<String> wordTableRows = [

@@ -1,205 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/data/models/content.dart';
+import 'package:first_app/app/data/models/user.dart';
+import 'package:first_app/app/data/services/content/content_repository.dart';
+import 'package:first_app/app/data/services/user/user_reposiory.dart';
 import 'package:get/get.dart';
 
-class Content {
-  final String title;
-  final int price;
-  final String image;
-  final String category;
-
-  Content({
-    required this.title,
-    required this.price,
-    required this.image,
-    required this.category,
-  });
-}
-
 class StoreController extends GetxController {
-  var earnedPoints = 500.obs;
-  var availableContents = <Content>[
-    Content(
-      title: 'admin',
-      price: 50,
-      image: 'assets/images/awards/1.png',
-      category: 'Rozet',
-    ),
-    Content(
-      title: 'Ürün 2',
-      price: 75,
-      image: 'assets/images/awards/2.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 3',
-      price: 100,
-      image: 'assets/images/awards/3.png',
-      category: 'Animasyon',
-    ),
-    Content(
-      title: 'Ürün 4',
-      price: 120,
-      image: 'assets/images/awards/4.png',
-      category: 'Video',
-    ),
-    Content(
-      title: 'Ürün 5',
-      price: 80,
-      image: 'assets/images/awards/5.png',
-      category: 'Resim',
-    ),
-    Content(
-      title: 'Ürün 6',
-      price: 90,
-      image: 'assets/images/awards/6.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 7',
-      price: 110,
-      image: 'assets/images/awards/7.png',
-      category: 'Animasyon',
-    ),
-    Content(
-      title: 'Ürün 8',
-      price: 70,
-      image: 'assets/images/awards/8.png',
-      category: 'Video',
-    ),
-    Content(
-      title: 'Ürün 9',
-      price: 60,
-      image: 'assets/images/awards/9.png',
-      category: 'Resim',
-    ),
-    Content(
-      title: 'Ürün 10',
-      price: 95,
-      image: 'assets/images/awards/10.png',
-      category: 'Müzik',
-    ),
-// Additional contents
-    Content(
-      title: 'Ürün 11',
-      price: 50,
-      image: 'assets/images/awards/11.png',
-      category: 'Sticker',
-    ),
-    Content(
-      title: 'Ürün 12',
-      price: 75,
-      image: 'assets/images/awards/12.png',
-      category: 'Video',
-    ),
-    Content(
-      title: 'Ürün 13',
-      price: 100,
-      image: 'assets/images/awards/13.png',
-      category: 'Avatar',
-    ),
-    Content(
-      title: 'Ürün 14',
-      price: 120,
-      image: 'assets/images/awards/14.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 15',
-      price: 80,
-      image: 'assets/images/awards/15.png',
-      category: 'Rozet',
-    ),
-    Content(
-      title: 'Ürün 16',
-      price: 90,
-      image: 'assets/images/awards/16.png',
-      category: 'Animasyon',
-    ),
-    Content(
-      title: 'Ürün 17',
-      price: 110,
-      image: 'assets/images/awards/17.png',
-      category: 'Sticker',
-    ),
-    Content(
-      title: 'Ürün 18',
-      price: 70,
-      image: 'assets/images/awards/18.png',
-      category: 'Video',
-    ),
-    Content(
-      title: 'Ürün 19',
-      price: 60,
-      image: 'assets/images/awards/19.png',
-      category: 'Avatar',
-    ),
-    Content(
-      title: 'Ürün 20',
-      price: 95,
-      image: 'assets/images/awards/20.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 21',
-      price: 50,
-      image: 'assets/images/awards/21.png',
-      category: 'Sticker',
-    ),
-    Content(
-      title: 'Ürün 22',
-      price: 75,
-      image: 'assets/images/apple.png',
-      category: 'Rozet',
-    ),
-    Content(
-      title: 'Ürün 23',
-      price: 100,
-      image: 'assets/images/apple.png',
-      category: 'Video',
-    ),
-    Content(
-      title: 'Ürün 24',
-      price: 120,
-      image: 'assets/images/apple.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 25',
-      price: 80,
-      image: 'assets/images/apple.png',
-      category: 'Animasyon',
-    ),
-    Content(
-      title: 'Ürün 26',
-      price: 90,
-      image: 'assets/images/apple.png',
-      category: 'Avatar',
-    ),
-    Content(
-      title: 'Ürün 27',
-      price: 110,
-      image: 'assets/images/apple.png',
-      category: 'Sticker',
-    ),
-    Content(
-      title: 'Ürün 28',
-      price: 70,
-      image: 'assets/images/apple.png',
-      category: 'Müzik',
-    ),
-    Content(
-      title: 'Ürün 29',
-      price: 60,
-      image: 'assets/images/apple.png',
-      category: 'Rozet',
-    ),
-    Content(
-      title: 'Ürün 30',
-      price: 95,
-      image: 'assets/images/apple.png',
-      category: 'Animasyon',
-    ),
-  ].obs;
+  ContentRepository contentRepository;
+  UserRepository userRepository;
+
+  StoreController({
+    required this.contentRepository,
+    required this.userRepository,
+  });
+
+  var earnedCoins = 0.obs;
+  var availableContents = <Content>[].obs;
   var purchasedContents = <Content>[].obs;
   var categories = <String>[
     'Tüm Kategoriler',
@@ -211,50 +27,55 @@ class StoreController extends GetxController {
     'Avatar',
     'Rozet',
   ];
-  var selectedCategory = 'Tüm Kategoriler'.obs;
+  var selectedCategory = 0.obs;
   var filteredContents = <Content>[].obs;
+  final selectedContent = Rx<Content?>(null);
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    filterByCategory(selectedCategory.value);
+    // get coin data
+    User user = await userRepository.readUser();
+    earnedCoins.value = user.coin;
+
+    // fill contents
+    List<Content> data = await contentRepository.readContents();
+    availableContents.assignAll(
+        data.where((content) => content.isPurchased == false).toList());
+    purchasedContents.assignAll(
+        data.where((content) => content.isPurchased == true).toList());
+    filterByCategory(0);
   }
 
-  void buyContent(Content content) {
-    if (earnedPoints.value >= content.price &&
+  void buyContent(Content content) async {
+    if (earnedCoins.value >= content.price &&
         !purchasedContents.contains(content)) {
-      earnedPoints.value -= content.price;
+      earnedCoins.value -= content.price;
       purchasedContents.add(content);
       availableContents.remove(content);
-    } else {
-      Get.dialog(
-        AlertDialog(
-          title: Text('Yetersiz Puan'),
-          content: Text(
-            'Bu içeriği almak için yeterli puanınız yok veya daha önce satın alınmış.',
-          ),
-          actions: [
-            TextButton(
-              child: Text('Tamam'),
-              onPressed: () {
-                Get.back();
-              },
-            ),
-          ],
-        ),
-      );
+
+      filterByCategory(selectedCategory.value);
+
+      // update user conins
+      User user = await userRepository.readUser();
+      user.coin -= content.price;
+      await DataHelper.instance.update("User", user);
+
+      // update content
+      content.isPurchased = true;
+      await DataHelper.instance.update("Content", content);
     }
   }
 
-  void filterByCategory(String? category) {
-    if (category == null || category == 'Tüm Kategoriler') {
+  void filterByCategory(int categoryIndex) {
+    if (categoryIndex == 0) {
       filteredContents.assignAll(availableContents);
     } else {
       filteredContents.assignAll(
-        availableContents.where((content) => content.category == category),
+        availableContents.where((content) => content.category == categoryIndex),
       );
     }
-    selectedCategory.value = category ?? 'Tüm Kategoriler';
+    selectedCategory.value = categoryIndex;
   }
 
   bool isContentPurchased(Content content) {
@@ -262,7 +83,7 @@ class StoreController extends GetxController {
   }
 
   canAffordContent(Content content) {
-    return earnedPoints.value >= content.price;
+    return earnedCoins.value >= content.price;
   }
 }
 
