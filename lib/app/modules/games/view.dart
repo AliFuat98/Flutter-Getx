@@ -262,24 +262,39 @@ class GamesPage extends GetView<GamesController> {
 
       switch (value) {
         case 0:
-          Get.toNamed(Game1Page.pageName,
-              arguments: [words, controller.chosenGameMode.value]);
+          Get.toNamed(Game1Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
           break;
         case 1:
-          Get.toNamed(Game2Page.pageName,
-              arguments: [words, controller.chosenGameMode.value]);
+          Get.toNamed(Game2Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
           break;
         case 2:
-          Get.toNamed(Game3Page.pageName,
-              arguments: [words, controller.chosenGameMode.value]);
+          Get.toNamed(Game3Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
           break;
         case 3:
-          Get.toNamed(Game4Page.pageName,
-              arguments: [words, controller.chosenGameMode.value]);
+          Get.toNamed(Game4Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
           break;
         case 4:
-          Get.toNamed(Game5Page.pageName,
-              arguments: [words, controller.chosenGameMode.value]);
+          Get.toNamed(Game5Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
           break;
         default:
       }

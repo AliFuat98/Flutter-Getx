@@ -172,9 +172,8 @@ class Game2Page extends GetView<Game2Controller> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/images/avatar.jpg",
+                    controller.selectedContent.value.pictureSrc,
                     fit: BoxFit.cover,
-                    width: 25.0.wp,
                   ),
                   const Expanded(
                     child: Text("Mesajınızı giriniz"),
@@ -239,9 +238,8 @@ class Game2Page extends GetView<Game2Controller> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/images/avatar.jpg",
+                    controller.selectedContent.value.pictureSrc,
                     fit: BoxFit.cover,
-                    width: 25.0.wp,
                   ),
                   const Expanded(
                     child: Text("Mesajınızı giriniz"),
@@ -297,9 +295,8 @@ class Game2Page extends GetView<Game2Controller> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
-                    "assets/images/avatar.jpg",
+                    controller.selectedContent.value.pictureSrc,
                     fit: BoxFit.cover,
-                    width: 25.0.wp,
                   ),
                   const Expanded(
                     child: Text("Mesajınızı giriniz"),

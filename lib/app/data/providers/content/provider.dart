@@ -19,4 +19,8 @@ class ContentProvider {
     });
     DataHelper.instance.insertAll("Content", maps);
   }
+
+  void updateContent(Content content) {
+    DataHelper.instance.update("Content", content);
+  }
 }

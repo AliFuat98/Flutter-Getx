@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 Widget getGameButton(IconData iconData, VoidCallback onpress) {
   return Container(
+    height: 5.0.hp,
     decoration: BoxDecoration(
       border: Border.all(
         color: darkBlue100,

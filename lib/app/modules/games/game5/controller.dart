@@ -2,22 +2,19 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:first_app/app/core/utils/DataHelper.dart';
-import 'package:first_app/app/data/models/game_user.dart';
-import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class GameWord{
+class GameWord {
   String name;
   String pictureSrc;
   String audioSrc;
   bool isCorrect;
 
-  GameWord(this.name,this.pictureSrc,this.audioSrc,this.isCorrect);
+  GameWord(this.name, this.pictureSrc, this.audioSrc, this.isCorrect);
 }
- 
+
 class Game5Controller extends GetxController {
   // all words coming from the chosen categories
   late List<Word> words;
@@ -36,7 +33,8 @@ class Game5Controller extends GetxController {
   late IconButton wrongIcon;
   final totalCoinCount = 0.obs;
   final totalScore = 0.obs;
-  Rx<IconButton> currentButton = IconButton(onPressed: (){}, icon: Icon(Icons.add)).obs;
+  Rx<IconButton> currentButton =
+      IconButton(onPressed: () {}, icon: Icon(Icons.add)).obs;
   final gameOver = false.obs;
 
   @override
@@ -52,8 +50,7 @@ class Game5Controller extends GetxController {
       color: Colors.lightGreen,
       iconSize: 50,
       icon: Icon(Icons.check),
-      onPressed: (){
-      },
+      onPressed: () {},
     );
     wrongIcon = IconButton(
       splashRadius: 50.0,
@@ -61,8 +58,7 @@ class Game5Controller extends GetxController {
       color: Colors.red,
       iconSize: 50,
       icon: Icon(Icons.close),
-      onPressed: (){
-      },
+      onPressed: () {},
     );
     playButton = IconButton(
       splashRadius: 50.0,
@@ -70,27 +66,30 @@ class Game5Controller extends GetxController {
       color: Colors.lightGreen,
       iconSize: 50,
       icon: Icon(Icons.play_circle),
-      onPressed: (){
-        listen_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
-
+      onPressed: () {
+        listen_audio_player
+            .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
       },
     );
     currentButton.value = playButton;
     generateWords();
   }
-  void generateWords(){
+
+  void generateWords() {
     Random random = Random();
     int number_of_correct_words = random.nextInt(8) + 1;
     int number_of_incorrect_words = 10 - number_of_correct_words;
     words.shuffle();
-    List<Word> sublist = words.getRange(0,10+number_of_incorrect_words).toList();
+    List<Word> sublist =
+        words.getRange(0, 10 + number_of_incorrect_words).toList();
     int index = 10;
-    for(int i= 0;i<10;i++){
-      if(i<number_of_correct_words){
-        gameWords.value.add(GameWord(sublist[i].name,sublist[i].pictureSrc, sublist[i].audioSrc,true));
-      }
-      else{
-        gameWords.value.add(GameWord(sublist[i].name,sublist[i].pictureSrc, sublist[index].audioSrc,false));
+    for (int i = 0; i < 10; i++) {
+      if (i < number_of_correct_words) {
+        gameWords.value.add(GameWord(
+            sublist[i].name, sublist[i].pictureSrc, sublist[i].audioSrc, true));
+      } else {
+        gameWords.value.add(GameWord(sublist[i].name, sublist[i].pictureSrc,
+            sublist[index].audioSrc, false));
         index++;
       }
     }
@@ -99,18 +98,20 @@ class Game5Controller extends GetxController {
       print("element:${element.name}  isCorrect:${element.isCorrect}");
     });
   }
-  void playStartingSpeech() async{
+
+  void playStartingSpeech() async {
     await Future.delayed(Duration(seconds: 2));
     general_audio_player.play(AssetSource("audios/Game5/firstSpeech.mp3"));
     int counter = 0;
     StreamSubscription<void>? audioPlayerCompletionListener;
-    audioPlayerCompletionListener = general_audio_player.onPlayerComplete.listen((event) async {
-      if(counter ==0){
+    audioPlayerCompletionListener =
+        general_audio_player.onPlayerComplete.listen((event) async {
+      if (counter == 0) {
         await Future.delayed(Duration(seconds: 1));
-        general_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+        general_audio_player
+            .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
         counter++;
-      }
-      else if(counter==1){
+      } else if (counter == 1) {
         audioPlayerCompletionListener!.cancel();
         is_wrong_clickable.value = true;
         is_correct_clickable.value = true;
@@ -120,18 +121,18 @@ class Game5Controller extends GetxController {
         correctButton.refresh();
       }
     });
-
   }
 
-  Future<void> handleUserSelect(bool choice,Function callback) async {
+  Future<void> handleUserSelect(bool choice, Function callback) async {
     is_wrong_clickable.value = false;
     is_correct_clickable.value = false;
     is_correct_clickable.refresh();
     is_wrong_clickable.refresh();
     StreamSubscription<void>? audioPlayerCompletionListener;
-    audioPlayerCompletionListener= choice_audio_player.onPlayerComplete.listen((event) async{
+    audioPlayerCompletionListener =
+        choice_audio_player.onPlayerComplete.listen((event) async {
       await Future.delayed(Duration(seconds: 1));
-      if(wordIndex.value == 9){
+      if (wordIndex.value == 9) {
         gameOver.value = true;
         gameOver.refresh();
         callback();
@@ -145,7 +146,8 @@ class Game5Controller extends GetxController {
       correctButton.refresh();
       wrongButton.value = Colors.deepPurpleAccent;
       StreamSubscription<void>? audioPlayerCompletionListener2;
-      audioPlayerCompletionListener2= listen_audio_player.onPlayerComplete.listen((event) async {
+      audioPlayerCompletionListener2 =
+          listen_audio_player.onPlayerComplete.listen((event) async {
         await Future.delayed(Duration(seconds: 1));
         is_wrong_clickable.value = true;
         is_correct_clickable.value = true;
@@ -155,47 +157,42 @@ class Game5Controller extends GetxController {
       });
       audioPlayerCompletionListener!.cancel();
       await Future.delayed(Duration(seconds: 1));
-      await listen_audio_player.play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+      await listen_audio_player
+          .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
     });
 
-    if(gameWords.value[wordIndex.value].isCorrect == choice){
-      if(choice == true){
+    if (gameWords.value[wordIndex.value].isCorrect == choice) {
+      if (choice == true) {
         correctButton.value = createColor(Colors.lightGreen);
         correctButton.refresh();
-      }
-      else{
+      } else {
         wrongButton.value = createColor(Colors.lightGreen);
         wrongButton.refresh();
       }
       currentButton.value = correctIcon;
       currentButton.refresh();
-      totalScore.value+=1000;
+      totalScore.value += 1000;
       totalScore.refresh();
       await choice_audio_player.play(AssetSource("audios/Game5/correct.mp3"));
-    }
-    else{
-      if(choice == true){
+    } else {
+      if (choice == true) {
         correctButton.value = Colors.redAccent;
         correctButton.refresh();
-      }
-      else{
+      } else {
         wrongButton.value = Colors.redAccent;
         wrongButton.refresh();
       }
       currentButton.value = wrongIcon;
       currentButton.refresh();
-      totalScore.value+=500;
+      totalScore.value += 500;
       totalScore.refresh();
       await choice_audio_player.play(AssetSource("audios/Game5/wrong.mp3"));
-
     }
     totalCoinCount.value = totalScore.value ~/ 200;
     totalCoinCount.refresh();
-
   }
 
-  MaterialAccentColor createColor(MaterialColor color){
-
+  MaterialAccentColor createColor(MaterialColor color) {
     return MaterialAccentColor(
       color.value,
       <int, Color>{
@@ -205,13 +202,5 @@ class Game5Controller extends GetxController {
         700: color[700]!,
       },
     );
-
-
-
-
-
-
-
   }
-
 }

@@ -20,6 +20,8 @@ class ContentDetail extends StatelessWidget {
           getWordImage(),
           SizedBox(height: 2.0.hp),
           getContentName(),
+          if (controller.isContentPurchased(controller.selectedContent.value!))
+            getUseButton(context),
         ],
       )),
     );
@@ -78,10 +80,50 @@ class ContentDetail extends StatelessWidget {
 
   Widget getContentName() {
     return Text(
-      controller.selectedContent.value?.name,
+      controller.selectedContent.value?.name ?? "",
       style: TextStyle(
         fontSize: 20.0.sp,
         fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget getUseButton(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: ElevatedButton(
+          onPressed: controller.isSelectedContentInUsed()
+              ? () {
+                  // unuse
+                  controller.unUseSelectedContent();
+                  Get.back();
+                }
+              : () {
+                  // use
+                  controller.useSelectedContent();
+                  Get.back();
+                },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: controller.isSelectedContentInUsed()
+                ? Colors.red
+                : Colors.green,
+            textStyle: const TextStyle(fontSize: 14.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 5.0),
+              Text(
+                controller.isSelectedContentInUsed() ? "UNUSE" : "USE",
+                style: TextStyle(
+                  fontSize: 25.0.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

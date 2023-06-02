@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/word.dart';
@@ -8,6 +9,9 @@ import 'package:first_app/app/data/models/word.dart';
 import 'package:get/get.dart';
 
 class Game3Controller extends GetxController {
+  late List<Content> avaliableContents;
+  late Rx<Content> selectedContent;
+
   // all words coming from the chosen categories
   late List<Word> words;
 
@@ -43,11 +47,13 @@ class Game3Controller extends GetxController {
     // get arguments
     words = Get.arguments[0] as List<Word>;
     gameMode = Get.arguments[1] as String;
+    avaliableContents = Get.arguments[2] as List<Content>;
 
     startGame();
   }
 
   void startGame() {
+    choseContent();
     startTime = DateTime.now();
     gameOver.value = false;
     guestCount.value = 0;
@@ -74,6 +80,13 @@ class Game3Controller extends GetxController {
     } else if (gameMode == "extreme") {
       baseScore.value *= 15;
     }
+  }
+
+  void choseContent() {
+    Random random = Random();
+    int index = random.nextInt(avaliableContents.length);
+    var content = avaliableContents.elementAt(index);
+    selectedContent = Rx(content);
   }
 
   Word getCorrectWord() {

@@ -15,4 +15,6 @@ class ContentRepository {
 
   void writeContents(List<Content> contents) =>
       contentProvider.writeContents(contents);
+
+  void updateContent(Content content) => contentProvider.updateContent(content);
 }

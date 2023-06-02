@@ -1,12 +1,17 @@
 import 'dart:math';
 
 import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:get/get.dart';
 
 class Game2Controller extends GetxController {
+  var availableContents = <Content>[];
+  Rx<Content> selectedContent =
+      Rx(Content(-1, "hiç", "assets/images/apple.png", true, true, 50, 3));
+
   // all words coming from the chosen categories
   late List<Word> words;
 
@@ -37,17 +42,20 @@ class Game2Controller extends GetxController {
   late DateTime startTime;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     // get arguments
     words = Get.arguments[0] as List<Word>;
     gameMode = Get.arguments[1] as String;
+    availableContents = Get.arguments[2] as List<Content>;
 
     startGame();
   }
 
   void startGame() {
+    choseContent();
+
     startTime = DateTime.now();
     gameOver.value = false;
     guestCount.value = 0;
@@ -74,6 +82,16 @@ class Game2Controller extends GetxController {
     } else if (gameMode == "extreme") {
       baseScore.value *= 15;
     }
+  }
+
+  void choseContent() {
+    if (availableContents.isEmpty) {
+      return;
+    }
+    Random random = Random();
+    int index = random.nextInt(availableContents.length);
+    var content = availableContents.elementAt(index);
+    selectedContent = Rx(content);
   }
 
   Word getMissingWord() {

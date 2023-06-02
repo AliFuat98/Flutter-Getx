@@ -7,7 +7,6 @@ import 'package:first_app/app/modules/store/widgets/content_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
 
 import 'controller.dart';
 
@@ -21,7 +20,7 @@ class StorePage extends GetWidget<StoreController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           backgroundColor: brightBlue50,
           appBar: AppBar(
@@ -52,13 +51,17 @@ class StorePage extends GetWidget<StoreController> {
               tabs: [
                 Tab(text: 'Ürünler'),
                 Tab(text: 'Satın Alınan İçerikler'),
+                Tab(text: 'Kullanımda'),
               ],
             ),
           ),
           body: TabBarView(
             children: [
-              buildProductTab(),
-              buildPurchasedItemsTab(),
+              buildProductTab(0),
+              buildProductTab(1),
+              buildProductTab(2),
+              // buildPurchasedItemsTab(),
+              // buildUsedItems(),
             ],
           ),
         ),
@@ -66,7 +69,7 @@ class StorePage extends GetWidget<StoreController> {
     );
   }
 
-  Widget buildProductTab() {
+  Widget buildProductTab(int pageIndex) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -81,115 +84,8 @@ class StorePage extends GetWidget<StoreController> {
           ),
         ),
         SizedBox(height: 10.0),
-        getProducts(),
+        getProducts(pageIndex),
       ],
-    );
-  }
-
-  Widget buildPurchasedItemsTab() {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              'Satın Alınan İçerikler',
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-          SizedBox(height: 10.0),
-          Expanded(
-            child: Obx(
-              () => GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.9,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                ),
-                itemCount: controller.purchasedContents.length,
-                itemBuilder: (context, index) {
-                  final content = controller.purchasedContents[index];
-                  final categoryColor = Colors
-                      .primaries[content.category % Colors.primaries.length];
-
-                  return GestureDetector(
-                    onTap: () {
-                      controller.selectedContent.value = content;
-                      Get.to(
-                        () => ContentDetail(),
-                        transition: Transition.downToUp,
-                      );
-                    },
-                    child: Card(
-                      color: categoryColor,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.asset(
-                                content.pictureSrc,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  content.name,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white, // Ürün adının rengi
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 5.0),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.monetization_on,
-                                      size: 16.0,
-                                      color: Colors.amber,
-                                    ),
-                                    SizedBox(width: 5.0),
-                                    Text(
-                                      'Puan: ${content.price}',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.amber, // Puanın rengi
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.0),
-                                Text(
-                                  'Kategori: ${content.category}',
-                                  style: TextStyle(fontSize: 14.0),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -248,14 +144,13 @@ class StorePage extends GetWidget<StoreController> {
     );
   }
 
-  Widget getProducts() {
+  Widget getProducts(int pageIndex) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.all(5.0.wp),
         child: Obx(
           () {
-            final sortedContents = controller.filteredContents.toList()
-              ..sort((a, b) => a.price.compareTo(b.price));
+            final sortedContents = controller.getSortedContent(pageIndex);
 
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -272,8 +167,10 @@ class StorePage extends GetWidget<StoreController> {
 
                 final isContentPurchased =
                     controller.isContentPurchased(content);
-                final opacity = isContentPurchased ? 0.0 : 1.0;
-                final height = isContentPurchased ? 0.0 : null;
+                final opacity =
+                    (isContentPurchased && pageIndex == 0) ? 0.0 : 1.0;
+                final height =
+                    (isContentPurchased && pageIndex == 0) ? 0.0 : null;
 
                 final canAffordContent = controller.canAffordContent(content);
                 final buttonColor =
@@ -345,12 +242,13 @@ class StorePage extends GetWidget<StoreController> {
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),
-                                getBuyButton(
-                                  canAffordContent,
-                                  buttonText,
-                                  content,
-                                  context,
-                                ),
+                                if (pageIndex == 0)
+                                  getBuyButton(
+                                    canAffordContent,
+                                    buttonText,
+                                    content,
+                                    context,
+                                  ),
                               ],
                             ),
                           ),

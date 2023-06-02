@@ -1,21 +1,27 @@
 import 'dart:ffi';
 
 import 'package:first_app/app/data/models/category.dart';
+import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/data/services/category/category_repository.dart';
+import 'package:first_app/app/data/services/content/content_repository.dart';
 import 'package:first_app/app/data/services/game/game_repository.dart';
 import 'package:get/get.dart';
 
 import '../../data/models/game.dart';
 
 class GamesController extends GetxController {
+  ContentRepository contentRepository;
   GameRepository gameRepository;
   CategoryRepository categoryRepository;
 
   GamesController({
     required this.gameRepository,
     required this.categoryRepository,
+    required this.contentRepository,
   });
+
+  var availableContents = <Content>[];
 
   final games = <Game>[].obs;
 
@@ -31,6 +37,11 @@ class GamesController extends GetxController {
     games.assignAll(data);
 
     categories = await categoryRepository.readCategories();
+
+    var contents = await contentRepository.readContents();
+    // animation and avatar
+    availableContents.assignAll(contents.where((cont) =>
+        cont.inUsed == true && (cont.category == 3 || cont.category == 6)));
   }
 
   bool checkChosen(int categoryID) {

@@ -1,4 +1,5 @@
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/modules/category/view.dart';
 import 'package:first_app/app/modules/category_map/view.dart';
 import 'package:first_app/app/modules/games/view.dart';
@@ -26,7 +27,7 @@ class HomePage extends GetView<HomeController> {
                 Container(
                   decoration: const BoxDecoration(
                       //color: Color.fromARGB(255, 174, 230, 247),
-                      color: Color.fromARGB(255, 51, 184, 224),
+                      color: darkBlue200,
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(50),
                       ),
@@ -38,32 +39,42 @@ class HomePage extends GetView<HomeController> {
                       ]),
                   child: Column(
                     children: [
-                      ListTile(
-                        title: Text(
-                          "hi Yavız",
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 242, 253, 240),
-                            fontSize: 20.0.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        textColor: Colors.white,
-                        subtitle: Text(
-                          "naber",
-                          style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: 15.0.sp,
-                          ),
-                        ),
-                        trailing: const CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage(
-                              "assets/images/word_images/family/mummy.jpg"),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "hi Yavuz",
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(
+                                        255, 242, 253, 240),
+                                    fontSize: 20.0.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  "naber",
+                                  style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 15.0.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Obx(
+                              () => Image(
+                                width: 10.0.hp,
+                                fit: BoxFit.cover,
+                                image: AssetImage(controller
+                                    .selectedContent.value.pictureSrc),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(
-                        height: 10.0,
-                      )
                     ],
                   ),
                 ),

@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/word.dart';
@@ -20,6 +23,9 @@ class ExtendWordGame1 {
 }
 
 class Game1Controller extends GetxController {
+  late List<Content> avaliableContents;
+  late Rx<Content> selectedContent;
+
   // All words that come from selected categories
   late List<Word> selectedWords;
 
@@ -49,15 +55,17 @@ class Game1Controller extends GetxController {
   final guessCount = 0.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     selectedWords = Get.arguments[0] as List<Word>;
     gameMode = Get.arguments[1] as String;
+    avaliableContents = Get.arguments[2] as List<Content>;
 
     startGame();
   }
 
   void startGame() {
+    choseContent();
     startTime = DateTime.now();
     gameOver.value = false;
     totalScore.value = 0;
@@ -79,6 +87,13 @@ class Game1Controller extends GetxController {
       baseScore.value *= 15;
     }
     _generateGameWords();
+  }
+
+  void choseContent() {
+    Random random = Random();
+    int index = random.nextInt(avaliableContents.length);
+    var content = avaliableContents.elementAt(index);
+    selectedContent = Rx(content);
   }
 
   void _generateGameWords() {
