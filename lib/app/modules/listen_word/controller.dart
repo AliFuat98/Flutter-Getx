@@ -92,6 +92,7 @@ class ListenwordController extends GetxController {
         filename: referenceFileName);
     request.files.add(testAudio);
     request.files.add(referenceAudio);
+    request.fields["word"] = selectedCategory.words[currentWordIndex.value].name;
 
     var response = await request.send();
     var responseData = await response.stream.toBytes();
