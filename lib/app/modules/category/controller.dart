@@ -19,6 +19,10 @@ class CategoryController extends GetxController {
   final deleting = false.obs;
   final selectedCategory = Rx<Category?>(null);
 
+  final mapIndex = 0.obs;
+  final mapList = <String>[];
+  final categoryListForMap = <Category>[].obs;
+
   // adding new category store the data in here
   final selectedCategoryImageFilePath = Rx<String?>(null);
 
@@ -28,12 +32,21 @@ class CategoryController extends GetxController {
     List<Category> data = await categoryRepository.readCategories();
     categories.assignAll(data);
     //ever(categories, (_) => categoryRepository.writeCategories(categories));
+    for (var i = -1; i < categories.length / 12; i++) {
+      mapList.add("Map ${i + 2}");
+    }
+    changeMap();
   }
 
   @override
   void onClose() {
     editController.dispose();
     super.onClose();
+  }
+
+  void changeMap() {
+    categoryListForMap.value =
+        categories.skip(11 * mapIndex.value).take(12).toList();
   }
 
   // yeni kategori ekleme

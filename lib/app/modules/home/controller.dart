@@ -31,7 +31,6 @@ class HomeController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     super.onReady();
-    print("object");
   }
 
   void choseContent() {

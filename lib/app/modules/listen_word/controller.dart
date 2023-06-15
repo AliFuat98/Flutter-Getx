@@ -75,8 +75,16 @@ class ListenwordController extends GetxController {
   }
 
   void handleScoreCalculationRequest(String recorded_audio_path) async {
+    //var url = Uri.parse('http://192.168.1.40:5000');
+    //var url = Uri.parse('http://127.0.0.1:5000');
+    //var url = Uri.parse('http://10.0.0.2:5000');
+    var url = Uri.parse('http://10.0.2.2:5176/api/User/GetUserList');
+    var responsex = await http.get(url);
+    print(responsex);
+    // var request =
+    //     http.MultipartRequest("POST", Uri.parse("http://127.0.0.1:5000"));
     var request =
-        http.MultipartRequest("POST", Uri.parse("http://127.0.0.1:5000"));
+        http.MultipartRequest("POST", Uri.parse("http://10.0.2.2:5000/"));
     File recordedAudioFile = File(recorded_audio_path);
     Uint8List audioBytes = recordedAudioFile.readAsBytesSync();
     var testAudio = http.MultipartFile.fromBytes("audio", audioBytes,
@@ -92,7 +100,8 @@ class ListenwordController extends GetxController {
         filename: referenceFileName);
     request.files.add(testAudio);
     request.files.add(referenceAudio);
-    request.fields["word"] = selectedCategory.words[currentWordIndex.value].name;
+    request.fields["word"] =
+        selectedCategory.words[currentWordIndex.value].name;
 
     var response = await request.send();
     var responseData = await response.stream.toBytes();

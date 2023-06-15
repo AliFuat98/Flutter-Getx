@@ -84,16 +84,51 @@ flutter:
     - assets/images/icons/
     - assets/images/game/
     - assets/images/category_images/
+    - assets/images/word_images/animals1/
+    - assets/images/word_images/animals2/
+    - assets/images/word_images/bathroom/
+    - assets/images/word_images/body/
+    - assets/images/word_images/clothes/
+    - assets/images/word_images/countries1/
+    - assets/images/word_images/countries2/
+    - assets/images/word_images/days_seasons/
+    - assets/images/word_images/drinks/
+    - assets/images/word_images/feelings/
+    - assets/images/word_images/flowers/
     - assets/images/word_images/family/
     - assets/images/word_images/foods/
     - assets/images/word_images/fruits/
+    - assets/images/word_images/furniture/
+    - assets/images/word_images/halloween/
+    - assets/images/word_images/insects/
+    - assets/images/word_images/instruments/
+    - assets/images/word_images/kitchen/
+    - assets/images/word_images/language/
+    - assets/images/word_images/living_room/
+    - assets/images/word_images/month/
+    - assets/images/word_images/nature1/
+    - assets/images/word_images/nature2/
+    - assets/images/word_images/occupation/
+    - assets/images/word_images/pen_case/
+    - assets/images/word_images/school/
+    - assets/images/word_images/sport/
+    - assets/images/word_images/summer/
+    - assets/images/word_images/technology/
+    - assets/images/word_images/town/
+    - assets/images/word_images/toys/
+    - assets/images/word_images/transport/
+    - assets/images/word_images/vegetable/
+    - assets/images/word_images/weather/
+
     - assets/audios/
     - assets/audios/game_5/
+    - assets/audios/words/
     - assets/images/awards/dessert/
     - assets/images/awards/badge/
     - assets/images/awards/avatar/
     - assets/images/awards/sticker/
     - assets/images/awards/animation/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

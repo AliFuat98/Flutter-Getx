@@ -27,8 +27,8 @@ class DataHelper {
 
   static void _onCreate(Database db, int version) async {
     print("on create first time");
-    db.execute(wordTable);
     db.execute(categoryTable);
+    db.execute(wordTable);
     db.execute(gameTable);
     db.execute(userTable);
     db.execute(GameUserTable);

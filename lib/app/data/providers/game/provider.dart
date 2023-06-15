@@ -9,7 +9,6 @@ class GameProvider {
     List<Game> games = List.generate(gameMaps.length, (i) {
       return Game.fromJson(gameMaps[i]);
     });
-    print(games.length);
     return games;
   }
 }

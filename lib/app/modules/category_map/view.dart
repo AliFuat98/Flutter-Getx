@@ -1,4 +1,6 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/modules/listen_word/view.dart';
 import 'package:first_app/app/modules/category_map/controller.dart';
 import 'package:first_app/app/widgets/file_operations.dart';
@@ -13,59 +15,116 @@ class CategoryMapPage extends GetView<CategoryMapController> {
   CategoryMapPage({super.key});
 
   static const pageName = "/categoryMap";
+  final caroController = CarouselController();
 
   final categoryController = Get.find<CategoryController>();
 
   @override
   Widget build(BuildContext context) {
     var positionList = getPositions();
-    var index = -1;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Obx(
-        () => Stack(children: [
-          InteractiveViewer(
-            maxScale: 10,
-            constrained: false,
-            transformationController: controller.transCtrl.value,
-            child: Stack(children: [
-              Image.asset(
-                "assets/images/map.jpg",
-                width: 1500,
-              ),
-              ...categoryController.categories.map((category) {
-                index++;
-                // fazla category olduğunda hata vermemesi için ilerde silinebilir
-                if (index == positionList.length) {
-                  index = positionList.length - 1;
-                }
-                return Positioned(
-                  left: positionList[index].leftPosition,
-                  top: positionList[index].topPosition,
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed(ListenWordPage.pageName, arguments: category);
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image:
-                                  getImage(category.isNew, category.pictureSrc),
-                              fit: BoxFit.cover),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black, width: 1.5)),
+        () {
+          var index = -1;
+          return Stack(children: [
+            InteractiveViewer(
+              maxScale: 3,
+              constrained: false,
+              transformationController: controller.transCtrl.value,
+              child: Stack(children: [
+                Image.asset(
+                  "assets/images/map.png",
+                  width: 1200,
+                ),
+                ...categoryController.categoryListForMap.map((category) {
+                  index++;
+                  // fazla category olduğunda hata vermemesi için ilerde silinebilir
+                  return Positioned(
+                    left: positionList[index].leftPosition,
+                    top: positionList[index].topPosition,
+                    child: InkWell(
+                      onTap: () {
+                        Get.toNamed(ListenWordPage.pageName,
+                            arguments: category);
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: getImage(
+                                    category.isNew, category.pictureSrc),
+                                fit: BoxFit.cover),
+                            shape: BoxShape.circle,
+                            border:
+                                Border.all(color: Colors.black, width: 1.5)),
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ]),
-          ),
-          backButton(),
-        ]),
+                  );
+                }).toList(),
+              ]),
+            ),
+            backButton(),
+            getCategoriesv2(),
+          ]);
+        },
       ),
-      floatingActionButton: resetScaleButton(),
+      //floatingActionButton: resetScaleButton(),
+    );
+  }
+
+  Widget getCategoriesv2() {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.only(bottom: 3.0.hp),
+      child: CarouselSlider(
+        carouselController: caroController,
+        options: CarouselOptions(
+          height: 5.0.hp,
+          initialPage: categoryController.mapIndex.value,
+          //autoPlay: true,
+          //autoPlayInterval: const Duration(seconds: 5),
+          enlargeCenterPage: true,
+          enlargeStrategy: CenterPageEnlargeStrategy.height,
+          onPageChanged: (index, reason) {
+            categoryController.mapIndex.value = index;
+            categoryController.changeMap();
+          },
+        ),
+        items: [
+          ...categoryController.mapList.map((element) {
+            return Container(
+              height: 5.0.hp,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: darkBlue100,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  width: 2,
+                  color: brightBlue200,
+                  strokeAlign: BorderSide.strokeAlignInside,
+                ),
+                // image: DecorationImage(
+                //   fit: BoxFit.cover,
+                //   image: AssetImage(element.pictureSrc),
+                // ),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 1.0.wp),
+              child: Center(
+                child: Text(
+                  element,
+                  style: const TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 
