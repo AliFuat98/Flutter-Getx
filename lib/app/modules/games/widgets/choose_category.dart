@@ -60,8 +60,10 @@ class ChooseCategory extends StatelessWidget {
   }
 
   Widget getCategoryCards() {
-    return Padding(
+    return Container(
       padding: EdgeInsets.symmetric(horizontal: 1.0.wp),
+      height: 80.0.hp,
+      color: Color.fromARGB(255, 243, 250, 255),
       child: Center(
         child: GridView.count(
           crossAxisCount: 3,

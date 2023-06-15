@@ -75,14 +75,8 @@ class ListenwordController extends GetxController {
   }
 
   void handleScoreCalculationRequest(String recorded_audio_path) async {
-    //var url = Uri.parse('http://192.168.1.40:5000');
     //var url = Uri.parse('http://127.0.0.1:5000');
     //var url = Uri.parse('http://10.0.0.2:5000');
-    var url = Uri.parse('http://10.0.2.2:5176/api/User/GetUserList');
-    var responsex = await http.get(url);
-    print(responsex);
-    // var request =
-    //     http.MultipartRequest("POST", Uri.parse("http://127.0.0.1:5000"));
     var request =
         http.MultipartRequest("POST", Uri.parse("http://10.0.2.2:5000/"));
     File recordedAudioFile = File(recorded_audio_path);
@@ -93,7 +87,7 @@ class ListenwordController extends GetxController {
         selectedCategory.words[currentWordIndex.value].audioSrc;
     String referenceFileName = referenceAudioPath.split('/').last;
     ByteData referenceData =
-        await rootBundle.load("assets/audios/${referenceFileName}");
+        await rootBundle.load("assets/audios/words/${referenceFileName}");
     List<int> referenceBytes = referenceData.buffer.asUint8List();
     var referenceAudio = http.MultipartFile.fromBytes(
         "reference", referenceBytes,

@@ -82,7 +82,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
       child: CarouselSlider(
         carouselController: caroController,
         options: CarouselOptions(
-          height: 5.0.hp,
+          height: 3.0.hp,
           initialPage: categoryController.mapIndex.value,
           //autoPlay: true,
           //autoPlayInterval: const Duration(seconds: 5),
@@ -96,10 +96,9 @@ class CategoryMapPage extends GetView<CategoryMapController> {
         items: [
           ...categoryController.mapList.map((element) {
             return Container(
-              height: 5.0.hp,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: darkBlue100,
+                color: Color.fromARGB(193, 1, 155, 104),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   width: 2,
@@ -111,14 +110,12 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                 //   image: AssetImage(element.pictureSrc),
                 // ),
               ),
-              margin: EdgeInsets.symmetric(horizontal: 1.0.wp),
+              margin: EdgeInsets.symmetric(horizontal: 10.0.wp),
               child: Center(
                 child: Text(
                   element,
                   style: const TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             );
