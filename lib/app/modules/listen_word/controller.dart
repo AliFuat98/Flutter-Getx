@@ -97,6 +97,9 @@ class ListenwordController extends GetxController {
     request.fields["word"] =
         selectedCategory.words[currentWordIndex.value].name;
 
+    request.fields["flag"] =
+        selectedCategory.words[currentWordIndex.value].isNew ? "1" : "0";
+
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var result = utf8.decode(responseData);

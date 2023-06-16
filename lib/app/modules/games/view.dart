@@ -5,6 +5,7 @@ import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
 import 'package:first_app/app/modules/games/game3/view.dart';
 import 'package:first_app/app/modules/games/game4/view.dart';
+import 'package:first_app/app/modules/games/game6/view.dart';
 import 'package:first_app/app/modules/games/widgets/choose_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -194,7 +195,7 @@ class GamesPage extends GetView<GamesController> {
     return Obx(
       () => AnimatedSmoothIndicator(
         activeIndex: controller.activeIndexOfDot.value,
-        count: 5,
+        count: controller.games.length,
         onDotClicked: (index) => {
           controller.activeIndexOfDot.value = index,
           caroController.animateToPage(index),
@@ -291,6 +292,13 @@ class GamesPage extends GetView<GamesController> {
           break;
         case 4:
           Get.toNamed(Game5Page.pageName, arguments: [
+            words,
+            controller.chosenGameMode.value,
+            controller.availableContents
+          ]);
+          break;
+        case 5:
+          Get.toNamed(Game6Page.pageName, arguments: [
             words,
             controller.chosenGameMode.value,
             controller.availableContents

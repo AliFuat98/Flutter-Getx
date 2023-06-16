@@ -1,4 +1,6 @@
 import 'package:first_app/app/data/services/storage/services.dart';
+import 'package:first_app/app/modules/games/game6/binding.dart';
+import 'package:first_app/app/modules/games/game6/view.dart';
 
 import 'package:first_app/app/modules/listen_word/binding.dart';
 import 'package:first_app/app/modules/listen_word/view.dart';
@@ -117,6 +119,11 @@ class MyApp extends StatelessWidget {
           name: Game5Page.pageName,
           page: () => Game5Page(),
           binding: Game5Binding(),
+        ),
+        GetPage(
+          name: Game6Page.pageName,
+          page: () => Game6Page(),
+          binding: Game6Binding(),
         )
       ],
       builder: EasyLoading.init(),
