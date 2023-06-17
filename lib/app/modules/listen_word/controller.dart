@@ -75,30 +75,38 @@ class ListenwordController extends GetxController {
   }
 
   void handleScoreCalculationRequest(String recorded_audio_path) async {
+    var word = selectedCategory.words[currentWordIndex.value];
     //var url = Uri.parse('http://127.0.0.1:5000');
-    //var url = Uri.parse('http://10.0.0.2:5000');
-    var request =
-        http.MultipartRequest("POST", Uri.parse("http://10.0.2.2:5000/"));
+    //var url = Uri.parse('http://10.0.2.2:5000');
+    var request = http.MultipartRequest(
+        "POST",
+        Uri.parse(
+            "http://${Platform.isAndroid ? "10.0.2.2" : "127.0.0.1"}:5000/"));
     File recordedAudioFile = File(recorded_audio_path);
     Uint8List audioBytes = recordedAudioFile.readAsBytesSync();
     var testAudio = http.MultipartFile.fromBytes("audio", audioBytes,
         filename: recordedFileName);
-    String referenceAudioPath =
-        selectedCategory.words[currentWordIndex.value].audioSrc;
+    String referenceAudioPath = word.audioSrc;
     String referenceFileName = referenceAudioPath.split('/').last;
-    ByteData referenceData =
-        await rootBundle.load("assets/audios/words/${referenceFileName}");
+    ByteData referenceData;
+    if (word.isNew) {
+      var file = File(word.audioSrc);
+      ByteBuffer buffer = Uint8List.fromList(await file.readAsBytes()).buffer;
+      referenceData = ByteData.view(buffer);
+    } else {
+      referenceData = await rootBundle.load("assets/${word.audioSrc}");
+    }
+
     List<int> referenceBytes = referenceData.buffer.asUint8List();
     var referenceAudio = http.MultipartFile.fromBytes(
         "reference", referenceBytes,
         filename: referenceFileName);
     request.files.add(testAudio);
     request.files.add(referenceAudio);
-    request.fields["word"] =
-        selectedCategory.words[currentWordIndex.value].name;
+    request.fields["word"] = word.name;
 
-    request.fields["flag"] =
-        selectedCategory.words[currentWordIndex.value].isNew ? "1" : "0";
+    var flag = word.isNew ? "1" : "0";
+    request.fields["flag"] = flag;
 
     var response = await request.send();
     var responseData = await response.stream.toBytes();
