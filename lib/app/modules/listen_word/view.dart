@@ -4,6 +4,7 @@ import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import 'controller.dart';
 
@@ -115,14 +116,18 @@ class ListenWordPage extends GetView<ListenwordController> {
               ),
             ],
           ),
-          IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.close,
-              size: 7.0.wp,
-              color: Colors.white,
+          SizedBox(
+            width: 7.0.wp,
+            height: 7.0.wp,
+            child: IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(
+                Icons.close,
+                size: 7.wp,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -167,10 +172,25 @@ class ListenWordPage extends GetView<ListenwordController> {
 
   Widget getWordImage() {
     var wordS = controller.selectedCategory.words;
-    return Obx(
-      () => Stack(
-        children: [
-          GestureDetector(
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: CircularPercentIndicator(
+            animation: true,
+            animationDuration: 1000,
+            radius: 17.0.hp,
+
+            // radius: 50,
+            lineWidth: 3.0.hp,
+            percent: 0.3, //controller.getPersant(),
+            progressColor: Color.fromARGB(161, 9, 219, 19),
+            backgroundColor: blue200,
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: GestureDetector(
             onTap: () {
               var curWord = wordS.elementAt(controller.currentWordIndex.value);
               var src = getAudioSource(curWord.isNew, curWord.audioSrc);
@@ -178,64 +198,56 @@ class ListenWordPage extends GetView<ListenwordController> {
 
               audioPlayer.play(src);
             },
-            child: Container(
-              height: 30.0.hp,
-              width: 30.0.hp,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 5,
+            child: Obx(
+              () => Container(
+                height: 30.0.hp,
+                width: 30.0.hp,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      30.0.hp,
+                    ),
+                  ),
                   color: darkBlue100,
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                    30.0.hp,
+                  image: DecorationImage(
+                    image: getImage(
+                      wordS.elementAt(controller.currentWordIndex.value).isNew,
+                      wordS
+                          .elementAt(controller.currentWordIndex.value)
+                          .pictureSrc,
+                    ),
+                    fit: BoxFit.fill,
                   ),
-                ),
-                color: darkBlue100,
-                image: DecorationImage(
-                  image: getImage(
-                    wordS.elementAt(controller.currentWordIndex.value).isNew,
-                    wordS
-                        .elementAt(controller.currentWordIndex.value)
-                        .pictureSrc,
-                  ),
-                  fit: BoxFit.fill,
                 ),
               ),
             ),
           ),
-          Positioned(
-            right: 0,
-            child: Container(
-              width: 10.0.hp,
-              height: 10.0.hp,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  var curWord =
-                      wordS.elementAt(controller.currentWordIndex.value);
-                  var src = getAudioSource(curWord.isNew, curWord.audioSrc);
-                  if (src == null) return;
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            margin: EdgeInsets.only(left: 28.0.hp, bottom: 28.0.hp),
+            width: 7.0.hp,
+            height: 7.0.hp,
+            decoration:
+                const BoxDecoration(shape: BoxShape.circle, color: darkBlue200),
+            child: IconButton(
+              onPressed: () {
+                var curWord =
+                    wordS.elementAt(controller.currentWordIndex.value);
+                var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+                if (src == null) return;
 
-                  audioPlayer.play(src);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: lightBlue,
-                  elevation: 10,
-                  shape: CircleBorder(),
-                ),
-                child: Icon(
-                  Icons.volume_up_sharp,
-                  size: 5.0.wp,
-                  color: Colors.white,
-                ),
+                audioPlayer.play(src);
+              },
+              icon: Icon(
+                Icons.volume_up_sharp,
+                color: Colors.white,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -249,7 +261,7 @@ class ListenWordPage extends GetView<ListenwordController> {
             wordS.elementAt(controller.currentWordIndex.value).name,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 30.0.sp,
+              fontSize: 26.0.sp,
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.normal,
               shadows: const [
@@ -267,50 +279,53 @@ class ListenWordPage extends GetView<ListenwordController> {
   }
 
   Widget getPrevNext() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            controller.decreaseCurrentWordIndex();
-          },
-          style: ElevatedButton.styleFrom(
-            elevation: 2,
-            shape: const CircleBorder(),
-            backgroundColor: brightBlue300,
-            padding: EdgeInsets.all(5.0.wp),
-          ),
-          child: Obx(
-            () => Icon(
-              Icons.arrow_back,
-              color: controller.currentWordIndex.value == 0
-                  ? darkBlue100
-                  : Colors.white,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.0.wp),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              controller.decreaseCurrentWordIndex();
+            },
+            style: ElevatedButton.styleFrom(
+              elevation: 2,
+              shape: const CircleBorder(),
+              backgroundColor: brightBlue300,
+              padding: EdgeInsets.all(5.0.wp),
+            ),
+            child: Obx(
+              () => Icon(
+                Icons.arrow_back,
+                color: controller.currentWordIndex.value == 0
+                    ? darkBlue100
+                    : Colors.white,
+              ),
             ),
           ),
-        ),
-        getWordName(),
-        ElevatedButton(
-          onPressed: () {
-            controller.increaseCurrentWordIndex();
-          },
-          style: ElevatedButton.styleFrom(
-            elevation: 2,
-            shape: const CircleBorder(),
-            backgroundColor: brightBlue300,
-            padding: EdgeInsets.all(5.0.wp),
-          ),
-          child: Obx(
-            () => Icon(
-              Icons.arrow_forward,
-              color: controller.currentWordIndex.value ==
-                      controller.selectedCategory.words.length - 1
-                  ? darkBlue100
-                  : Colors.white,
+          getWordName(),
+          ElevatedButton(
+            onPressed: () {
+              controller.increaseCurrentWordIndex();
+            },
+            style: ElevatedButton.styleFrom(
+              elevation: 2,
+              shape: const CircleBorder(),
+              backgroundColor: brightBlue300,
+              padding: EdgeInsets.all(5.0.wp),
+            ),
+            child: Obx(
+              () => Icon(
+                Icons.arrow_forward,
+                color: controller.currentWordIndex.value ==
+                        controller.selectedCategory.words.length - 1
+                    ? darkBlue100
+                    : Colors.white,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

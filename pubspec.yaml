@@ -55,6 +55,7 @@ dependencies:
   permission_handler: ^10.2.0
   wav: ^1.2.0
   http: ^0.13.6
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

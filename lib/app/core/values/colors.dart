@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // listen word page
 const blue = Color.fromARGB(255, 37, 142, 255);
+const blue200 = Color.fromARGB(164, 84, 121, 184);
 
 const darkBlue100 = Color.fromARGB(255, 21, 128, 241);
 const darkBlue200 = Color.fromARGB(255, 18, 116, 219);

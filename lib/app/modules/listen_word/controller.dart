@@ -115,6 +115,14 @@ class ListenwordController extends GetxController {
     pronunciationScore.refresh();
   }
 
+  double getPersant() {
+    var list = pronunciationScore.value.split("+");
+    if (list.length <= 1) {
+      return 0.0;
+    }
+    return double.parse(list.elementAt(1));
+  }
+
   void increaseCurrentWordIndex() {
     if (currentWordIndex.value >= selectedCategory.words.length - 1) {
       return;
