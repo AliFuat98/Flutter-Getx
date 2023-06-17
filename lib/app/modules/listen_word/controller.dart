@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -13,8 +15,10 @@ import 'package:http/http.dart' as http;
 class ListenwordController extends GetxController {
   late Category selectedCategory;
   final currentWordIndex = 0.obs;
-  final pronunciationScore = "".obs;
+  final pronunciationScore = 0.0.obs;
   final recorder = FlutterSoundRecorder();
+  AudioPlayer fx_player = AudioPlayer();
+  AudioPlayer reaction_player = AudioPlayer();
   late final String iosFile;
   late final String androidFile;
   late String recordedFileName;
@@ -111,17 +115,59 @@ class ListenwordController extends GetxController {
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var result = utf8.decode(responseData);
-    pronunciationScore.value = result;
+    var results = result.split("+");
+    pronunciationScore.value = double.parse(results[1]);
     pronunciationScore.refresh();
+    handleReaction(results[0]);
   }
 
-  double getPersant() {
-    var list = pronunciationScore.value.split("+");
+  void handleReaction(String prediction) async {
+    var random = Random();
+    int randomInt;
+    if (int.parse(prediction) == 1) {
+      randomInt = random.nextInt(2) + 1;
+      await fx_player.play(AssetSource("audios/audioFX/perfect.mp3"),
+          volume: 5);
+      await Future.delayed(Duration(milliseconds: 500));
+      await reaction_player.play(
+          AssetSource(
+              "audios/learning_page/perfect${randomInt.toString()}.mp3"),
+          volume: 15);
+    } else if (int.parse(prediction) == 2) {
+      randomInt = random.nextInt(2) + 1;
+      await fx_player.play(AssetSource("audios/audioFX/correct.mp3"),
+          volume: 5);
+      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 500));
+      await reaction_player.play(
+          AssetSource("audios/learning_page/almost${randomInt.toString()}.mp3"),
+          volume: 15);
+    } else if (int.parse(prediction) == 3) {
+      randomInt = random.nextInt(2) + 1;
+      await fx_player.play(AssetSource("audios/audioFX/average.mp3"),
+          volume: 5);
+      await Future.delayed(Duration(milliseconds: 500));
+      await reaction_player.play(
+          AssetSource(
+              "audios/learning_page/average${randomInt.toString()}.mp3"),
+          volume: 15);
+    } else if (int.parse(prediction) == 4) {
+      randomInt = random.nextInt(2) + 1;
+      await fx_player.play(AssetSource("audios/audioFX/wrong.mp3"), volume: 5);
+      await Future.delayed(Duration(milliseconds: 500));
+      await reaction_player.play(
+          AssetSource("audios/learning_page/wrong${randomInt.toString()}.mp3"),
+          volume: 15);
+    }
+  }
+
+  /*double getPersant() {
+    //var list = pronunciationScore.value.split("+");
     if (list.length <= 1) {
       return 0.0;
     }
     return double.parse(list.elementAt(1));
-  }
+  }*/
 
   void increaseCurrentWordIndex() {
     if (currentWordIndex.value >= selectedCategory.words.length - 1) {

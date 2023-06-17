@@ -72,7 +72,7 @@ class ListenWordPage extends GetView<ListenwordController> {
           Stack(
             children: [
               Icon(
-                Icons.star,
+                Icons.favorite,
                 color: Colors.yellow,
                 size: 15.0.wp,
               ),
@@ -81,9 +81,7 @@ class ListenWordPage extends GetView<ListenwordController> {
                   alignment: Alignment.center,
                   child: Obx(
                     () => Text(
-                      controller.pronunciationScore.value == ""
-                          ? "0"
-                          : controller.pronunciationScore.value,
+                      controller.pronunciationScore.value.toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

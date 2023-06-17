@@ -124,6 +124,8 @@ flutter:
     - assets/audios/
     - assets/audios/game_5/
     - assets/audios/words/
+    - assets/audios/learning_page/
+    - assets/audios/audioFX/
     - assets/images/awards/dessert/
     - assets/images/awards/badge/
     - assets/images/awards/avatar/
