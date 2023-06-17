@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/data/models/word.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,8 +12,15 @@ class GameWord {
   String pictureSrc;
   String audioSrc;
   bool isCorrect;
+  bool isNew;
 
-  GameWord(this.name, this.pictureSrc, this.audioSrc, this.isCorrect);
+  GameWord(
+    this.name,
+    this.pictureSrc,
+    this.audioSrc,
+    this.isCorrect,
+    this.isNew,
+  );
 }
 
 class Game5Controller extends GetxController {
@@ -67,8 +75,11 @@ class Game5Controller extends GetxController {
       iconSize: 50,
       icon: Icon(Icons.play_circle),
       onPressed: () {
-        listen_audio_player
-            .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+        var curWord = gameWords.value[wordIndex.value];
+        var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+        if (src == null) return;
+
+        listen_audio_player.play(src);
       },
     );
     currentButton.value = playButton;
@@ -86,10 +97,20 @@ class Game5Controller extends GetxController {
     for (int i = 0; i < 10; i++) {
       if (i < number_of_correct_words) {
         gameWords.value.add(GameWord(
-            sublist[i].name, sublist[i].pictureSrc, sublist[i].audioSrc, true));
+          sublist[i].name,
+          sublist[i].pictureSrc,
+          sublist[i].audioSrc,
+          true,
+          sublist[i].isNew,
+        ));
       } else {
-        gameWords.value.add(GameWord(sublist[i].name, sublist[i].pictureSrc,
-            sublist[index].audioSrc, false));
+        gameWords.value.add(GameWord(
+          sublist[i].name,
+          sublist[i].pictureSrc,
+          sublist[index].audioSrc,
+          false,
+          sublist[i].isNew,
+        ));
         index++;
       }
     }
@@ -108,8 +129,12 @@ class Game5Controller extends GetxController {
         general_audio_player.onPlayerComplete.listen((event) async {
       if (counter == 0) {
         await Future.delayed(Duration(seconds: 1));
-        general_audio_player
-            .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+
+        var curWord = gameWords.value[wordIndex.value];
+        var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+        if (src == null) return;
+
+        general_audio_player.play(src);
         counter++;
       } else if (counter == 1) {
         audioPlayerCompletionListener!.cancel();
@@ -157,8 +182,12 @@ class Game5Controller extends GetxController {
       });
       audioPlayerCompletionListener!.cancel();
       await Future.delayed(Duration(seconds: 1));
-      await listen_audio_player
-          .play(AssetSource(gameWords.value[wordIndex.value].audioSrc));
+
+      var curWord = gameWords.value[wordIndex.value];
+      var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+      if (src == null) return;
+
+      await listen_audio_player.play(src);
     });
 
     if (gameWords.value[wordIndex.value].isCorrect == choice) {

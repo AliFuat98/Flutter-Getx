@@ -2,6 +2,7 @@ import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/modules/games/widgets/game_button.dart';
 import 'package:first_app/app/modules/games/widgets/game_title.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -89,11 +90,11 @@ class Game1Page extends GetView<Game1Controller> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(
-            controller.gameTable[index]!.isOpened
-                ? currentWord.pictureSrc
-                : "assets/images/game/mark.png",
-          ),
+          image: controller.gameTable[index]!.isOpened
+              ? getImage(currentWord.isNew, currentWord.pictureSrc)
+              : const AssetImage(
+                  "assets/images/game/mark.png",
+                ),
           fit: BoxFit.cover,
         ),
         color: Colors.amber,

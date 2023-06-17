@@ -1,5 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -171,9 +172,11 @@ class ListenWordPage extends GetView<ListenwordController> {
         children: [
           GestureDetector(
             onTap: () {
-              var audioPath =
-                  wordS.elementAt(controller.currentWordIndex.value).audioSrc;
-              audioPlayer.play(AssetSource(audioPath));
+              var curWord = wordS.elementAt(controller.currentWordIndex.value);
+              var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+              if (src == null) return;
+
+              audioPlayer.play(src);
             },
             child: Container(
               height: 30.0.hp,
@@ -190,7 +193,8 @@ class ListenWordPage extends GetView<ListenwordController> {
                 ),
                 color: darkBlue100,
                 image: DecorationImage(
-                  image: AssetImage(
+                  image: getImage(
+                    wordS.elementAt(controller.currentWordIndex.value).isNew,
                     wordS
                         .elementAt(controller.currentWordIndex.value)
                         .pictureSrc,
@@ -210,10 +214,12 @@ class ListenWordPage extends GetView<ListenwordController> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  var audioPath = wordS
-                      .elementAt(controller.currentWordIndex.value)
-                      .audioSrc;
-                  audioPlayer.play(AssetSource(audioPath));
+                  var curWord =
+                      wordS.elementAt(controller.currentWordIndex.value);
+                  var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+                  if (src == null) return;
+
+                  audioPlayer.play(src);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: lightBlue,

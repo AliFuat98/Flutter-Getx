@@ -28,9 +28,7 @@ class AddWord extends GetView<WordController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Close And Done Buttons
               closeAndDoneButtons(),
-              // CREATE NEW CATEGORY title
               getTitle(),
               SizedBox(height: 5.0.hp),
               getInputField(),
@@ -47,37 +45,10 @@ class AddWord extends GetView<WordController> {
                   ],
                 ),
               ),
-
               SizedBox(height: 2.0.hp),
-              Row(
-                children: [
-                  SizedBox(width: 5.0.wp),
-                  Expanded(
-                    child: getPickerButton(
-                      Icons.image,
-                      "Galery",
-                      () async => categoryController
-                          .selectedCategoryImageFilePath
-                          .value = await pickImage(ImageSource.gallery),
-                    ),
-                  ),
-                  SizedBox(width: 3.0.wp),
-                  Expanded(
-                    child: getPickerButton(
-                      Icons.camera_alt,
-                      "Camera",
-                      () async => categoryController
-                          .selectedCategoryImageFilePath
-                          .value = await pickImage(ImageSource.camera),
-                    ),
-                  ),
-                  SizedBox(width: 5.0.wp),
-                ],
-              ),
-
+              getGaleryCameraButtons(),
               Obx(() {
-                final path =
-                    categoryController.selectedCategoryImageFilePath.value;
+                final path = controller.wordImageFilePath.value;
                 return Expanded(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
@@ -95,70 +66,6 @@ class AddWord extends GetView<WordController> {
     );
   }
 
-  Widget getListenButton() {
-    return ElevatedButton(
-      onPressed: () async {
-        if (controller.wordAudioFilePath.value == null) {
-          return;
-        }
-        audioPlayer.play(DeviceFileSource(controller.wordAudioFilePath.value!),
-            volume: 5000000);
-      },
-      child: Icon(
-        Icons.play_arrow,
-        size: 10.0.wp,
-      ),
-    );
-  }
-
-  Widget getRecordTime() {
-    return Obx(
-      () => StreamBuilder<RecordingDisposition>(
-        stream: controller.recorder.value.onProgress,
-        builder: (context, snapshot) {
-          final duration =
-              snapshot.hasData ? snapshot.data!.duration : Duration.zero;
-          return Text('00:${duration.inSeconds}');
-        },
-      ),
-    );
-  }
-
-  Widget getRecorderButton() {
-    return Obx(
-      () => ElevatedButton(
-        onPressed: () async {
-          if (controller.recorder.value.isRecording) {
-            await controller.stop();
-          } else {
-            await controller.record();
-          }
-        },
-        child: Icon(
-          controller.recorder.value.isRecording ? Icons.stop : Icons.mic,
-          size: 10.0.wp,
-        ),
-      ),
-    );
-  }
-
-  Widget getPickerButton(
-      IconData iconData, String title, VoidCallback onClicked) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          minimumSize: Size.fromHeight(20.0.sp),
-          textStyle: TextStyle(fontSize: 14.0.sp)),
-      onPressed: onClicked,
-      child: Row(
-        children: [
-          Icon(iconData, size: 10.0.wp),
-          SizedBox(width: 5.0.wp),
-          Expanded(child: Text(title))
-        ],
-      ),
-    );
-  }
-
   Widget closeAndDoneButtons() {
     return Padding(
       padding: EdgeInsets.all(3.0.wp),
@@ -168,8 +75,10 @@ class AddWord extends GetView<WordController> {
           // CLOSE BUTTON
           IconButton(
             onPressed: () {
-              Get.back();
+              // clear Cach
+              deleteFile(controller.wordImageFilePath.value ?? "");
               categoryController.editController.clear();
+              Get.back();
             },
             icon: const Icon(Icons.close),
           ),
@@ -183,19 +92,23 @@ class AddWord extends GetView<WordController> {
               if (!categoryController.fromKey.currentState!.validate()) {
                 return;
               }
-              if (categoryController.selectedCategoryImageFilePath.value ==
-                  null) {
+              if (controller.wordAudioFilePath.value == null) {
+                EasyLoading.showError("Please record a voice");
+                return;
+              }
+              if (controller.wordImageFilePath.value == null) {
                 EasyLoading.showError("Please select an image");
                 return;
               }
-              var success = await categoryController.insertCategory();
+              var success = await controller.insertWord();
               if (success) {
                 EasyLoading.showSuccess(
-                  "Category is added",
+                  "Word is added",
                 );
+                deleteFile(controller.wordImageFilePath.value ?? "");
                 Get.back();
               } else {
-                EasyLoading.showError("Category name is already exist");
+                EasyLoading.showError("Word name is already exist");
               }
               categoryController.editController.clear();
             },
@@ -216,7 +129,7 @@ class AddWord extends GetView<WordController> {
       padding: EdgeInsets.symmetric(horizontal: 5.0.wp),
       child: Center(
         child: Text(
-          "Create New Category",
+          "Create New Word",
           style: TextStyle(
             fontSize: 20.0.sp,
             fontWeight: FontWeight.bold,
@@ -245,6 +158,103 @@ class AddWord extends GetView<WordController> {
           }
           return null;
         },
+      ),
+    );
+  }
+
+  Widget getRecorderButton() {
+    return Obx(
+      () => ElevatedButton(
+        onPressed: () async {
+          if (controller.recorder.value.isRecording) {
+            await controller.stop();
+          } else {
+            await controller.record();
+          }
+        },
+        child: Icon(
+          controller.recorder.value.isRecording ? Icons.stop : Icons.mic,
+          size: 10.0.wp,
+        ),
+      ),
+    );
+  }
+
+  Widget getListenButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        if (controller.wordAudioFilePath.value == null) {
+          return;
+        }
+        audioPlayer.play(
+          DeviceFileSource(controller.wordAudioFilePath.value!),
+        );
+      },
+      child: Icon(
+        Icons.play_arrow,
+        size: 10.0.wp,
+      ),
+    );
+  }
+
+  Widget getRecordTime() {
+    return Obx(
+      () => StreamBuilder<RecordingDisposition>(
+        stream: controller.recorder.value.onProgress,
+        builder: (context, snapshot) {
+          final duration =
+              snapshot.hasData ? snapshot.data!.duration : Duration.zero;
+          return Text('00:${duration.inSeconds}');
+        },
+      ),
+    );
+  }
+
+  Widget getGaleryCameraButtons() {
+    return Row(
+      children: [
+        SizedBox(width: 5.0.wp),
+        Expanded(
+          child: getPickerButton(Icons.image, "Galery", () async {
+            // clear cach
+            if (controller.wordImageFilePath.value != null) {
+              deleteFile(controller.wordImageFilePath.value!);
+            }
+            controller.wordImageFilePath.value =
+                await pickImage(ImageSource.gallery);
+            return;
+          }),
+        ),
+        SizedBox(width: 3.0.wp),
+        Expanded(
+          child: getPickerButton(Icons.camera_alt, "Camera", () async {
+            // clear cach
+            if (controller.wordImageFilePath.value != null) {
+              deleteFile(controller.wordImageFilePath.value!);
+            }
+            controller.wordImageFilePath.value =
+                await pickImage(ImageSource.camera);
+            return;
+          }),
+        ),
+        SizedBox(width: 5.0.wp),
+      ],
+    );
+  }
+
+  Widget getPickerButton(
+      IconData iconData, String title, VoidCallback onClicked) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          minimumSize: Size.fromHeight(20.0.sp),
+          textStyle: TextStyle(fontSize: 14.0.sp)),
+      onPressed: onClicked,
+      child: Row(
+        children: [
+          Icon(iconData, size: 10.0.wp),
+          SizedBox(width: 5.0.wp),
+          Expanded(child: Text(title))
+        ],
       ),
     );
   }

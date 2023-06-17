@@ -32,8 +32,10 @@ class CategoryController extends GetxController {
     List<Category> data = await categoryRepository.readCategories();
     categories.assignAll(data);
     //ever(categories, (_) => categoryRepository.writeCategories(categories));
-    for (var i = -1; i < categories.length / 12; i++) {
-      mapList.add("Map ${i + 2}");
+
+    // this is for Maps slider in the category Map
+    for (var i = 0; i < categories.length / 12; i++) {
+      mapList.add("Map ${i + 1}");
     }
     changeMap();
   }
@@ -47,19 +49,13 @@ class CategoryController extends GetxController {
   void changeMap() {
     categoryListForMap.value =
         categories.skip(11 * mapIndex.value).take(12).toList();
+    categoryListForMap.value =
+        categoryListForMap.where((p0) => p0.words.isNotEmpty).toList();
   }
 
   // yeni kategori ekleme
   Future<bool> insertCategory() async {
     final categoryName = editController.text;
-    var imagePath = await savePermenantTheImageAndGetThePath(
-        selectedCategoryImageFilePath.value);
-    if (imagePath == null) {
-      return false;
-    }
-
-    Category category = Category.withoutSettings(categoryName, imagePath);
-
     var nameCheck = categories.any(
       (element) => element.name.toLowerCase() == categoryName.toLowerCase(),
     );
@@ -68,8 +64,18 @@ class CategoryController extends GetxController {
       return false;
     }
 
+    var imagePath = await saveFilePermenantAndGetThePath(
+        selectedCategoryImageFilePath.value,
+        recordName: categoryName);
+    if (imagePath == null) {
+      return false;
+    }
+
+    Category category = Category.withoutSettings(categoryName, imagePath);
+
     final result = await DataHelper.instance.insert("Category", category);
     if (result == 0) {
+      deleteFile(imagePath);
       return false;
     }
     categories.value = await categoryRepository.readCategories();

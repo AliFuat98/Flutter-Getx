@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/extensions.dart';
+import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:first_app/app/modules/category/controller.dart';
 import 'package:first_app/app/modules/word/controller.dart';
@@ -28,8 +29,7 @@ class WordPage extends GetView<WordController> {
         children: [
           backButton(),
           categoryImageAndName(color, category),
-          //wordNameTextField(),
-          getWordsList(category),
+          getWordsList(),
         ],
       ),
       floatingActionButton: addWordButton(),
@@ -91,93 +91,65 @@ class WordPage extends GetView<WordController> {
     );
   }
 
-  Widget wordNameTextField() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.0.wp, horizontal: 5.0.wp),
-      child: TextFormField(
-        controller: categoryController.editController,
-        autofocus: true,
-        decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[400]!),
-          ),
-          prefixIcon: Icon(
-            Icons.check_box_outline_blank,
-            color: Colors.grey[400],
-          ),
-          suffixIcon: IconButton(
-            onPressed: () {
-              if (categoryController.fromKey.currentState!.validate()) {
-                var success = categoryController
-                    .addWord(categoryController.editController.text);
-                if (success) {
-                  EasyLoading.showSuccess("words is added");
-                } else {
-                  EasyLoading.showError("word couldn't be added");
-                }
-                categoryController.editController.clear();
-              }
-            },
-            icon: const Icon(Icons.done),
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return "Please enter your word";
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget getWordsList(Category category) {
+  Widget getWordsList() {
     return Flexible(
       child: Padding(
         padding: EdgeInsets.all(5.0.wp),
-        child: ListView.builder(
-          itemCount: category.words.length,
-          itemBuilder: (context, index) {
-            return Dismissible(
-              key: Key(category.words[index].wordID.toString()),
-              direction: DismissDirection.endToStart,
-              onDismissed: (direction) {
-                // delete the word
-              },
-              background: Container(
-                alignment: AlignmentDirectional.centerEnd,
-                color: Colors.red,
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
+        child: Obx(
+          () => ListView.builder(
+            itemCount:
+                categoryController.selectedCategory.value?.words.length ?? 0,
+            itemBuilder: (context, index) {
+              var category = categoryController.selectedCategory.value;
+              if (category == null) {
+                return Container();
+              }
+              return Dismissible(
+                key: Key(category.words[index].wordID.toString()),
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) {
+                  controller.deleteWord(category.words[index]);
+                },
+                background: Container(
+                  alignment: AlignmentDirectional.centerEnd,
+                  color: Colors.red,
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 0.0, 16.0, 0.0),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage(category.words[index].pictureSrc),
-                ),
-                title: Text(category.words[index].name),
-                trailing: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    elevation: 0,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: getImage(category.words[index].isNew,
+                        category.words[index].pictureSrc),
                   ),
-                  onPressed: () {
-                    audioPlayer
-                        .play(AssetSource(category.words[index].audioSrc));
-                  },
-                  child: const Icon(
-                    Icons.play_arrow_outlined,
-                    size: 20,
-                    color: const Color.fromARGB(255, 10, 74, 185),
+                  title: Text(category.words[index].name),
+                  trailing: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: darkBlue100,
+                      elevation: 0,
+                    ),
+                    onPressed: () {
+                      var src = getAudioSource(category.words[index].isNew,
+                          category.words[index].audioSrc);
+                      if (src == null) {
+                        return;
+                      }
+                      audioPlayer.play(src);
+                    },
+                    child: const Icon(
+                      Icons.play_arrow_outlined,
+                      size: 20,
+                      color: brightBlue100,
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

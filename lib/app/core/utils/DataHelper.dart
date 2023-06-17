@@ -50,6 +50,36 @@ class DataHelper {
     });
   }
 
+  Future<int> delete(String table, Object object) async {
+    try {
+      final db = await instance.database;
+      int result = -1;
+
+      switch (object.runtimeType.toString()) {
+        case "Word":
+          Word newWord = object as Word;
+          result = await db.delete(
+            table,
+            where: 'wordID = ?',
+            whereArgs: [newWord.wordID],
+          );
+          break;
+        case "Category":
+          Category newCategory = object as Category;
+          result = await db.delete(
+            table,
+            where: 'ID = ?',
+            whereArgs: [newCategory.ID],
+          );
+          break;
+        default:
+      }
+      return result;
+    } catch (e) {
+      return -1;
+    }
+  }
+
   Future<int> insert(String table, Object object) async {
     final db = await instance.database;
     int result = -1;
@@ -93,6 +123,15 @@ class DataHelper {
           category.toJson(),
           where: 'ID = ?',
           whereArgs: [category.ID],
+        );
+        break;
+      case "Word":
+        Word word = object as Word;
+        result = await db.update(
+          table,
+          word.toJson(),
+          where: 'wordID = ?',
+          whereArgs: [word.wordID],
         );
         break;
       case "Content":

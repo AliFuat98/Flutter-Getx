@@ -4,6 +4,7 @@ import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/modules/games/widgets/game_button.dart';
 import 'package:first_app/app/modules/games/widgets/game_title.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -64,7 +65,11 @@ class Game2Page extends GetView<Game2Controller> {
               return getGameButton(
                 Icons.play_arrow_outlined,
                 () {
-                  audioPlayer.play(AssetSource(word.audioSrc));
+                  var src = getAudioSource(word.isNew, word.audioSrc);
+                  if (src == null) {
+                    return;
+                  }
+                  audioPlayer.play(src);
                 },
               );
             }).toList(),
@@ -126,7 +131,7 @@ class Game2Page extends GetView<Game2Controller> {
           ],
         ),
         child: Image(
-          image: AssetImage(word.pictureSrc),
+          image: getImage(word.isNew, word.pictureSrc),
         ),
       ),
     );

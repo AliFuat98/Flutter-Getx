@@ -26,19 +26,29 @@ class AddCategory extends StatelessWidget {
               SizedBox(height: 5.0.hp),
               getInputField(),
               SizedBox(height: 2.0.hp),
-              getPickerButton(
-                Icons.image,
-                "Pick Galery",
-                () async => categoryController.selectedCategoryImageFilePath
-                    .value = await pickImage(ImageSource.gallery),
-              ),
+              getPickerButton(Icons.image, "Pick Galery", () async {
+                // cach temizle
+                if (categoryController.selectedCategoryImageFilePath.value !=
+                    null) {
+                  deleteFile(
+                      categoryController.selectedCategoryImageFilePath.value!);
+                }
+                categoryController.selectedCategoryImageFilePath.value =
+                    await pickImage(ImageSource.gallery);
+                return;
+              }),
               SizedBox(height: 2.0.hp),
-              getPickerButton(
-                Icons.camera_alt,
-                "Pick Camera",
-                () async => categoryController.selectedCategoryImageFilePath
-                    .value = await pickImage(ImageSource.camera),
-              ),
+              getPickerButton(Icons.camera_alt, "Pick Camera", () async {
+                // cach temizle
+                if (categoryController.selectedCategoryImageFilePath.value !=
+                    null) {
+                  deleteFile(
+                      categoryController.selectedCategoryImageFilePath.value!);
+                }
+                categoryController.selectedCategoryImageFilePath.value =
+                    await pickImage(ImageSource.camera);
+                return;
+              }),
 
               Obx(() {
                 final path =
@@ -90,8 +100,11 @@ class AddCategory extends StatelessWidget {
           // CLOSE BUTTON
           IconButton(
             onPressed: () {
-              Get.back();
+              // clear cach
+              deleteFile(
+                  categoryController.selectedCategoryImageFilePath.value ?? "");
               categoryController.editController.clear();
+              Get.back();
             },
             icon: const Icon(Icons.close),
           ),
@@ -115,6 +128,10 @@ class AddCategory extends StatelessWidget {
                 EasyLoading.showSuccess(
                   "Category is added",
                 );
+                // clear cach
+                deleteFile(
+                    categoryController.selectedCategoryImageFilePath.value ??
+                        "");
                 Get.back();
               } else {
                 EasyLoading.showError("Category name is already exist");

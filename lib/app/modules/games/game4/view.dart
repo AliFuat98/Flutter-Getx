@@ -3,6 +3,7 @@ import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/modules/games/widgets/game_button.dart';
 import 'package:first_app/app/modules/games/widgets/game_title.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -249,7 +250,11 @@ class Game4Page extends GetView<Game4Controller> {
           onTap: () async {
             if (extendedWord != null &&
                 (!extendedWord.isImage || extendedWord.isCompleted)) {
-              audioPlayer.play(AssetSource(extendedWord.word.audioSrc));
+              var src = getAudioSource(
+                  extendedWord.word.isNew, extendedWord.word.audioSrc);
+              if (src == null) return;
+
+              audioPlayer.play(src);
             }
           },
           child: Container(
@@ -279,7 +284,8 @@ class Game4Page extends GetView<Game4Controller> {
                   ? BoxFit.fill
                   : null,
               image: (extendedWord != null && extendedWord.isImage)
-                  ? AssetImage(extendedWord.word.pictureSrc)
+                  ? getImage(
+                      extendedWord.word.isNew, extendedWord.word.pictureSrc)
                   : const AssetImage("assets/images/game/mark.png"),
             ),
           ),

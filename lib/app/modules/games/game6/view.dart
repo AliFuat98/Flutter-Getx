@@ -4,6 +4,7 @@ import 'package:first_app/app/core/values/colors.dart';
 import 'package:first_app/app/data/models/word.dart';
 import 'package:first_app/app/modules/games/widgets/game_button.dart';
 import 'package:first_app/app/modules/games/widgets/game_title.dart';
+import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -111,7 +112,7 @@ class Game6Page extends GetView<Game6Controller> {
           ],
         ),
         child: Image(
-          image: AssetImage(word.pictureSrc),
+          image: getImage(word.isNew, word.pictureSrc),
         ),
       ),
     );
