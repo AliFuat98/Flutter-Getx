@@ -233,7 +233,7 @@ class ListenWordPage extends GetView<ListenwordController> {
                       width: 30.0.hp,
                       alignment: Alignment.center,
                       child: Text(
-                        "%${controller.pronunciationScore.value * 100}",
+                        "%${(controller.pronunciationScore.value * 100).toStringAsFixed(2)}",
                         style:
                             TextStyle(fontSize: 40.0.sp, color: Colors.black),
                       ),

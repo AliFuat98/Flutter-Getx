@@ -197,5 +197,6 @@ class ListenwordController extends GetxController {
       return;
     }
     currentWordIndex.value++;
+    isCurrentImageVisible.value = true;
   }
 }
