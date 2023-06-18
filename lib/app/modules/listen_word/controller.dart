@@ -16,6 +16,8 @@ class ListenwordController extends GetxController {
   late Category selectedCategory;
   final currentWordIndex = 0.obs;
   final pronunciationScore = 0.0.obs;
+  final totalCoins = 0.obs;
+  final isCurrentImageVisible = true.obs;
   final recorder = FlutterSoundRecorder();
   AudioPlayer fx_player = AudioPlayer();
   AudioPlayer reaction_player = AudioPlayer();
@@ -70,8 +72,10 @@ class ListenwordController extends GetxController {
     await Future.delayed(Duration(seconds: 3));
     if (recorder.isRecording) {
       await Future.delayed(Duration(seconds: 1));
-      String path = await stopRecording();
-      handleScoreCalculationRequest(path);
+      if (recorder.isRecording) {
+        String path = await stopRecording();
+        handleScoreCalculationRequest(path);
+      }
     }
   }
 
@@ -130,9 +134,10 @@ class ListenwordController extends GetxController {
     var responseData = await response.stream.toBytes();
     var result = utf8.decode(responseData);
     var results = result.split("+");
-    pronunciationScore.value = double.parse(results[1]);
+    pronunciationScore.value =
+        double.parse((double.parse(results[1]) / 100).toStringAsFixed(2));
     pronunciationScore.refresh();
-
+    isCurrentImageVisible.value = false;
     handleReaction(results[0]);
   }
 
@@ -148,6 +153,7 @@ class ListenwordController extends GetxController {
           AssetSource(
               "audios/learning_page/perfect${randomInt.toString()}.mp3"),
           volume: 15);
+      totalCoins.value += 100;
     } else if (int.parse(prediction) == 2) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/correct.mp3"),
@@ -156,6 +162,7 @@ class ListenwordController extends GetxController {
       await reaction_player.play(
           AssetSource("audios/learning_page/almost${randomInt.toString()}.mp3"),
           volume: 15);
+      totalCoins.value += 75;
     } else if (int.parse(prediction) == 3) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/average.mp3"),
@@ -165,6 +172,7 @@ class ListenwordController extends GetxController {
           AssetSource(
               "audios/learning_page/average${randomInt.toString()}.mp3"),
           volume: 15);
+      totalCoins.value += 50;
     } else if (int.parse(prediction) == 4) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/wrong.mp3"), volume: 5);
@@ -172,6 +180,7 @@ class ListenwordController extends GetxController {
       await reaction_player.play(
           AssetSource("audios/learning_page/wrong${randomInt.toString()}.mp3"),
           volume: 15);
+      totalCoins.value += 25;
     }
   }
 

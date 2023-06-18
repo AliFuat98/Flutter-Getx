@@ -67,51 +67,60 @@ class ListenWordPage extends GetView<ListenwordController> {
         top: 5.0.wp,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Stack(
-            children: [
-              Icon(
-                Icons.favorite,
-                color: Colors.yellow,
-                size: 15.0.wp,
-              ),
-              Positioned.fill(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Obx(
-                    () => Text(
-                      controller.pronunciationScore.value.toString(),
+          Container(
+            margin: EdgeInsets.only(top: 0.5.hp),
+            width: 13.0.hp,
+            height: 4.0.hp,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.monetization_on,
+                  color: Colors.yellowAccent,
+                  size: 8.0.wp,
+                ),
+                SizedBox(width: 0.1.hp),
+                Obx(() => Text(
+                      '${controller.totalCoins.value}',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.0.sp,
+                        fontSize: 16.0.sp,
+                        color: Colors.white,
                       ),
+                    )),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 11.0.hp,
+                alignment: Alignment.center,
+                child: Obx(
+                  () => Text(
+                    "${controller.currentWordIndex.value + 1}/${controller.selectedCategory.words.length}",
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 242, 253, 240),
+                      fontSize: 10.0.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-          Column(
-            children: [
-              Obx(
-                () => Text(
-                  "${controller.currentWordIndex.value + 1}/${controller.selectedCategory.words.length}",
+              Container(
+                width: 20.0.hp,
+                padding: EdgeInsets.only(right: 8.0.hp),
+                alignment: Alignment.center,
+                child: Text(
+                  controller.selectedCategory.name.toUpperCase(),
                   style: TextStyle(
                     color: const Color.fromARGB(255, 242, 253, 240),
-                    fontSize: 15.0.sp,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0.sp,
                   ),
                 ),
-              ),
-              Text(
-                controller.selectedCategory.name.toUpperCase(),
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 242, 253, 240),
-                  fontSize: 20.0.sp,
-                ),
-              ),
+              )
             ],
           ),
           SizedBox(
@@ -172,22 +181,18 @@ class ListenWordPage extends GetView<ListenwordController> {
     var wordS = controller.selectedCategory.words;
     return Stack(
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: Obx(
-            () => CircularPercentIndicator(
-              animation: true,
-              animationDuration: 1000,
-              radius: 17.0.hp,
-
-              // radius: 50,
-              lineWidth: 3.0.hp,
-              percent: controller.pronunciationScore.value / 100,
-              progressColor: Color.fromARGB(161, 9, 219, 19),
-              backgroundColor: blue200,
-            ),
-          ),
-        ),
+        Obx(() => Align(
+              alignment: Alignment.center,
+              child: CircularPercentIndicator(
+                animation: true,
+                animationDuration: 1000,
+                radius: 17.0.hp,
+                lineWidth: 3.0.hp,
+                percent: controller.pronunciationScore.value,
+                progressColor: Color.fromARGB(161, 9, 219, 19),
+                backgroundColor: blue200,
+              ),
+            )),
         Align(
           alignment: Alignment.center,
           child: GestureDetector(
@@ -199,27 +204,54 @@ class ListenWordPage extends GetView<ListenwordController> {
               audioPlayer.play(src);
             },
             child: Obx(
-              () => Container(
-                height: 30.0.hp,
-                width: 30.0.hp,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      30.0.hp,
+              () => controller.isCurrentImageVisible.value
+                  ? Container(
+                      height: 30.0.hp,
+                      width: 30.0.hp,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            30.0.hp,
+                          ),
+                        ),
+                        color: darkBlue100,
+                        image: DecorationImage(
+                          image: getImage(
+                            wordS
+                                .elementAt(controller.currentWordIndex.value)
+                                .isNew,
+                            wordS
+                                .elementAt(controller.currentWordIndex.value)
+                                .pictureSrc,
+                          ),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: 30.0.hp,
+                      width: 30.0.hp,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "%${controller.pronunciationScore.value * 100}",
+                        style:
+                            TextStyle(fontSize: 40.0.sp, color: Colors.black),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            30.0.hp,
+                          ),
+                        ),
+                        color: darkBlue100,
+                        image: const DecorationImage(
+                          opacity: 0.5,
+                          image:
+                              AssetImage("assets/images/word_images/white.png"),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
-                  ),
-                  color: darkBlue100,
-                  image: DecorationImage(
-                    image: getImage(
-                      wordS.elementAt(controller.currentWordIndex.value).isNew,
-                      wordS
-                          .elementAt(controller.currentWordIndex.value)
-                          .pictureSrc,
-                    ),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
             ),
           ),
         ),
