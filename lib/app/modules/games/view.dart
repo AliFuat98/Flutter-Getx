@@ -58,20 +58,37 @@ class GamesPage extends GetView<GamesController> {
     );
   }
 
+  // Widget backButton() {
+  //   return Padding(
+  //     padding: EdgeInsets.all(1.0.wp),
+  //     child: Row(
+  //       children: [
+  //         IconButton(
+  //           onPressed: () {
+  //             Get.back();
+  //           },
+  //           icon: const Icon(
+  //             Icons.arrow_back,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget backButton() {
-    return Padding(
+    return Container(
+      alignment: Alignment.centerLeft,
       padding: EdgeInsets.all(1.0.wp),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-            ),
-          ),
-        ],
+      child: IconButton(
+        onPressed: () {
+          Get.back();
+        },
+        icon: Icon(
+          Icons.arrow_back,
+          size: 7.wp,
+          color: Colors.black54,
+        ),
       ),
     );
   }

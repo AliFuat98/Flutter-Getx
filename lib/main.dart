@@ -1,4 +1,6 @@
 import 'package:first_app/app/data/services/storage/services.dart';
+import 'package:first_app/app/modules/admin/binding.dart';
+import 'package:first_app/app/modules/admin/view.dart';
 import 'package:first_app/app/modules/games/game6/binding.dart';
 import 'package:first_app/app/modules/games/game6/view.dart';
 
@@ -14,7 +16,6 @@ import 'package:first_app/app/modules/games/game1/view.dart';
 import 'package:first_app/app/modules/games/game2/binding.dart';
 import 'package:first_app/app/modules/games/game2/view.dart';
 import 'package:first_app/app/modules/games/game3/binding.dart';
-import 'package:first_app/app/modules/games/game3/controller.dart';
 import 'package:first_app/app/modules/games/game3/view.dart';
 import 'package:first_app/app/modules/games/game4/binding.dart';
 import 'package:first_app/app/modules/games/game4/view.dart';
@@ -37,8 +38,8 @@ import 'app/modules/games/game5/binding.dart';
 import 'app/modules/games/game5/view.dart';
 
 void main() async {
-  // sqfliteFfiInit();
-  // databaseFactory = databaseFactoryFfi;
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   await GetStorage.init();
   await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());
@@ -124,6 +125,11 @@ class MyApp extends StatelessWidget {
           name: Game6Page.pageName,
           page: () => Game6Page(),
           binding: Game6Binding(),
+        ),
+        GetPage(
+          name: AdminPage.pageName,
+          page: () => AdminPage(),
+          binding: AdminBinding(),
         )
       ],
       builder: EasyLoading.init(),

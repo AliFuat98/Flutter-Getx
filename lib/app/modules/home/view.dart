@@ -1,5 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
+import 'package:first_app/app/modules/admin/view.dart';
 import 'package:first_app/app/modules/category/view.dart';
 import 'package:first_app/app/modules/category_map/view.dart';
 import 'package:first_app/app/modules/games/view.dart';
@@ -95,7 +96,7 @@ class HomePage extends GetView<HomeController> {
                             iconData: Icons.landscape_rounded,
                           ),
                           MenuItem(
-                            pageName: CategoryPage.pageName,
+                            pageName: AdminPage.pageName,
                             menuItemName: "Admin",
                             iconData: Icons.admin_panel_settings_outlined,
                           ),

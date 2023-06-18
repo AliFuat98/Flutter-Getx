@@ -6,8 +6,9 @@ import 'package:first_app/app/modules/games/widgets/game_button.dart';
 import 'package:first_app/app/modules/games/widgets/game_title.dart';
 import 'package:first_app/app/widgets/file_operations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/dialog/dialog_route.dart';
+import 'package:http/http.dart';
 
 import 'controller.dart';
 
@@ -120,7 +121,14 @@ class Game6Page extends GetView<Game6Controller> {
 
   Widget getRecordButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        if (controller.recorder.value.isRecording) {
+          await controller.stop();
+          getCorrectAnswerDialog();
+        } else {
+          await controller.record();
+        }
+      },
       child: Container(
         width: 80.0,
         height: 80.0,
@@ -128,8 +136,8 @@ class Game6Page extends GetView<Game6Controller> {
           shape: BoxShape.circle,
           color: Colors.red, //_isRecording ? Colors.red : Colors.grey,
         ),
-        child: const Icon(
-          Icons.mic, //_isRecording ? Icons.mic : Icons.mic_none,
+        child: Icon(
+          controller.recorder.value.isRecording ? Icons.mic : Icons.mic_none,
           color: Colors.white,
           size: 40.0,
         ),
@@ -163,7 +171,7 @@ class Game6Page extends GetView<Game6Controller> {
     await Get.defaultDialog(
       barrierDismissible: false,
       radius: 5,
-      title: "CORRECT",
+      title: controller.predictionClassName.value,
       backgroundColor: brightBlue50,
       content: SizedBox(
         height: 25.0.hp,
@@ -195,6 +203,11 @@ class Game6Page extends GetView<Game6Controller> {
                   Icons.navigate_next,
                   () {
                     Get.back();
+                    if (controller.gameOver.isTrue) {
+                      getEndGameDialog();
+                    } else {
+                      controller.getNextGame();
+                    }
                   },
                 ),
               ],

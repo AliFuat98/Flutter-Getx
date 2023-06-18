@@ -28,6 +28,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
       body: Obx(
         () {
           var index = -1;
+          var nameIndex = -1;
           return Stack(children: [
             InteractiveViewer(
               maxScale: 3,
@@ -40,7 +41,6 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                 ),
                 ...categoryController.categoryListForMap.map((category) {
                   index++;
-                  // fazla category olduğunda hata vermemesi için ilerde silinebilir
                   return Positioned(
                     left: positionList[index].leftPosition,
                     top: positionList[index].topPosition,
@@ -60,6 +60,26 @@ class CategoryMapPage extends GetView<CategoryMapController> {
                             shape: BoxShape.circle,
                             border:
                                 Border.all(color: Colors.black, width: 1.5)),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                ...categoryController.categoryListForMap.map((category) {
+                  nameIndex++;
+                  return Positioned(
+                    left: positionList[nameIndex].leftPosition - 50,
+                    top: positionList[nameIndex].topPosition + 55,
+                    child: SizedBox(
+                      width: 160,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          category.name,
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54),
+                        ),
                       ),
                     ),
                   );
@@ -129,15 +149,19 @@ class CategoryMapPage extends GetView<CategoryMapController> {
     return Positioned(
       left: 4.0.wp,
       top: 4.0.wp,
-      child: IconButton(
-        icon: const Icon(
-          Icons.backspace,
-          size: 50,
-          color: Colors.red,
+      child: SizedBox(
+        width: 10.0.wp,
+        height: 10.0.wp,
+        child: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.backspace,
+            size: 10.wp,
+            color: Colors.red,
+          ),
         ),
-        onPressed: () {
-          Get.back();
-        },
       ),
     );
   }
