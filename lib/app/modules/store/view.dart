@@ -201,10 +201,7 @@ class StorePage extends GetWidget<StoreController> {
                           Expanded(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: Image.asset(
-                                content.pictureSrc,
-                                fit: BoxFit.cover,
-                              ),
+                              child: controller.getCorrectImage(content),
                             ),
                           ),
                           Padding(
@@ -313,10 +310,9 @@ class StorePage extends GetWidget<StoreController> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    content.pictureSrc,
-                    fit: BoxFit.cover,
-                    width: 25.0.wp,
+                  controller.getCorrectImage(
+                    content,
+                    widths: 2,
                   ),
                   SizedBox(width: 10),
                   Expanded(

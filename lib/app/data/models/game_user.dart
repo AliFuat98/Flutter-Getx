@@ -36,21 +36,21 @@ class GameUser {
     return map;
   }
 
-  get isFinished => this._isFinished;
-  set isFinished(value) => this._isFinished = value;
+  int get userID => this._userID;
+  set userID(int value) => this._userID = value;
 
-  get userID => this._userID;
-  set userID(value) => this._userID = value;
-
-  get gameID => this._gameID;
-  set gameID(value) => this._gameID = value;
+  int get gameID => this._gameID;
+  set gameID(int value) => this._gameID = value;
 
   double get score => this._score;
   set score(double value) => this._score = value;
 
-  get timeTaken => this._timeTaken;
-  set timeTaken(value) => this._timeTaken = value;
+  int get timeTaken => this._timeTaken;
+  set timeTaken(int value) => this._timeTaken = value;
 
   DateTime get date => this._date;
   set date(DateTime value) => this._date = value;
+
+  bool get isFinished => this._isFinished;
+  set isFinished(bool value) => this._isFinished = value;
 }

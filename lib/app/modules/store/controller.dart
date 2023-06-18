@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:first_app/app/core/utils/DataHelper.dart';
+import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/services/content/content_repository.dart';
 import 'package:first_app/app/data/services/user/user_reposiory.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StoreController extends GetxController {
@@ -54,6 +54,51 @@ class StoreController extends GetxController {
         .where((contet) => contet.isPurchased == true && contet.inUsed == true)
         .toList());
     filterByCategory(0);
+  }
+
+  String getCorrectImagePath() {
+    if (selectedContent.value == null) {
+      return "assets/images/game/mark.png";
+    }
+    // video
+    if (selectedContent.value!.category == 4) {
+      return "assets/images/awards/video/default.png";
+    }
+
+    if (selectedContent.value!.category == 2) {
+      return "assets/images/awards/music/default.png";
+    }
+    return selectedContent.value!.pictureSrc;
+  }
+
+  Image getCorrectImage(Content cnt, {int? widths}) {
+    // video
+    if (cnt.category == 4) {
+      return Image.asset(
+        "assets/images/awards/video/default.png",
+        fit: BoxFit.cover,
+      );
+    }
+
+    // music
+    if (cnt.category == 2) {
+      return Image.asset(
+        "assets/images/awards/music/default.png",
+        fit: BoxFit.cover,
+      );
+    }
+    //others
+    if (widths != null) {
+      return Image.asset(
+        cnt.pictureSrc,
+        fit: BoxFit.cover,
+        width: 25.0.wp,
+      );
+    }
+    return Image.asset(
+      cnt.pictureSrc,
+      fit: BoxFit.cover,
+    );
   }
 
   List<Content> getSortedContent(int pageIndex) {

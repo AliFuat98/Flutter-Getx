@@ -1,5 +1,6 @@
 import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
+import 'package:first_app/app/modules/admin/game_ist/view.dart';
 import 'package:first_app/app/modules/category/view.dart';
 import 'package:first_app/app/modules/games/widgets/choose_category.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,9 @@ class AdminPage extends GetView<AdminController> {
                   getAdminButton(
                     "Game Statistics",
                     Icons.gamepad,
-                    () {},
+                    () {
+                      Get.toNamed(GameStatPage.pageName);
+                    },
                   ),
                   SizedBox(height: 5.hp),
                   getAdminButton(

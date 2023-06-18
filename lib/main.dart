@@ -1,5 +1,7 @@
 import 'package:first_app/app/data/services/storage/services.dart';
 import 'package:first_app/app/modules/admin/binding.dart';
+import 'package:first_app/app/modules/admin/game_ist/binding.dart';
+import 'package:first_app/app/modules/admin/game_ist/view.dart';
 import 'package:first_app/app/modules/admin/view.dart';
 import 'package:first_app/app/modules/games/game6/binding.dart';
 import 'package:first_app/app/modules/games/game6/view.dart';
@@ -130,7 +132,12 @@ class MyApp extends StatelessWidget {
           name: AdminPage.pageName,
           page: () => AdminPage(),
           binding: AdminBinding(),
-        )
+        ),
+        GetPage(
+          name: GameStatPage.pageName,
+          page: () => GameStatPage(),
+          binding: GameStatBinding(),
+        ),
       ],
       builder: EasyLoading.init(),
     );

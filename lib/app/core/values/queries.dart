@@ -42,7 +42,7 @@ PRIMARY KEY("UserID" AUTOINCREMENT)
 
 const String GameUserTable = """CREATE TABLE IF NOT EXISTS "GameUser" (
 "UserID"	INTEGER,
-"GameID"	TEXT,
+"GameID"	INTEGER,
 "Score" FLOAT,
 "Date"  TEXT,
 "Timetaken" INTEGER,
@@ -157,6 +157,30 @@ const List<String> contentTableRows = [
   """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (76,"Stuart Minion","assets/images/awards/animation/17.gif", 0, 0,1200,3) ;""",
   """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (77,"Jake Dog","assets/images/awards/animation/18.gif", 0, 0,600,3) ;""",
   """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (78,"Yellow Creator","assets/images/awards/animation/19.gif", 0, 0,500,3) ;""",
+
+  // music
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (79,"Music","images/awards/music/1.mp3", 0, 0,1200,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (80,"Music","images/awards/music/2.mp3", 0, 0,400,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (81,"Music","images/awards/music/3.mp3", 0, 0,1500,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (82,"Music","images/awards/music/4.mp3", 0, 0,300,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (83,"Music","images/awards/music/5.mp3", 0, 0,1400,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (84,"Music","images/awards/music/6.mp3", 0, 0,2000,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (85,"Music","images/awards/music/7.mp3", 0, 0,300,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (86,"Music","images/awards/music/8.mp3", 0, 0,1200,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (87,"Music","images/awards/music/9.mp3", 0, 0,600,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (88,"Music","images/awards/music/10.mp3", 0, 0,500,2) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (89,"Music","images/awards/music/11.mp3", 0, 0,800,2) ;""",
+
+  // video
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (90,"Video","images/awards/video/1.mp4", 0, 0,400,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (91,"Video","images/awards/video/2.mp4", 0, 0,1500,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (92,"Video","images/awards/video/3.mp4", 0, 0,300,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (93,"Video","images/awards/video/4.mp4", 0, 0,1400,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (94,"Video","images/awards/video/5.mp4", 0, 0,2000,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (95,"Video","images/awards/video/6.mp4", 0, 0,300,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (96,"Video","images/awards/video/7.mp4", 0, 0,1200,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (97,"Video","images/awards/video/8.mp4", 0, 0,600,4) ;""",
+  """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (98,"Video","images/awards/video/9.mp4", 0, 0,500,4) ;""",
 ];
 
 const List<String> gameTableRows = [

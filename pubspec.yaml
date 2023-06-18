@@ -56,6 +56,8 @@ dependencies:
   wav: ^1.2.0
   http: ^0.13.6
   percent_indicator: ^4.2.3
+  video_player: ^2.6.1
+  chewie: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -131,6 +133,8 @@ flutter:
     - assets/images/awards/avatar/
     - assets/images/awards/sticker/
     - assets/images/awards/animation/
+    - assets/images/awards/music/
+    - assets/images/awards/video/
 
   #   - images/a_dot_ham.jpeg
 

@@ -38,12 +38,12 @@ class Pronunciation {
   int get wordID => this._wordID;
   set wordID(int value) => this._wordID = value;
 
-  get categoryID => this._categoryID;
-  set categoryID(value) => this._categoryID = value;
+  int get categoryID => this._categoryID;
+  set categoryID(int value) => this._categoryID = value;
 
   double get score => this._score;
   set score(double value) => this._score = value;
 
-  get date => this._date;
-  set date(value) => this._date = value;
+  DateTime get date => this._date;
+  set date(DateTime value) => this._date = value;
 }

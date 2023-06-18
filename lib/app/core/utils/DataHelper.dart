@@ -155,6 +155,13 @@ class DataHelper {
     return maps;
   }
 
+  Future<List<Map<String, dynamic>>> getAllWithFilter(
+      String table, String where) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(table, where: where);
+    return maps;
+  }
+
   Future<List<Map<String, dynamic>>> getAll(String table) async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(table);
