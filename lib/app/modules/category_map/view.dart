@@ -147,8 +147,8 @@ class CategoryMapPage extends GetView<CategoryMapController> {
 
   Widget backButton() {
     return Positioned(
-      left: 4.0.wp,
-      top: 4.0.wp,
+      left: 3.0.wp,
+      top: 10.0.wp,
       child: SizedBox(
         width: 10.0.wp,
         height: 10.0.wp,
@@ -159,7 +159,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
           icon: Icon(
             Icons.backspace,
             size: 10.wp,
-            color: Colors.red,
+            color: Colors.blueGrey,
           ),
         ),
       ),
