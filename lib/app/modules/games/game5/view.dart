@@ -192,10 +192,13 @@ class Game5Page extends GetView<Game5Controller> {
           getGameButton(
             Icons.navigate_next,
             () async {
-              controller.getNextGame();
-              // Get dialogs
-              if (controller.gameOver.value) {
-                await getEndGameDialog();
+              if (controller.is_next_clickable.value) {
+                // Get dialogs
+                if (controller.gameOver.value) {
+                  await getEndGameDialog();
+                } else {
+                  controller.getNextGame();
+                }
               }
             },
           ),
@@ -316,9 +319,11 @@ class Game5Page extends GetView<Game5Controller> {
                 getGameButton(
                   Icons.restart_alt,
                   () async {
-                    Get.back();
-                    await controller.insertGameInfo();
-                    controller.startGame();
+                    if (controller.is_restart_clickable.value) {
+                      Get.back();
+                      await controller.insertGameInfo();
+                      controller.startGame();
+                    }
                   },
                 ),
               ],

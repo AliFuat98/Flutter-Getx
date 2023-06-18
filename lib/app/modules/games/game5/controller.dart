@@ -43,6 +43,8 @@ class Game5Controller extends GetxController {
   final is_wrong_clickable = false.obs;
   late Rx<MaterialAccentColor> correctButton;
   final is_correct_clickable = false.obs;
+  final is_next_clickable = false.obs;
+  final is_restart_clickable = false.obs;
   late IconButton playButton;
   late IconButton correctIcon;
   late IconButton wrongIcon;
@@ -87,16 +89,36 @@ class Game5Controller extends GetxController {
       iconSize: 50,
       icon: Icon(Icons.play_circle),
       onPressed: () {
-        var curWord = gameWords.value[wordIndex.value];
-        var src = getAudioSource(curWord.isNew, curWord.audioSrc);
-        if (src == null) return;
-
-        listen_audio_player.play(src);
+        listenCurrentWord();
       },
     );
     currentButton.value = playButton;
     generateWords();
-    startGame();
+    choseContent();
+    startTime = DateTime.now();
+    listenCurrentWord();
+    //startGame();
+  }
+
+  void listenCurrentWord() async {
+    if (wordIndex.value < gameWords.value.length) {
+      var curWord = gameWords.value[wordIndex.value];
+      var src = getAudioSource(curWord.isNew, curWord.audioSrc);
+      if (src == null) return;
+
+      await listen_audio_player.play(src, volume: 10);
+      listenAudioPlayer(listen_audio_player);
+    }
+  }
+
+  void listenAudioPlayer(AudioPlayer player) async {
+    StreamSubscription<void>? audioPlayerCompletionListener;
+    audioPlayerCompletionListener =
+        await player.onPlayerComplete.listen((event) {
+      is_correct_clickable.value = true;
+      is_wrong_clickable.value = true;
+      is_restart_clickable.value = true;
+    });
   }
 
   void generateWords() {
@@ -133,89 +155,21 @@ class Game5Controller extends GetxController {
     });
   }
 
-  void playStartingSpeech() async {
-    await Future.delayed(Duration(seconds: 2));
-    general_audio_player.play(AssetSource("audios/Game5/firstSpeech.mp3"));
-    int counter = 0;
-    StreamSubscription<void>? audioPlayerCompletionListener;
-    audioPlayerCompletionListener =
-        general_audio_player.onPlayerComplete.listen((event) async {
-      if (counter == 0) {
-        await Future.delayed(Duration(seconds: 1));
-
-        var curWord = gameWords.value[wordIndex.value];
-        var src = getAudioSource(curWord.isNew, curWord.audioSrc);
-        if (src == null) return;
-
-        general_audio_player.play(src);
-        counter++;
-      } else if (counter == 1) {
-        audioPlayerCompletionListener!.cancel();
-        is_wrong_clickable.value = true;
-        is_correct_clickable.value = true;
-        is_correct_clickable.refresh();
-        is_wrong_clickable.refresh();
-        wrongButton.refresh();
-        correctButton.refresh();
-      }
-    });
-  }
-
   Future<void> handleUserSelect(bool choice, Function callback) async {
     is_wrong_clickable.value = false;
     is_correct_clickable.value = false;
-    is_correct_clickable.refresh();
-    is_wrong_clickable.refresh();
-    StreamSubscription<void>? audioPlayerCompletionListener;
-    audioPlayerCompletionListener =
-        choice_audio_player.onPlayerComplete.listen((event) async {
-      await Future.delayed(Duration(seconds: 1));
-      if (wordIndex.value == 9) {
-        gameOver.value = true;
-        gameOver.refresh();
-        callback();
-        return;
-      }
-      wordIndex.value++;
-      wordIndex.refresh();
-      currentButton.value = playButton;
-      currentButton.refresh();
-      correctButton.value = createColor(Colors.blue);
-      correctButton.refresh();
-      wrongButton.value = Colors.deepPurpleAccent;
-      StreamSubscription<void>? audioPlayerCompletionListener2;
-      audioPlayerCompletionListener2 =
-          listen_audio_player.onPlayerComplete.listen((event) async {
-        await Future.delayed(Duration(seconds: 1));
-        is_wrong_clickable.value = true;
-        is_correct_clickable.value = true;
-        is_correct_clickable.refresh();
-        is_wrong_clickable.refresh();
-        audioPlayerCompletionListener2!.cancel();
-      });
-      audioPlayerCompletionListener!.cancel();
-      await Future.delayed(Duration(seconds: 1));
-
-      var curWord = gameWords.value[wordIndex.value];
-      var src = getAudioSource(curWord.isNew, curWord.audioSrc);
-      if (src == null) return;
-
-      await listen_audio_player.play(src);
-    });
 
     if (gameWords.value[wordIndex.value].isCorrect == choice) {
       if (choice == true) {
         correctButton.value = createColor(Colors.lightGreen);
-        correctButton.refresh();
       } else {
         wrongButton.value = createColor(Colors.lightGreen);
-        wrongButton.refresh();
       }
       currentButton.value = correctIcon;
       currentButton.refresh();
       totalScore.value += 1000;
       totalScore.refresh();
-      await choice_audio_player.play(AssetSource("audios/Game5/correct.mp3"));
+      //await choice_audio_player.play(AssetSource("audios/Game5/correct.mp3"));
     } else {
       if (choice == true) {
         correctButton.value = Colors.redAccent;
@@ -228,8 +182,10 @@ class Game5Controller extends GetxController {
       currentButton.refresh();
       totalScore.value += 500;
       totalScore.refresh();
-      await choice_audio_player.play(AssetSource("audios/Game5/wrong.mp3"));
+      //await choice_audio_player.play(AssetSource("audios/Game5/wrong.mp3"));
     }
+    controlGameStatus();
+    is_next_clickable.value = true;
     totalCoinCount.value = totalScore.value ~/ 200;
     totalCoinCount.refresh();
   }
@@ -246,17 +202,30 @@ class Game5Controller extends GetxController {
     );
   }
 
+  void controlGameStatus() {
+    if (wordIndex.value == gameWords.value.length - 1) {
+      gameOver.value = true;
+    }
+  }
+
   void getNextGame() async {
-    // fill below
+    wordIndex.value++;
+    correctButton.value = createColor(Colors.blue);
+    wrongButton.value = Colors.deepPurpleAccent;
+    currentButton.value = playButton;
+    is_next_clickable.value = false;
+    listenCurrentWord();
   }
 
   void startGame() async {
+    generateWords();
     choseContent();
-    startTime = DateTime.now();
-    gameOver.value = false;
     totalScore.value = 0;
     totalCoinCount.value = 0;
+    gameOver.value = false;
     wordIndex.value = 0;
+    startTime = DateTime.now();
+    listenCurrentWord();
 
     // Fill below
   }

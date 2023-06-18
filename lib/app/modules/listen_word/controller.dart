@@ -55,12 +55,23 @@ class ListenwordController extends GetxController {
   }
 
   Future<void> startRecording() async {
+    fx_player.play(AssetSource("audios/audioFX/recording1.mp3"), volume: 3);
+    trackRecording();
     if (Platform.isIOS) {
       await recorder.startRecorder(toFile: iosFile, codec: Codec.pcm16WAV);
       recordedFileName = "recording.wav";
     } else if (Platform.isAndroid) {
       await recorder.startRecorder(toFile: androidFile, codec: Codec.aacMP4);
       recordedFileName = "recording.m4a";
+    }
+  }
+
+  void trackRecording() async {
+    await Future.delayed(Duration(seconds: 3));
+    if (recorder.isRecording) {
+      await Future.delayed(Duration(seconds: 1));
+      String path = await stopRecording();
+      handleScoreCalculationRequest(path);
     }
   }
 
@@ -71,6 +82,9 @@ class ListenwordController extends GetxController {
 
   void handleButtonPress() async {
     if (recorder.isRecording) {
+      await Future.delayed(Duration(milliseconds: 300));
+      await fx_player.play(AssetSource("audios/audioFX/recording2.mp3"),
+          volume: 5);
       String path = await stopRecording();
       handleScoreCalculationRequest(path);
     } else {
@@ -118,6 +132,7 @@ class ListenwordController extends GetxController {
     var results = result.split("+");
     pronunciationScore.value = double.parse(results[1]);
     pronunciationScore.refresh();
+
     handleReaction(results[0]);
   }
 
@@ -137,7 +152,6 @@ class ListenwordController extends GetxController {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/correct.mp3"),
           volume: 5);
-      await Future.delayed(Duration(seconds: 1));
       await Future.delayed(Duration(milliseconds: 500));
       await reaction_player.play(
           AssetSource("audios/learning_page/almost${randomInt.toString()}.mp3"),
