@@ -62,6 +62,17 @@ const String contentTable = """CREATE TABLE IF NOT EXISTS "Content" (
 PRIMARY KEY("ID" AUTOINCREMENT)
 );""";
 
+const String pronunciationTable =
+    """CREATE TABLE IF NOT EXISTS "Pronunciation" (
+"ID"	INTEGER,
+"WordID"	INTEGER,
+"CategoryID" INTEGER,
+"Date"  TEXT,
+"Score" FLOAT,
+FOREIGN KEY (WordID) REFERENCES Word(wordID),
+FOREIGN KEY (CategoryID) REFERENCES Category(ID)
+);""";
+
 const List<String> contentTableRows = [
   // badge
   """INSERT INTO "Content" ("ID","Name","PictureSrc","isPurchased","inUsed","Price","Category") VALUES (1,"Super Kids","assets/images/awards/badge/1.png", 0, 0,400,7) ;""",

@@ -174,16 +174,18 @@ class ListenWordPage extends GetView<ListenwordController> {
       children: [
         Align(
           alignment: Alignment.center,
-          child: CircularPercentIndicator(
-            animation: true,
-            animationDuration: 1000,
-            radius: 17.0.hp,
+          child: Obx(
+            () => CircularPercentIndicator(
+              animation: true,
+              animationDuration: 1000,
+              radius: 17.0.hp,
 
-            // radius: 50,
-            lineWidth: 3.0.hp,
-            percent: 0.3, //controller.getPersant(),
-            progressColor: Color.fromARGB(161, 9, 219, 19),
-            backgroundColor: blue200,
+              // radius: 50,
+              lineWidth: 3.0.hp,
+              percent: controller.pronunciationScore.value / 100,
+              progressColor: Color.fromARGB(161, 9, 219, 19),
+              backgroundColor: blue200,
+            ),
           ),
         ),
         Align(
