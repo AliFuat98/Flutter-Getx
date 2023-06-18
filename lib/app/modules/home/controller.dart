@@ -4,11 +4,13 @@ import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/services/content/content_repository.dart';
 import 'package:get/get.dart';
 
+import '../../widgets/AudioController.dart';
+
 class HomeController extends GetxController {
   ContentRepository contentRepository;
-  HomeController({
-    required this.contentRepository,
-  });
+  AudioPlayerController audioController;
+  HomeController(
+      {required this.contentRepository, required this.audioController});
 
   var availableContents = <Content>[];
   Rx<Content> selectedContent =
@@ -17,6 +19,7 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    //audioController.playAudio("audios/app_and_levels/app.mp4");
 
     var contents = await contentRepository.readContents();
     // animation and avatar

@@ -29,6 +29,7 @@ import 'package:first_app/app/modules/store/view.dart';
 import 'package:first_app/app/modules/word/binding.dart';
 import 'package:first_app/app/modules/word/view.dart';
 import 'package:first_app/app/modules/word/widgets/add_word.dart';
+import 'package:first_app/app/widgets/AudioController.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AudioPlayerController controller = AudioPlayerController();
     return GetMaterialApp(
       title: 'VELEDE BILGI AKTARIMI',
       debugShowCheckedModeBanner: false,
@@ -60,7 +62,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: HomePage.pageName,
           page: () => HomePage(),
-          binding: HomeBinding(),
+          binding: HomeBinding(controller),
         ),
         GetPage(
           name: CategoryPage.pageName,
@@ -75,7 +77,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: ListenWordPage.pageName,
           page: () => ListenWordPage(),
-          binding: ListenWordBinding(),
+          binding: ListenWordBinding(controller),
         ),
         GetPage(
           name: StorePage.pageName,

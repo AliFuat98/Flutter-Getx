@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/core/utils/DataHelper.dart';
 import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
@@ -53,6 +54,9 @@ class Game1Controller extends GetxController {
   int currentCoupleCount = 0;
 
   final guessCount = 0.obs;
+  AudioPlayer card_1_audio_player = AudioPlayer();
+  AudioPlayer card_2_audio_player = AudioPlayer();
+  AudioPlayer choice_audio_player = AudioPlayer();
 
   @override
   void onInit() async {
@@ -157,11 +161,13 @@ class Game1Controller extends GetxController {
     // first click
     if (openWords.isEmpty) {
       gameTable[index]!.isOpened = true;
+      card_1_audio_player.play(AssetSource("games/game_1/cards.mp3"));
       gameTable.refresh();
       return;
     }
     if (openWords.length == 1) {
       gameTable[index]!.isOpened = true;
+      card_2_audio_player.play(AssetSource("games/game_1/cards.mp3"));
       final secondword = gameTable[index]!;
 
       // farklı çıkarsa
@@ -176,6 +182,7 @@ class Game1Controller extends GetxController {
       else {
         gameTable[index]!.isCompleted = true;
         gameTable[openWords.first.index]!.isCompleted = true;
+        choice_audio_player.play(AssetSource("games/game_1/correct.mp3"));
         _correctAnswer();
       }
       gameTable.refresh();

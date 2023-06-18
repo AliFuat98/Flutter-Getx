@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/data/models/category.dart';
+import 'package:first_app/app/widgets/AudioController.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class ListenwordController extends GetxController {
   final totalCoins = 0.obs;
   final isCurrentImageVisible = true.obs;
   final recorder = FlutterSoundRecorder();
+  AudioPlayerController audioController;
   AudioPlayer fx_player = AudioPlayer();
   AudioPlayer reaction_player = AudioPlayer();
   late final String iosFile;
@@ -26,9 +28,12 @@ class ListenwordController extends GetxController {
   late String recordedFileName;
   late final directory;
 
+  ListenwordController({required this.audioController});
+
   @override
   void onInit() async {
     super.onInit();
+    audioController.audioPlayer.setVolume(0.1);
     selectedCategory = Get.arguments as Category;
     initRecorder();
     directory = await getApplicationDocumentsDirectory();

@@ -121,6 +121,14 @@ class Game5Controller extends GetxController {
     });
   }
 
+  void listenChoiceAudioPlayer(AudioPlayer player) async {
+    StreamSubscription<void>? audioPlayerCompletionListener;
+    audioPlayerCompletionListener =
+        await player.onPlayerComplete.listen((event) {
+      is_next_clickable.value = true;
+    });
+  }
+
   void generateWords() {
     Random random = Random();
     int number_of_correct_words = random.nextInt(8) + 1;
@@ -158,6 +166,7 @@ class Game5Controller extends GetxController {
   Future<void> handleUserSelect(bool choice, Function callback) async {
     is_wrong_clickable.value = false;
     is_correct_clickable.value = false;
+    String audioPath = "";
 
     if (gameWords.value[wordIndex.value].isCorrect == choice) {
       if (choice == true) {
@@ -169,7 +178,7 @@ class Game5Controller extends GetxController {
       currentButton.refresh();
       totalScore.value += 1000;
       totalScore.refresh();
-      //await choice_audio_player.play(AssetSource("audios/Game5/correct.mp3"));
+      audioPath = "audios/game_5/correct.mp3";
     } else {
       if (choice == true) {
         correctButton.value = Colors.redAccent;
@@ -182,10 +191,11 @@ class Game5Controller extends GetxController {
       currentButton.refresh();
       totalScore.value += 500;
       totalScore.refresh();
-      //await choice_audio_player.play(AssetSource("audios/Game5/wrong.mp3"));
+      audioPath = "audios/game_5/wrong.mp3";
     }
+    await choice_audio_player.play(AssetSource(audioPath), volume: 3);
+    listenChoiceAudioPlayer(choice_audio_player);
     controlGameStatus();
-    is_next_clickable.value = true;
     totalCoinCount.value = totalScore.value ~/ 200;
     totalCoinCount.refresh();
   }

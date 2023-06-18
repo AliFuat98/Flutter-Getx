@@ -6,6 +6,7 @@ import 'package:first_app/app/modules/category_map/view.dart';
 import 'package:first_app/app/modules/games/view.dart';
 import 'package:first_app/app/modules/home/widgets/menuitem.dart';
 import 'package:first_app/app/modules/store/view.dart';
+import 'package:first_app/app/widgets/AudioController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

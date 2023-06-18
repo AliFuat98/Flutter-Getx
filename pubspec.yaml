@@ -124,7 +124,9 @@ flutter:
     - assets/images/word_images/weather/
 
     - assets/audios/
+    - assets/audios/app_and_levels/
     - assets/audios/game_5/
+    - assets/audios/game_1/
     - assets/audios/words/
     - assets/audios/learning_page/
     - assets/audios/audioFX/
