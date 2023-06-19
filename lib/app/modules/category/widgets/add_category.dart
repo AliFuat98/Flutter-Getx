@@ -57,7 +57,6 @@ class AddCategory extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.0.wp),
                     width: double.infinity,
-                    color: Colors.red,
                     child: path != null
                         ? Image(image: getImage(true, path))
                         : const FlutterLogo(size: 100),

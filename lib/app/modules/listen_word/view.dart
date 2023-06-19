@@ -70,8 +70,9 @@ class ListenWordPage extends GetView<ListenwordController> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
+            //color: Colors.yellow,
             margin: EdgeInsets.only(top: 0.5.hp),
-            width: 13.0.hp,
+            //width: 13.0.hp,
             height: 4.0.hp,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +97,8 @@ class ListenWordPage extends GetView<ListenwordController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 11.0.hp,
+                //color: Colors.red,
+                width: 20.0.hp,
                 alignment: Alignment.center,
                 child: Obx(
                   () => Text(
@@ -110,8 +112,9 @@ class ListenWordPage extends GetView<ListenwordController> {
                 ),
               ),
               Container(
+                //color: Colors.red,
                 width: 20.0.hp,
-                padding: EdgeInsets.only(right: 8.0.hp),
+                //padding: EdgeInsets.only(right: 8.0.hp),
                 alignment: Alignment.center,
                 child: Text(
                   controller.selectedCategory.name.toUpperCase(),

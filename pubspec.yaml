@@ -122,6 +122,7 @@ flutter:
     - assets/images/word_images/transport/
     - assets/images/word_images/vegetable/
     - assets/images/word_images/weather/
+    - assets/images/word_images/
 
     - assets/audios/
     - assets/audios/app_and_levels/

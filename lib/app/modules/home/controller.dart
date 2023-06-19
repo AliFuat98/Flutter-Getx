@@ -19,9 +19,9 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    audioController.playAudio(
-      "audios/app_and_levels/app.mp4",
-    );
+    // audioController.playAudio(
+    //   "audios/app_and_levels/app.mp4",
+    // );
 
     var contents = await contentRepository.readContents();
     // animation and avatar

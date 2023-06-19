@@ -47,10 +47,9 @@ class CategoryController extends GetxController {
   }
 
   void changeMap() {
+    categoryListForMap.value = categories.skip(12 * mapIndex.value).toList();
     categoryListForMap.value =
-        categories.skip(11 * mapIndex.value).take(12).toList();
-    categoryListForMap.value =
-        categoryListForMap.where((p0) => p0.words.isNotEmpty).toList();
+        categoryListForMap.where((p0) => p0.words.isNotEmpty).take(12).toList();
   }
 
   // yeni kategori ekleme
