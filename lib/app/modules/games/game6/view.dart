@@ -26,7 +26,7 @@ class Game6Page extends GetView<Game6Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle("Seç Telefuz Et"),
+              SizedBox(height: 5.0.hp),
               getScoreTable(),
               SizedBox(height: 2.0.hp),
               getImages(),
@@ -384,34 +384,33 @@ class Game6Page extends GetView<Game6Controller> {
           width: 100.0.wp,
           height: 10.0.hp,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 2.0.wp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getIconAndTextInfo(Icons.monetization_on,
-                        "Coins: ${controller.totalCoinCount.value}"),
-                    getIconAndTextInfo(Icons.sports_volleyball,
-                        controller.gameMode.toUpperCase()),
-                  ],
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 2.0.wp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      getIconAndTextInfo(Icons.monetization_on,
+                          "Coins: ${controller.totalCoinCount.value}"),
+                      getIconAndTextInfo(Icons.sports_volleyball,
+                          controller.gameMode.toUpperCase()),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 2.0.wp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getIconAndTextInfo(
-                        Icons.medical_services_outlined, "Move: ${0}"),
-                    getIconAndTextInfo(Icons.scoreboard,
-                        "score: ${controller.totalScore.value}"),
-                  ],
+                Padding(
+                  padding: EdgeInsets.only(left: 2.0.wp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      getIconAndTextInfo(
+                          Icons.medical_services_outlined, "Move: ${0}"),
+                      getIconAndTextInfo(Icons.scoreboard,
+                          "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ]),
         ),
       ),
     );

@@ -128,6 +128,7 @@ class ListenWordPage extends GetView<ListenwordController> {
             height: 7.0.wp,
             child: IconButton(
               onPressed: () {
+                controller.updateDatabase();
                 Get.back();
               },
               icon: Icon(
@@ -201,7 +202,7 @@ class ListenWordPage extends GetView<ListenwordController> {
               var src = getAudioSource(curWord.isNew, curWord.audioSrc);
               if (src == null) return;
 
-              audioPlayer.play(src);
+              audioPlayer.play(src, volume: 5);
             },
             child: Obx(
               () => controller.isCurrentImageVisible.value
@@ -270,7 +271,7 @@ class ListenWordPage extends GetView<ListenwordController> {
                 var src = getAudioSource(curWord.isNew, curWord.audioSrc);
                 if (src == null) return;
 
-                audioPlayer.play(src);
+                audioPlayer.play(src, volume: 5);
               },
               icon: Icon(
                 Icons.volume_up_sharp,

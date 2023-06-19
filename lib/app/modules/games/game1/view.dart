@@ -17,26 +17,27 @@ class Game1Page extends GetView<Game1Controller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          getBackgroundImage(),
-          Column(
-            children: [
-              Column(
-                children: [
-                  getGameTitle("find couple"),
-                  SizedBox(height: 2.0.hp),
-                  getScoreTable(),
-                ],
-              ),
-              getGameTable(),
-              getMenuButton(),
-              SizedBox(
-                height: 3.0.hp,
-              ),
-            ],
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            getBackgroundImage(),
+            Column(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(height: 1.0.hp),
+                    getScoreTable(),
+                  ],
+                ),
+                getGameTable(),
+                getMenuButton(),
+                SizedBox(
+                  height: 3.0.hp,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -209,7 +210,7 @@ class Game1Page extends GetView<Game1Controller> {
                     width: 25.0.wp,
                   ),
                   const Expanded(
-                    child: Text("Mesajınızı giriniz"),
+                    child: Text("Enter your message"),
                   ),
                 ],
               ),
@@ -295,7 +296,7 @@ class Game1Page extends GetView<Game1Controller> {
                     getIconAndTextInfo(Icons.medical_services_outlined,
                         "Move: ${controller.guessCount.value}"),
                     getIconAndTextInfo(Icons.scoreboard,
-                        "Score: ${controller.totalScore.value}"),
+                        "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
                   ],
                 ),
               ),

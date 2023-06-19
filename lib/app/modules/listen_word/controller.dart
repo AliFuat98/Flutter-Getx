@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:first_app/app/data/models/category.dart';
+import 'package:first_app/app/data/models/pronunciation.dart';
 import 'package:first_app/app/widgets/AudioController.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -12,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+
+import '../../core/utils/DataHelper.dart';
 
 class ListenwordController extends GetxController {
   late Category selectedCategory;
@@ -33,7 +36,8 @@ class ListenwordController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    audioController.audioPlayer.setVolume(0.1);
+    audioController.stopAudio();
+    audioController.playAudio("audios/learning_page/transition1.mp3");
     selectedCategory = Get.arguments as Category;
     initRecorder();
     directory = await getApplicationDocumentsDirectory();
@@ -74,7 +78,7 @@ class ListenwordController extends GetxController {
   }
 
   void trackRecording() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 4));
     if (recorder.isRecording) {
       await Future.delayed(Duration(seconds: 1));
       if (recorder.isRecording) {
@@ -142,8 +146,13 @@ class ListenwordController extends GetxController {
     pronunciationScore.value =
         double.parse((double.parse(results[1]) / 100).toStringAsFixed(2));
     pronunciationScore.refresh();
+    storeActivity(pronunciationScore.value);
     isCurrentImageVisible.value = false;
     handleReaction(results[0]);
+    selectedCategory.words[currentWordIndex.value].isPronounced = 1;
+    if (currentWordIndex.value == selectedCategory.words.length - 1) {
+      selectedCategory.isCompleted = 1;
+    }
   }
 
   void handleReaction(String prediction) async {
@@ -152,56 +161,70 @@ class ListenwordController extends GetxController {
     if (int.parse(prediction) == 1) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/perfect.mp3"),
-          volume: 5);
+          volume: 2);
       await Future.delayed(Duration(milliseconds: 500));
       await reaction_player.play(
           AssetSource(
               "audios/learning_page/perfect${randomInt.toString()}.mp3"),
-          volume: 15);
+          volume: 5);
       totalCoins.value += 100;
     } else if (int.parse(prediction) == 2) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/correct.mp3"),
-          volume: 5);
+          volume: 2);
       await Future.delayed(Duration(milliseconds: 500));
       await reaction_player.play(
           AssetSource("audios/learning_page/almost${randomInt.toString()}.mp3"),
-          volume: 15);
+          volume: 5);
       totalCoins.value += 75;
     } else if (int.parse(prediction) == 3) {
       randomInt = random.nextInt(2) + 1;
       await fx_player.play(AssetSource("audios/audioFX/average.mp3"),
-          volume: 5);
+          volume: 2);
       await Future.delayed(Duration(milliseconds: 500));
       await reaction_player.play(
           AssetSource(
               "audios/learning_page/average${randomInt.toString()}.mp3"),
-          volume: 15);
+          volume: 5);
       totalCoins.value += 50;
     } else if (int.parse(prediction) == 4) {
       randomInt = random.nextInt(2) + 1;
-      await fx_player.play(AssetSource("audios/audioFX/wrong.mp3"), volume: 5);
+      await fx_player.play(AssetSource("audios/audioFX/wrong.mp3"), volume: 2);
       await Future.delayed(Duration(milliseconds: 500));
       await reaction_player.play(
           AssetSource("audios/learning_page/wrong${randomInt.toString()}.mp3"),
-          volume: 15);
-      totalCoins.value += 25;
+          volume: 5);
+      totalCoins.value += 0;
     }
   }
 
-  /*double getPersant() {
-    //var list = pronunciationScore.value.split("+");
-    if (list.length <= 1) {
-      return 0.0;
+  void storeActivity(double score) async {
+    final now = DateTime.now();
+    await DataHelper.instance.insert(
+        "Pronunciation",
+        Pronunciation.withoutID(
+            selectedCategory.words[currentWordIndex.value].wordID,
+            selectedCategory.ID,
+            score,
+            now));
+  }
+
+  void updateDatabase() async {
+    if (selectedCategory.isCompleted == 1) {
+      await DataHelper.instance.update("Category", selectedCategory);
     }
-    return double.parse(list.elementAt(1));
-  }*/
+    selectedCategory.words.forEach((element) async {
+      if (element.isPronounced == 1) {
+        await DataHelper.instance.update("Word", element);
+      }
+    });
+  }
 
   void increaseCurrentWordIndex() {
-    if (currentWordIndex.value >= selectedCategory.words.length - 1) {
-      return;
-    }
+    fx_player.stop();
+    reaction_player.stop();
     currentWordIndex.value++;
     isCurrentImageVisible.value = true;
+    pronunciationScore.value = 0.0;
   }
 }

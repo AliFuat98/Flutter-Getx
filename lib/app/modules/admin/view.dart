@@ -115,7 +115,7 @@ class AdminPage extends GetView<AdminController> {
   Widget getAdminTitle() {
     return Center(
       child: Text(
-        "ADMİN",
+        "ADMIN",
         style: TextStyle(
           fontSize: 7.0.hp,
           fontWeight: FontWeight.w900,

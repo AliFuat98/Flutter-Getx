@@ -12,6 +12,12 @@ class Pronunciation {
     this._score,
     this._date,
   );
+  Pronunciation.withoutID(
+    this._wordID,
+    this._categoryID,
+    this._score,
+    this._date,
+  );
 
   Pronunciation.fromJson(dynamic json) {
     _ID = json['ID'];
@@ -23,7 +29,6 @@ class Pronunciation {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['ID'] = _ID;
     map['WordID'] = _wordID;
     map['CategoryID'] = _categoryID;
     map['Score'] = _score;

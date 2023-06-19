@@ -16,6 +16,7 @@ class Game2Page extends GetView<Game2Controller> {
 
   static const pageName = "/game2";
   AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer choice_audio_player = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,9 @@ class Game2Page extends GetView<Game2Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle("olmayanı bul"),
+              SizedBox(
+                height: 1.0.hp,
+              ),
               getScoreTable(),
               SizedBox(
                 height: 5.0.hp,
@@ -105,6 +108,10 @@ class Game2Page extends GetView<Game2Controller> {
       onTap: () async {
         if (word.wordID == controller.getMissingWord().wordID) {
           await controller.correctAnswer();
+          if (choice_audio_player.state.toString() == "PlayerState.playing") {
+            choice_audio_player.stop();
+          }
+          choice_audio_player.play(AssetSource("audios/game_1/correct.mp3"));
 
           // Get dialogs
           if (controller.gameOver.value) {
@@ -114,7 +121,11 @@ class Game2Page extends GetView<Game2Controller> {
             controller.getNextGame();
           }
         } else {
-          EasyLoading.showError("yanlış");
+          EasyLoading.showError("Wrong");
+          if (choice_audio_player.state.toString() == "PlayerState.playing") {
+            choice_audio_player.stop();
+          }
+          choice_audio_player.play(AssetSource("audios/game_5/wrong.mp3"));
           controller.wrongAnswer();
         }
       },
@@ -390,7 +401,7 @@ class Game2Page extends GetView<Game2Controller> {
                     getIconAndTextInfo(
                         Icons.medical_services_outlined, "Move: ${0}"),
                     getIconAndTextInfo(Icons.scoreboard,
-                        "score: ${controller.totalScore.value}"),
+                        "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
                   ],
                 ),
               ),

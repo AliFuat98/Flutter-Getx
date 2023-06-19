@@ -47,9 +47,10 @@ class HomePage extends GetView<HomeController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "hi Yavuz",
+                                  "Hi Yavuz",
                                   style: TextStyle(
                                     color: const Color.fromARGB(
                                         255, 242, 253, 240),
@@ -58,7 +59,7 @@ class HomePage extends GetView<HomeController> {
                                   ),
                                 ),
                                 Text(
-                                  "naber",
+                                  "Welcome",
                                   style: TextStyle(
                                     color: Colors.white54,
                                     fontSize: 15.0.sp,
@@ -67,11 +68,14 @@ class HomePage extends GetView<HomeController> {
                               ],
                             ),
                             Obx(
-                              () => Image(
-                                width: 10.0.hp,
-                                fit: BoxFit.cover,
-                                image: AssetImage(controller
-                                    .selectedContent.value.pictureSrc),
+                              () => Padding(
+                                padding: EdgeInsets.only(right: 2.0.wp),
+                                child: Image(
+                                  width: 9.8.hp,
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(controller
+                                      .selectedContent.value.pictureSrc),
+                                ),
                               ),
                             ),
                           ],

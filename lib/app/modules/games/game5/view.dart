@@ -21,7 +21,7 @@ class Game5Page extends GetView<Game5Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle("Doğru Mu"),
+              SizedBox(height: 5.0.hp),
               getScoreTable(),
               SizedBox(height: 2.0.hp),
               getGameImage(),
@@ -443,7 +443,7 @@ class Game5Page extends GetView<Game5Controller> {
                     getIconAndTextInfo(
                         Icons.medical_services_outlined, "Move: ${0}"),
                     getIconAndTextInfo(Icons.scoreboard,
-                        "score: ${controller.totalScore.value}"),
+                        "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
                   ],
                 ),
               ),

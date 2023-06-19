@@ -69,6 +69,7 @@ const String pronunciationTable =
 "CategoryID" INTEGER,
 "Date"  TEXT,
 "Score" FLOAT,
+PRIMARY KEY("ID" AUTOINCREMENT),
 FOREIGN KEY (WordID) REFERENCES Word(wordID),
 FOREIGN KEY (CategoryID) REFERENCES Category(ID)
 );""";

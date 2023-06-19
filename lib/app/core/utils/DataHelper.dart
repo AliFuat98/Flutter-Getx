@@ -1,6 +1,7 @@
 import 'package:first_app/app/core/values/queries.dart';
 import 'package:first_app/app/data/models/content.dart';
 import 'package:first_app/app/data/models/game_user.dart';
+import 'package:first_app/app/data/models/pronunciation.dart';
 import 'package:first_app/app/data/models/user.dart';
 import 'package:first_app/app/data/models/category.dart';
 import 'package:sqflite/sqflite.dart';
@@ -32,6 +33,7 @@ class DataHelper {
     db.execute(gameTable);
     db.execute(userTable);
     db.execute(GameUserTable);
+    db.execute(pronunciationTable);
     db.execute(contentTable);
     wordTableRows.forEach((element) {
       db.execute(element);
@@ -96,6 +98,10 @@ class DataHelper {
       case "GameUser":
         GameUser newGameUser = object as GameUser;
         result = await db.insert(table, newGameUser.toJson());
+        break;
+      case "Pronunciation":
+        Pronunciation newPronounce = object as Pronunciation;
+        result = await db.insert(table, newPronounce.toJson());
         break;
       default:
     }

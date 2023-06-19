@@ -71,13 +71,13 @@ class Game3Controller extends GetxController {
 
     // fill base score according to game mode
     baseScore.value = words.length.toDouble();
-    if (gameMode == "kolay") {
+    if (gameMode == "Easy") {
       baseScore.value *= 2;
-    } else if (gameMode == "normal") {
+    } else if (gameMode == "Normal") {
       baseScore.value *= 5;
-    } else if (gameMode == "zor") {
+    } else if (gameMode == "Hard") {
       baseScore.value *= 10;
-    } else if (gameMode == "extreme") {
+    } else if (gameMode == "Extreme") {
       baseScore.value *= 15;
     }
   }
@@ -96,13 +96,13 @@ class Game3Controller extends GetxController {
   Future correctAnswer() async {
     // get coin if s/he knows the answer in the first try
     if (guestCount.value == 0) {
-      if (gameMode == "kolay") {
+      if (gameMode == "Easy") {
         totalCoinCount.value += 2;
-      } else if (gameMode == "normal") {
+      } else if (gameMode == "Normal") {
         totalCoinCount.value += 5;
-      } else if (gameMode == "zor") {
+      } else if (gameMode == "Hard") {
         totalCoinCount.value += 10;
-      } else if (gameMode == "extreme") {
+      } else if (gameMode == "Extreme") {
         totalCoinCount.value += 15;
       }
     }
@@ -166,13 +166,13 @@ class Game3Controller extends GetxController {
 
   List<Word> _getRandomWords() {
     switch (gameMode) {
-      case "kolay":
+      case "Easy":
         return _getRandomWordsWithCount(1);
-      case "normal":
+      case "Normal":
         return _getRandomWordsWithCount(3);
-      case "zor":
+      case "Hard":
         return _getRandomWordsWithCount(5);
-      case "extreme":
+      case "Extreme":
         return _getRandomWordsWithCount(8);
       default:
     }

@@ -25,7 +25,7 @@ class GamesController extends GetxController {
 
   final games = <Game>[].obs;
 
-  final chosenGameMode = "kolay".obs;
+  final chosenGameMode = "Easy".obs;
   final activeIndexOfDot = 0.obs;
   List<Category> categories = [];
   Rx<List<int>> selectedCategoryIDs = Rx<List<int>>([]);

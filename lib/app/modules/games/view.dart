@@ -114,7 +114,7 @@ class GamesPage extends GetView<GamesController> {
               child: Icon(Icons.category, size: 5.0.hp),
             ),
             SizedBox(width: 5.0.wp),
-            const Expanded(child: Text("choose category"))
+            const Expanded(child: Text("Choose Category"))
           ],
         ),
       ),
@@ -122,7 +122,7 @@ class GamesPage extends GetView<GamesController> {
   }
 
   Widget gameModeDropdown() {
-    var choseList = ["kolay", "normal", "zor", "extreme"];
+    var choseList = ["Easy", "Normal", "Hard", "Extreme"];
     return Container(
       decoration: const BoxDecoration(
         color: darkBlue100,
@@ -256,7 +256,7 @@ class GamesPage extends GetView<GamesController> {
         constraints: BoxConstraints(maxWidth: 40.0.wp, maxHeight: 30.0.wp),
         padding: EdgeInsets.all(0.5.hp),
         child: Text(
-          "OYNA",
+          "PLAY",
           style: TextStyle(
             color: Colors.white,
             fontSize: 3.0.hp,

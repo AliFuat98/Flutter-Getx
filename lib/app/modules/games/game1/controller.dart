@@ -77,16 +77,16 @@ class Game1Controller extends GetxController {
     currentCoupleCount = 0;
 
     baseScore.value = selectedWords.length.toDouble();
-    if (gameMode == "kolay") {
+    if (gameMode == "Easy") {
       numberOfWords = 10;
       baseScore.value *= 2;
-    } else if (gameMode == "normal") {
+    } else if (gameMode == "Normal") {
       numberOfWords = 20;
       baseScore.value *= 5;
-    } else if (gameMode == "zor") {
+    } else if (gameMode == "Hard") {
       numberOfWords = 30;
       baseScore.value *= 10;
-    } else if (gameMode == "extreme") {
+    } else if (gameMode == "Extreme") {
       numberOfWords = 44;
       baseScore.value *= 15;
     }
@@ -161,13 +161,13 @@ class Game1Controller extends GetxController {
     // first click
     if (openWords.isEmpty) {
       gameTable[index]!.isOpened = true;
-      card_1_audio_player.play(AssetSource("games/game_1/cards.mp3"));
+      card_1_audio_player.play(AssetSource("audios/game_1/card.mp3"));
       gameTable.refresh();
       return;
     }
     if (openWords.length == 1) {
       gameTable[index]!.isOpened = true;
-      card_2_audio_player.play(AssetSource("games/game_1/cards.mp3"));
+      card_2_audio_player.play(AssetSource("audios/game_1/card.mp3"));
       final secondword = gameTable[index]!;
 
       // farklı çıkarsa
@@ -182,7 +182,7 @@ class Game1Controller extends GetxController {
       else {
         gameTable[index]!.isCompleted = true;
         gameTable[openWords.first.index]!.isCompleted = true;
-        choice_audio_player.play(AssetSource("games/game_1/correct.mp3"));
+        choice_audio_player.play(AssetSource("audios/game_1/correct.mp3"));
         _correctAnswer();
       }
       gameTable.refresh();

@@ -16,6 +16,7 @@ class Game3Page extends GetView<Game3Controller> {
 
   static const pageName = "/game3";
   AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer choice_audio_player = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class Game3Page extends GetView<Game3Controller> {
           getBackgroundImage(),
           Column(
             children: [
-              getGameTitle("dinle ve seç"),
+              SizedBox(height: 1.0.hp),
               getScoreTable(),
               SizedBox(height: 2.0.hp),
               getGameButton(Icons.play_arrow, () {
@@ -61,21 +62,24 @@ class Game3Page extends GetView<Game3Controller> {
 
   Widget getImages() {
     return Expanded(
-      child: SizedBox(
-        width: 400,
-        child: Center(
-          child: Obx(
-            () => GridView.count(
-              crossAxisCount: (controller.gameMode == "zor" ||
-                      controller.gameMode == "extreme")
-                  ? 3
-                  : 2,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              children: [
-                ...controller.randomWords.value
-                    .map((word) => getSquareImage(word))
-              ],
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 3.0.wp),
+        child: SizedBox(
+          width: 400,
+          child: Center(
+            child: Obx(
+              () => GridView.count(
+                crossAxisCount: (controller.gameMode == "zor" ||
+                        controller.gameMode == "extreme")
+                    ? 3
+                    : 2,
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  ...controller.randomWords.value
+                      .map((word) => getSquareImage(word))
+                ],
+              ),
             ),
           ),
         ),
@@ -88,6 +92,10 @@ class Game3Page extends GetView<Game3Controller> {
       onTap: () async {
         if (word.wordID == controller.getCorrectWord().wordID) {
           await controller.correctAnswer();
+          if (choice_audio_player.state.toString() == "PlayerState.playing") {
+            choice_audio_player.stop();
+          }
+          choice_audio_player.play(AssetSource("audios/game_1/correct.mp3"));
 
           // Get dialogs
           if (controller.gameOver.value) {
@@ -97,7 +105,11 @@ class Game3Page extends GetView<Game3Controller> {
             controller.getNextGame();
           }
         } else {
-          EasyLoading.showError("yanlış");
+          EasyLoading.showError("Wrong");
+          if (choice_audio_player.state.toString() == "PlayerState.playing") {
+            choice_audio_player.stop();
+          }
+          choice_audio_player.play(AssetSource("audios/game_5/wrong.mp3"));
           controller.wrongAnswer();
         }
       },
@@ -376,7 +388,7 @@ class Game3Page extends GetView<Game3Controller> {
                     getIconAndTextInfo(
                         Icons.medical_services_outlined, "Move: ${0}"),
                     getIconAndTextInfo(Icons.scoreboard,
-                        "score: ${controller.totalScore.value}"),
+                        "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
                   ],
                 ),
               ),

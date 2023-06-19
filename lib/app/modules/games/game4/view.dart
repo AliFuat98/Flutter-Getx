@@ -24,7 +24,7 @@ class Game4Page extends GetView<Game4Controller> {
             getBackgroundImage(),
             Column(
               children: [
-                getGameTitle("CANDY CRUSH"),
+                getGameTitle("CANDY CRUSH", 4),
                 getScoreTable(),
                 getImages(),
                 getMenuButton(),
@@ -337,7 +337,7 @@ class Game4Page extends GetView<Game4Controller> {
                     getIconAndTextInfo(
                         Icons.medical_services_outlined, "Move: ${0}"),
                     getIconAndTextInfo(Icons.scoreboard,
-                        "Score: ${controller.totalScore.value}"),
+                        "Score: ${controller.totalScore.value.toStringAsFixed(2)}"),
                   ],
                 ),
               ),

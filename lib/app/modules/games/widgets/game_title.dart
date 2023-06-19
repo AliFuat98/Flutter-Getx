@@ -2,7 +2,33 @@ import 'package:first_app/app/core/utils/extensions.dart';
 import 'package:first_app/app/core/values/colors.dart';
 import 'package:flutter/widgets.dart';
 
-Widget getGameTitle(String title) {
+Widget getGameTitle(String title, int gameNumber) {
+  var padding;
+  var fontSize;
+  if (gameNumber == 1) {
+    padding = EdgeInsets.all(4.0.wp);
+    fontSize = 24.0.sp;
+  } else if (gameNumber == 2) {
+    padding = EdgeInsets.only(
+        left: 1.0.wp, right: 1.0.wp, top: 4.0.wp, bottom: 4.0.wp);
+    fontSize = 12.0.sp;
+  } else if (gameNumber == 3) {
+    padding = EdgeInsets.only(
+        left: 4.0.wp, right: 4.0.wp, top: 14.0.wp, bottom: 1.0.wp);
+    fontSize = 24.0.sp;
+  } else if (gameNumber == 4) {
+    padding = EdgeInsets.only(
+        left: 4.0.wp, right: 4.0.wp, top: 14.0.wp, bottom: 1.0.wp);
+    fontSize = 24.0.sp;
+  } else if (gameNumber == 5) {
+    padding = EdgeInsets.only(
+        left: 4.0.wp, right: 4.0.wp, top: 14.0.wp, bottom: 1.0.wp);
+    fontSize = 24.0.sp;
+  } else if (gameNumber == 6) {
+    padding = EdgeInsets.only(
+        left: 4.0.wp, right: 4.0.wp, top: 14.0.wp, bottom: 1.0.wp);
+    fontSize = 24.0.sp;
+  }
   return Center(
     child: Padding(
       padding: EdgeInsets.all(4.0.wp),

@@ -159,7 +159,7 @@ class CategoryMapPage extends GetView<CategoryMapController> {
           icon: Icon(
             Icons.backspace,
             size: 10.wp,
-            color: Colors.blueGrey,
+            color: Color.fromARGB(213, 22, 99, 140),
           ),
         ),
       ),
